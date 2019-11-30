@@ -2,7 +2,7 @@
 <!DOCTYPE repositories SYSTEM "/dtd/repositories.dtd">
 <repositories xmlns="" version="1.0">
 <repo quality="experimental" status="unofficial">
-	<name>proton</name>
+	<name>hedmos-overlay</name>
 	<description>Hedmo Overlay</description>
 	<homepage>https://github.com/hedmo/hedmos-overlay</homepage>
 	<owner type="project">
