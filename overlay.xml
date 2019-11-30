@@ -6,7 +6,7 @@
 	<description>Hedmo Overlay</description>
 	<homepage>https://github.com/hedmo/hedmos-overlay</homepage>
 	<owner type="project">
-		<name>hedmos-overlay</name>
+		<name>hedmo</name>
 	</owner>
 	<source type="git">git://github.com/hedmo/hedmos-overlay.git</source>
 	<source type="git">https://github.com/hedmo/hedmos-overlay.git</source>
