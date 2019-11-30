@@ -66,7 +66,7 @@ src_prepare() {
 
 	# create compatibilitytool.vdf
 	sed -E \
-		-e "s/\"display_name\" \"##BUILD_NAME##\"/\"display_name\" \"Proton (custom) ${PROTON_VER}\"/" \
+		-e "s/\"display_name\" \"##BUILD_NAME##\"/\"display_name\" \"Proton (9999) ${PROTON_VER}\"/" \
 		-e "s/\"##BUILD_NAME##\"/\"${PN}-${PROTON_VER}\"/" \
 		-i compatibilitytool.vdf.template || die
 	mv compatibilitytool.vdf.template compatibilitytool.vdf
