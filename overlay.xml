@@ -1,9 +1,15 @@
-<?xml version="1.0"?>
-<layman>
-  <overlay name="hedmos-overlay" quality="experimental" status="official" type="git"
-    src="git://github.com/hedmo/hedmos-overlay.git"
-    contact="hedmo@yahoo.com">
-    <link>http://github.com/github.com/hedmo/hedmos-overlay/tree/master</link>
-    <description>hedmos's experimental overlay</description>
-  </overlay>
-</layman>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE repositories SYSTEM "/dtd/repositories.dtd">
+<repositories xmlns="" version="1.0">
+<repo quality="experimental" status="unofficial">
+	<name>proton</name>
+	<description>Proton Overlay</description>
+	<homepage>https://github.com/hedmo/hedmos-overlay</homepage>
+	<owner type="project">
+		<name>pchome</name>
+	</owner>
+	<source type="git">git://github.com/hedmo/hedmos-overlay.git</source>
+	<source type="git">https://github.com/hedmo/hedmos-overlay.git</source>
+</repo>
+</repositories>
+
