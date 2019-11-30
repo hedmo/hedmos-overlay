@@ -3,10 +3,10 @@
 <repositories xmlns="" version="1.0">
 <repo quality="experimental" status="unofficial">
 	<name>proton</name>
-	<description>Proton Overlay</description>
+	<description>Hedmo Overlay</description>
 	<homepage>https://github.com/hedmo/hedmos-overlay</homepage>
 	<owner type="project">
-		<name>pchome</name>
+		<name>hedmo</name>
 	</owner>
 	<source type="git">git://github.com/hedmo/hedmos-overlay.git</source>
 	<source type="git">https://github.com/hedmo/hedmos-overlay.git</source>
