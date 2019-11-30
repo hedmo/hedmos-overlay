@@ -2,11 +2,11 @@
 <!DOCTYPE repositories SYSTEM "/dtd/repositories.dtd">
 <repositories xmlns="" version="1.0">
 <repo quality="experimental" status="unofficial">
-	<name>hedmos-overlay</name>
+	<name>hedmo</name>
 	<description>Hedmo Overlay</description>
 	<homepage>https://github.com/hedmo/hedmos-overlay</homepage>
 	<owner type="project">
-		<name>hedmo</name>
+		<name>hedmos-overlay</name>
 	</owner>
 	<source type="git">git://github.com/hedmo/hedmos-overlay.git</source>
 	<source type="git">https://github.com/hedmo/hedmos-overlay.git</source>
