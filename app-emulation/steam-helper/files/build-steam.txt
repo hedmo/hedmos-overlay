@@ -1,0 +1,18 @@
+[binaries]
+c = ['winegcc', '-m32']
+cpp = ['wineg++', '-m32']
+ar = 'ar'
+strip = 'strip'
+
+[properties]
+needs_exe_wrapper = true
+
+cpp_args=['-fno-gnu-unique', '-fpermissive']
+cpp_link_args=['-mwindows', '-mno-cygwin']
+
+[host_machine]
+system = 'linux'
+cpu_family = 'x86'
+cpu = 'i686'
+endian = 'little'
+
