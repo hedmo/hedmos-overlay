@@ -33,8 +33,8 @@ DEPEND="${RDEPEND}
 BDEPEND="dev-util/meson-common-winelib"
 
 PATCHES=(
-	"${FILESDIR}/install-each-lib-in-subdir.patch"
-	"${FILESDIR}/dxvk-hud-and-vr-options.patch"
+#	"${FILESDIR}/install-each-lib-in-subdir.patch"
+#	"${FILESDIR}/dxvk-hud-and-vr-options.patch"
 	"${FILESDIR}/d9vk-hud-option.patch"
 )
 
@@ -91,8 +91,8 @@ multilib_src_configure() {
 		--cross-file="$(cross_file)"
 		--libdir="$(get_libdir)/wine-modules/d9vk"
 		--bindir="$(get_libdir)/wine-modules/d9vk"
-		$(meson_use hud enable_hud)
-		$(meson_use openvr enable_openvr)
+#		$(meson_use hud enable_hud)
+#		$(meson_use openvr enable_openvr)
 		-Dc_args="$(winelib_flags cflags)"
 		-Dcpp_args="$(winelib_flags cppflags)"
 		-Dc_link_args="$(winelib_flags ldflags)"
