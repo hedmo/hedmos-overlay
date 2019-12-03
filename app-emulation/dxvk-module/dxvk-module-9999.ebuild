@@ -91,8 +91,8 @@ multilib_src_configure() {
 		--cross-file="$(cross_file)"
 		--libdir="$(get_libdir)/wine-modules/dxvk"
 		--bindir="$(get_libdir)/wine-modules/dxvk"
-		$(meson_use hud enable_hud)
-		$(meson_use openvr enable_openvr)
+#		$(meson_use hud enable_hud)
+#		$(meson_use openvr enable_openvr)
 		-Dc_args="$(winelib_flags cflags)"
 		-Dcpp_args="$(winelib_flags cppflags)"
 		-Dc_link_args="$(winelib_flags ldflags)"
