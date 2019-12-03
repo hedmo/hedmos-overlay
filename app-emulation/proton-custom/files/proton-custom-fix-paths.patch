@@ -43,7 +43,7 @@
  
      def conf_path(self, n, f):
          return os.path.expanduser(self.conf.get("paths", n, fallback = f))
-@@ -154,8 +154,11 @@
+@@ -161,8 +161,11 @@
          self.tracked_files_file = self.path("tracked_files")
          self.prefix_lock = FileLock(self.path("pfx.lock"), timeout=-1)
  
@@ -57,7 +57,7 @@
  
      def remove_tracked_files(self):
          if not os.path.exists(self.tracked_files_file):
-@@ -165,7 +168,7 @@
+@@ -175,7 +175,7 @@
          with open(self.tracked_files_file, "r") as tracked_files:
              dirs = []
              for f in tracked_files:
@@ -66,7 +66,7 @@
                  if os.path.exists(path):
                      if os.path.isfile(path) or os.path.islink(path):
                          os.remove(path)
-@@ -213,18 +216,18 @@
+@@ -207,18 +207,18 @@
                  return
  
              if old_proton_ver == "3.7" and old_prefix_ver == "1":
@@ -87,10 +87,10 @@
 -                shutil.rmtree(self.prefix_dir + "/drive_c/windows/Microsoft.NET")
 +                shutil.rmtree(self.pfx_path("/drive_c/windows/Microsoft.NET"))
  
-         except ValueError:
-             log("Prefix has an invalid version?! You may want to back up user files and delete this prefix.")
-@@ -261,7 +264,7 @@
-             ( "LiberationMono-Regular.ttf", "cour.ttf" ),
+        #prior to prefix version 4.11-2, all controllers were xbox controllers. wipe out the old registry entries.
+        if (int(old_proton_maj) < 4 or (int(old_proton_maj) == 4 and int(old_proton_min) == 11)) and \
+@@ -280,7 +280,7 @@
+             ( "SourceHanSansSCRegular.otf", "msyh.ttf" ),
          ]
  
 -        windowsfonts = self.prefix_dir + "/drive_c/windows/Fonts"
@@ -98,7 +98,7 @@
          makedirs(windowsfonts)
          for p in fontsmap:
              lname = os.path.join(windowsfonts, p[1])
-@@ -282,10 +285,10 @@
+@@ -301,10 +301,10 @@
                  self.upgrade_pfx(None)
  
              if not os.path.exists(self.prefix_dir):
@@ -112,7 +112,7 @@
                  self.copy_pfx()
  
              with open(self.version_file, "w") as f:
-@@ -301,7 +304,7 @@
+@@ -320,7 +320,7 @@
              else:
                  #linux-only fallback, really shouldn't get here
                  steamdir = os.environ["HOME"] + ".steam/root/"
@@ -121,8 +121,8 @@
              makedirs(dst + "Steam")
              filestocopy = ["steamclient.dll",
                      "steamclient64.dll",
-@@ -407,17 +410,17 @@
-                     wined3dfiles.append("d3d9")
+@@ -378,17 +378,17 @@
+                     wined3dfiles.append("dxgi")
  
              for f in wined3dfiles:
 -                try_copy(g_proton.default_pfx_dir + "drive_c/windows/system32/" + f + ".dll",
@@ -146,4 +146,4 @@
 +                        self.pfx_path("drive_c/windows/syswow64/" + f + ".dll"))
                  g_session.dlloverrides[f] = "n"
              '''
-             def use_wine_module(name):
+             class Session:

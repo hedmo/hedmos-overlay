@@ -1,6 +1,6 @@
 --- a/proton
 +++ b/proton
-@@ -395,12 +397,30 @@
+@@ -365,12 +365,30 @@
                  try_copy(g_proton.default_pfx_dir + "drive_c/windows/syswow64/" + f + ".dll",
                          self.prefix_dir + "drive_c/windows/syswow64/" + f + ".dll")
  

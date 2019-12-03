@@ -1,7 +1,7 @@
 --- a/proton
 +++ b/proton
 @@ -93,27 +93,42 @@
- 
+
  class Proton:
      def __init__(self, base_dir):
 -        self.base_dir = base_dir + "/"
@@ -56,4 +56,5 @@
 +                    not filecmp.cmp(self.version_file, self.dist_version_file):
                  if os.path.exists(self.dist_dir):
                      shutil.rmtree(self.dist_dir)
-                 tar = tarfile.open(self.path("proton_dist.tar.gz"), mode="r:gz")
+                     tar = None
+                 

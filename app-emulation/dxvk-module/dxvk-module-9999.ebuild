@@ -5,7 +5,7 @@ EAPI=6
 
 MULTILIB_COMPAT=( abi_x86_{32,64} )
 
-inherit meson multilib-minimal
+inherit meson multilib-minimal ninja-utils
 
 DESCRIPTION="A Vulkan-based translation layer for Direct3D 10/11"
 HOMEPAGE="https://github.com/doitsujin/dxvk"
@@ -35,7 +35,7 @@ BDEPEND="dev-util/meson-common-winelib"
 PATCHES=(
 	"${FILESDIR}/install-each-lib-in-subdir.patch"
 	"${FILESDIR}/ddraw-stub.patch"
-	"${FILESDIR}/dxvk-hud-and-vr-options.patch"
+#	"${FILESDIR}/dxvk-hud-and-vr-options.patch"
 )
 
 dxvk_check_requirements() {
