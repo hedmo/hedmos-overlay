@@ -7,16 +7,16 @@ MULTILIB_COMPAT=( abi_x86_{32,64} )
 
 inherit meson multilib-minimal
 
-DESCRIPTION="A Vulkan-based translation layer for Direct3D 9"
-HOMEPAGE="https://github.com/Joshua-Ashton/d9vk"
+DESCRIPTION="A Vulkan-based translation layer for Direct3D 10/11"
+HOMEPAGE="https://github.com/doitsujin/dxvk"
 
 if [[ ${PV} == "9999" ]] ; then
-	EGIT_REPO_URI="https://github.com/Joshua-Ashton/d9vk.git"
+	EGIT_REPO_URI="https://github.com/doitsujin/dxvk.git"
 	EGIT_BRANCH="master"
 	inherit git-r3
 	SRC_URI=""
 else
-	SRC_URI="https://github.com/Joshua-Ashton/d9vk/archive/${PV}.tar.gz -> ${P}.tar.gz"
+	SRC_URI="https://github.com/doitsujin/dxvk/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="-* ~amd64"
 fi
 
@@ -34,8 +34,8 @@ BDEPEND="dev-util/meson-common-winelib"
 
 PATCHES=(
 	"${FILESDIR}/install-each-lib-in-subdir.patch"
-#	"${FILESDIR}/dxvk-hud-and-vr-options.patch"
-#	"${FILESDIR}/d9vk-hud-option.patch"
+	"${FILESDIR}/ddraw-stub.patch"
+	"${FILESDIR}/dxvk-hud-and-vr-options.patch"
 )
 
 dxvk_check_requirements() {
@@ -89,18 +89,15 @@ winelib_flags() {
 multilib_src_configure() {
 	local emesonargs=(
 		--cross-file="$(cross_file)"
-		--libdir="$(get_libdir)/wine-modules/d9vk"
-		--bindir="$(get_libdir)/wine-modules/d9vk"
-#		$(meson_use hud enable_hud)
-#		$(meson_use openvr enable_openvr)
+		--libdir="$(get_libdir)/wine-modules/dxvk"
+		--bindir="$(get_libdir)/wine-modules/dxvk"
+		$(meson_use hud enable_hud)
+		$(meson_use openvr enable_openvr)
 		-Dc_args="$(winelib_flags cflags)"
 		-Dcpp_args="$(winelib_flags cppflags)"
 		-Dc_link_args="$(winelib_flags ldflags)"
 		-Dcpp_link_args="$(winelib_flags ldflags)"
 		-Denable_tests=false
-		-Denable_dxgi=false
-		-Denable_d3d10=false
-		-Denable_d3d11=false
 		--unity=on
 	)
 	meson_src_configure

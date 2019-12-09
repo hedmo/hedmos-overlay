@@ -45,7 +45,6 @@ RDEPEND="
 		>=media-libs/mesa-19.1
 	)
 "
-
 PATCHES=(
 	"${FILESDIR}/install-each-lib-in-subdir.patch"
 	"${FILESDIR}/ddraw-stub.patch"
@@ -71,8 +70,11 @@ multilib_src_configure() {
 	local bit="${MULTILIB_ABI_FLAG:8:2}"
 
 	local emesonargs=(
-        --libdir="$(get_libdir)/wine-modules/dxvk"
-		--bindir="$(get_libdir)/wine-modules/dxvk"
+#		--cross-file="$(cross_file)"
+		--libdir="$(get_libdir)/wine-modules/dxvk"
+		--bindir="$(get_libdir)/wine-modules/dxvk"	
+#		--libdir=$(get_libdir)/dxvk
+#		--bindir=$(get_libdir)/dxvk/bin
 		--cross-file=../${P}/build-wine${bit}.txt
 	)
 	meson_src_configure
