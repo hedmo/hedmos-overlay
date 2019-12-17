@@ -1,45 +1,42 @@
-# Copyright 1999-2011 Gentoo Foundation
-       # Distributed under the terms of the GNU General Public License v2
-       #$Header:/var/cvsroot/gentoo-x86/x11-libs/libwnck/libwnck-2.30.7.ebuild,v1.6 2011/10/28 20:22:46 maekke Exp $
- 	EAPI="5"
- 	GNOME2_LA_PUNT="yes"
- 	GCONF_DEBUG="no"
- 	
-	inherit gnome2
- 	
- 	DESCRIPTION="A window navigation construction kit"
- 	HOMEPAGE="http://www.gnome.org/"
- 	
- 	LICENSE="LGPL-2"
- 	SLOT="1"
- 	KEYWORDS="alpha amd64 arm hppa ia64 ~mips ppc ppc64 sh sparc x86 ~x86-fbsd  ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos ~x64-solaris ~x86-solaris"
- 	
- 	IUSE="doc +introspection startup-notification"
- 	
- 	RDEPEND=">=x11-libs/gtk+-2.19.7:2[introspection?]
- 	>=dev-libs/glib-2.16:2
- 	x11-libs/libX11
- 	x11-libs/libXres
- 	x11-libs/libXext
- 	introspection? ( >=dev-libs/gobject-introspection-0.6.14 )
- 	startup-notification? ( >=x11-libs/startup-notification-0.4 )"
- 	DEPEND="${RDEPEND}
- 	sys-devel/gettext
- 	>=dev-util/pkgconfig-0.9
- 	>=dev-util/intltool-0.40
- 	doc? ( >=dev-util/gtk-doc-1.9 )
- 	# eautoreconf needs
- 	# dev-util/gtk-doc-am
- 	# gnome-base/gnome-common
- 	
- 	pkg_setup() {
- 	G2CONF="${G2CONF}
- 	--disable-static
- 	$(use_enable introspection)
- 	$(use_enable startup-notification)"
- 	DOCS="AUTHORS ChangeLog HACKING NEWS README"
- 	}
- 	
- 	src_prepare() {
- 	gnome2_src_prepare
- 	}	
+# Copyright 2008 Saleem Abdulrasool <compnerd@compnerd.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require gnome.org
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+
+SUMMARY="Window Navigator Construction Key Library"
+HOMEPAGE="http://www.gnome.org/"
+
+LICENCES="LGPL-2"
+SLOT="1"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="doc gobject-introspection"
+
+DEPENDENCIES="
+    build:
+        dev-util/intltool[>=0.40.0]
+        virtual/pkg-config[>=0.20]
+        doc? ( dev-doc/gtk-doc[>=1.9] )
+        gobject-introspection? ( gnome-desktop/gobject-introspection[>=0.6.14] )
+    build+run:
+        dev-libs/glib:2[>=2.16.0]
+        x11-libs/gtk+:2[>=2.19.7]
+        x11-libs/libX11
+        x11-libs/libXext
+        x11-libs/libXres
+        x11-libs/startup-notification[>=0.4]
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=( '--enable-startup-notification' '--program-suffix=-1' )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( 'doc gtk-doc' 'gobject-introspection introspection' )
+DEFAULT_SRC_COMPILE_PARAMS=( 'GETTEXT_PACKAGE=libwnck-1' )
+
+src_prepare() {
+    edo sed -i '/AC_PATH_PROG(PKG_CONFIG/d' configure.ac
+    edo sed -e 's/GNOME_DEBUG_CHECK/dnl &/'             \
+            -e 's/GNOME_COMPILE_WARNINGS/dnl &/'        \
+            -e 's/GNOME_MAINTAINER_MODE_DEFINES/dnl &/' \
+            -i "${WORK}/configure.ac"
+    edo intltoolize --automake --force --copy
+    autotools_src_prepare
+}
