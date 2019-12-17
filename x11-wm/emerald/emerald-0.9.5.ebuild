@@ -11,14 +11,14 @@ THEMES_RELEASE=0.5.2
 
 DESCRIPTION="Emerald Window Decorator"
 HOMEPAGE="http://www.compiz.org/"
-SRC_URI="https://github.com/hedmo/emerald/emerald-0.9.5.tar.gz"
+SRC_URI="http://cgit.compiz.org/fusion/decorators/emerald/emerald-0.9.5.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
 IUSE=""
 
 # NOTE: emerald-0.9.5 can not bee downloaden as it chould.
-RESTRICT="fetch strip"
+#RESTRICT="fetch strip"
 
 
 PDEPEND="~x11-themes/emerald-themes-${THEMES_RELEASE}"
