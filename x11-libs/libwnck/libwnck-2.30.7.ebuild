@@ -10,7 +10,7 @@ DESCRIPTION="A window navigation construction kit"
 HOMEPAGE="https://developer.gnome.org/libwnck/2.30/"
 
 LICENSE="LGPL-2+"
-SLOT="3/1"
+SLOT="3"
 KEYWORDS="alpha amd64 arm ~arm64 ~hppa ia64 ~mips ppc ppc64 ~sh sparc x86 ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos ~x64-solaris ~x86-solaris"
 
 IUSE="+introspection startup-notification tools"
