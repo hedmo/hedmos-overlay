@@ -28,7 +28,6 @@
  	>=dev-util/pkgconfig-0.9
  	>=dev-util/intltool-0.40
  	doc? ( >=dev-util/gtk-doc-1.9 )
- 	x86-interix? ( sys-libs/itx-bind )"
  	# eautoreconf needs
  	# dev-util/gtk-doc-am
  	# gnome-base/gnome-common
@@ -43,10 +42,4 @@
  	
  	src_prepare() {
  	gnome2_src_prepare
- 	
- 	#if use x86-interix; then
- 	# activate the itx-bind package...
- 	#append-flags "-I${EPREFIX}/usr/include/bind"
- 	#append-ldflags "-L${EPREFIX}/usr/lib/bind"
- 	#fi
  	}	
