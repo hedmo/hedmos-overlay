@@ -1,42 +1,44 @@
-# Copyright 2008 Saleem Abdulrasool <compnerd@compnerd.org>
+# Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-require gnome.org
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+EAPI=6
+GNOME2_LA_PUNT="yes"
 
-SUMMARY="Window Navigator Construction Key Library"
-HOMEPAGE="http://www.gnome.org/"
+inherit flag-o-matic gnome2
 
-LICENCES="LGPL-2"
-SLOT="1"
-PLATFORMS="~amd64 ~x86"
-MYOPTIONS="doc gobject-introspection"
+DESCRIPTION="A window navigation construction kit"
+HOMEPAGE="https://developer.gnome.org/libwnck/stable/"
 
-DEPENDENCIES="
-    build:
-        dev-util/intltool[>=0.40.0]
-        virtual/pkg-config[>=0.20]
-        doc? ( dev-doc/gtk-doc[>=1.9] )
-        gobject-introspection? ( gnome-desktop/gobject-introspection[>=0.6.14] )
-    build+run:
-        dev-libs/glib:2[>=2.16.0]
-        x11-libs/gtk+:2[>=2.19.7]
-        x11-libs/libX11
-        x11-libs/libXext
-        x11-libs/libXres
-        x11-libs/startup-notification[>=0.4]
+LICENSE="LGPL-2+"
+SLOT="3"
+KEYWORDS="alpha amd64 arm ~arm64 ~hppa ia64 ~mips ppc ppc64 ~sh sparc x86 ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos ~x64-solaris ~x86-solaris"
+
+IUSE="+introspection startup-notification tools"
+
+RDEPEND="
+	x11-libs/cairo[X]
+	>=x11-libs/gtk+-3.22:3[introspection?]
+	>=dev-libs/glib-2.32:2
+	x11-libs/libX11
+	x11-libs/libXres
+	x11-libs/libXext
+	introspection? ( >=dev-libs/gobject-introspection-0.6.14:= )
+	startup-notification? ( >=x11-libs/startup-notification-0.4 )
 "
+DEPEND="${RDEPEND}
+	>=dev-util/gtk-doc-am-1.9
+	>=sys-devel/gettext-0.19.4
+	virtual/pkgconfig
+"
+# eautoreconf needs
+#	sys-devel/autoconf-archive
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( '--enable-startup-notification' '--program-suffix=-1' )
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( 'doc gtk-doc' 'gobject-introspection introspection' )
-DEFAULT_SRC_COMPILE_PARAMS=( 'GETTEXT_PACKAGE=libwnck-1' )
-
-src_prepare() {
-    edo sed -i '/AC_PATH_PROG(PKG_CONFIG/d' configure.ac
-    edo sed -e 's/GNOME_DEBUG_CHECK/dnl &/'             \
-            -e 's/GNOME_COMPILE_WARNINGS/dnl &/'        \
-            -e 's/GNOME_MAINTAINER_MODE_DEFINES/dnl &/' \
-            -i "${WORK}/configure.ac"
-    edo intltoolize --automake --force --copy
-    autotools_src_prepare
+src_configure() {
+	# Don't collide with SLOT=1
+	gnome2_src_configure \
+		--disable-static \
+		$(use_enable introspection) \
+		$(use_enable startup-notification) \
+		$(use_enable tools) \
+		--program-suffix=-${SLOT}
 }
