@@ -162,6 +162,7 @@ local mycmakeargs=(
 "-DCOMPIZ_WERROR=Off"
 "-HAVE_WNCK_WINDOW_HAS_NAME=1"
 "-Wno-dev=ON"
+"DUSE_GTK=on
 )
 cmake-utils_src_configure
 }
