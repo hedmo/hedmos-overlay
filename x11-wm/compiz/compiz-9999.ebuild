@@ -113,7 +113,9 @@ src_prepare() {
 # Use Python 3
 		find -type f \( -name 'CMakeLists.txt' -or -name '*.cmake' \) -exec sed -e 's/COMMAND python/COMMAND python3/g' -i {} \;
 		find compizconfig/ccsm -type f -exec sed -e 's|^#!.*python|#!/usr/bin/env python3|g' -i {} \;
-
+# Gentoo 'cython3' binary is called 'cython' #
+	sed -e 's:cython3:cython:g' \
+		-i compizconfig/compizconfig-python/CMakeLists.txt || die
 
 cmake-utils_src_prepare 		
 }
