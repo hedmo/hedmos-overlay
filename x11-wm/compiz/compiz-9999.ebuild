@@ -116,8 +116,8 @@ src_prepare() {
 		find -type f \( -name 'CMakeLists.txt' -or -name '*.cmake' \) -exec sed -e 's/COMMAND python/COMMAND python3/g' -i {} \;
 		find compizconfig/ccsm -type f -exec sed -e 's|^#!.*python|#!/usr/bin/env python3|g' -i {} \;
 # Don't let compiz install /etc/compizconfig/config, violates sandbox and we install it from "${WORKDIR}/debian/compizconfig" anyway #
-	sed '/add_subdirectory (config)/d' \
-		-i compizconfig/libcompizconfig/CMakeLists.txt || die
+	#sed '/add_subdirectory (config)/d' \
+	#	-i compizconfig/libcompizconfig/CMakeLists.txt || die
 
 	# Fix libdir #
 	sed "s:/lib/:/$(get_libdir)/:g" \
