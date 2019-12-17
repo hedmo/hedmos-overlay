@@ -103,16 +103,34 @@ pkg_pretend() {
 src_prepare() {
 
 
-		echo "gtk/gnome/compiz-wm.desktop.in" >> "${S}/po/POTFILES.skip"
-		echo "metadata/core.xml.in" >> "${S}/po/POTFILES.skip"
+#		echo "gtk/gnome/compiz-wm.desktop.in" >> "${S}/po/POTFILES.skip"
+#		echo "metadata/core.xml.in" >> "${S}/po/POTFILES.skip"
 
 # Fix wrong path for icons
-		sed -i 's:DataDir = "@prefix@/share":DataDir = "/usr/share":' compizconfig/ccsm/ccm/Constants.py.in
+#		sed -i 's:DataDir = "@prefix@/share":DataDir = "/usr/share":' compizconfig/ccsm/ccm/Constants.py.in
 # disable byte-compilation
-    > py-compile
+#    > py-compile
+
 # Use Python 3
 		find -type f \( -name 'CMakeLists.txt' -or -name '*.cmake' \) -exec sed -e 's/COMMAND python/COMMAND python3/g' -i {} \;
 		find compizconfig/ccsm -type f -exec sed -e 's|^#!.*python|#!/usr/bin/env python3|g' -i {} \;
+# Don't let compiz install /etc/compizconfig/config, violates sandbox and we install it from "${WORKDIR}/debian/compizconfig" anyway #
+	sed '/add_subdirectory (config)/d' \
+		-i compizconfig/libcompizconfig/CMakeLists.txt || die
+
+	# Fix libdir #
+	sed "s:/lib/:/$(get_libdir)/:g" \
+		-i compizconfig/compizconfig-python/CMakeLists.txt || die
+
+	# Unset CMAKE_BUILD_TYPE env variable so that cmake-utils.eclass doesn't try to "append-cppflags -DNDEBUG" #
+	#	resulting in compiz window placement not working #
+	export CMAKE_BUILD_TYPE=none
+
+	# Disable -Werror #
+	sed -e 's:-Werror::g' \
+		-i cmake/CompizCommon.cmake || die		
+		
+		
 # Gentoo 'cython3' binary is called 'cython' #
 	sed -e 's:cython3:cython:g' \
 		-i compizconfig/compizconfig-python/CMakeLists.txt || die
