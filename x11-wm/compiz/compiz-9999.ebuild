@@ -107,7 +107,7 @@ src_prepare() {
 #		echo "metadata/core.xml.in" >> "${S}/po/POTFILES.skip"
 
 # Fix wrong path for icons
-#		sed -i 's:DataDir = "@prefix@/share":DataDir = "/usr/share":' compizconfig/ccsm/ccm/Constants.py.in
+		sed -i 's:DataDir = "@prefix@/share":DataDir = "/usr/share":' compizconfig/ccsm/ccm/Constants.py.in
 # disable byte-compilation
 #    > py-compile
 
