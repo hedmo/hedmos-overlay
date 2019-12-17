@@ -44,9 +44,9 @@
  	src_prepare() {
  	gnome2_src_prepare
  	
- 	if use x86-interix; then
+ 	#if use x86-interix; then
  	# activate the itx-bind package...
- 	append-flags "-I${EPREFIX}/usr/include/bind"
- 	append-ldflags "-L${EPREFIX}/usr/lib/bind"
- 	fi
+ 	#append-flags "-I${EPREFIX}/usr/include/bind"
+ 	#append-ldflags "-L${EPREFIX}/usr/lib/bind"
+ 	#fi
  	}	
