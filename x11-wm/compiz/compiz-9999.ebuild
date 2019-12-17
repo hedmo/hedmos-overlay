@@ -49,12 +49,13 @@ COMMONDEPEND="
 		cairo? ( x11-libs/cairo[X] )
 		fuse? ( sys-fs/fuse )
 		gtk? (
-				>=x11-libs/gtk+-3.24.1 
-				>=x11-libs/libwnck-2.19.4
-				x11-libs/pango
-				gnome? (
-						gnome-base/gnome-desktop
-						gnome-base/gconf
+		>=x11-libs/gtk+-2.18.0
+		>=x11-libs/libwnck-2.19.4
+		x11-libs/pango
+		gnome? (
+			gnome-base/gnome-desktop
+			gnome-base/gconf
+			x11-wm/metacity
 				)
 		)
 		svg? (
