@@ -7,7 +7,7 @@ GNOME2_LA_PUNT="yes"
 inherit flag-o-matic gnome2
 
 DESCRIPTION="A window navigation construction kit"
-HOMEPAGE="https://developer.gnome.org/libwnck/"
+HOMEPAGE="https://developer.gnome.org/libwnck/2.30/"
 
 LICENSE="LGPL-2+"
 SLOT="3"
