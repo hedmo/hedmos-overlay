@@ -57,6 +57,7 @@ PATCHES=(
 	"${FILESDIR}/proton-custom-fix-more-paths.patch"
 	"${FILESDIR}/proton-custom-fix-more-paths-2.patch"
 	"${FILESDIR}/proton-custom-wine-dxgi.patch"
+        "${FILESDIR}/proton.patch"
 )
 
 src_prepare() {
