@@ -11,7 +11,7 @@ THEMES_RELEASE=0.5.2
 
 DESCRIPTION="Emerald Window Decorator"
 HOMEPAGE="http://www.compiz.org/"
-SRC_URI="http://cgit.compiz.org/fusion/decorators/emerald/emerald-0.9.5.tar.gz"
+SRC_URI="http://cgit.compiz.org/fusion/decorators/emerald/snapshot/emerald-0.9.5.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
