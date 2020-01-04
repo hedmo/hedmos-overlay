@@ -50,7 +50,7 @@ COMMONDEPEND="
 		fuse? ( sys-fs/fuse )
 		gtk? (
 		>=x11-libs/gtk+-2.18.0
-		>=x11-libs/libwnck-2.19.4
+		>=x11-libs/libwnck-3.19.4
 		x11-libs/pango
 		gnome? (
 			gnome-base/gnome-desktop
