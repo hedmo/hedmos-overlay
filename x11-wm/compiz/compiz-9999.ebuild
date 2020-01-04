@@ -50,7 +50,7 @@ COMMONDEPEND="
 		fuse? ( sys-fs/fuse )
 		gtk? (
 		>=x11-libs/gtk+-2.18.0
-		>=x11-libs/libwnck-2.19.4
+		>=x11-libs/libwnck-3.19.4
 		x11-libs/pango
 		gnome? (
 			gnome-base/gnome-desktop
@@ -157,12 +157,10 @@ local mycmakeargs=(
 "-DCMAKE_INSTALL_PREFIX=/usr"
 "-DCMAKE_C_FLAGS=$(usex debug '-DDEBUG -ggdb' '')"
 "-DCMAKE_CXX_FLAGS=$(usex debug '-DDEBUG -ggdb' '')"
-"-DCOMPIZ_DEFAULT_PLUGINS=ccp gtk"
+"-DCOMPIZ_DEFAULT_PLUGINS=ccp "
 "-DCOMPIZ_DISABLE_SCHEMAS_INSTALL=ON"
 "-DCOMPIZ_PACKAGING_ENABLED=ON"
 "-DCOMPIZ_WERROR=Off"
-"-DBUILD_GTK=ON"
-"-DUSE_GTK=yes"
 "-HAVE_WNCK_WINDOW_HAS_NAME=1"
 "-Wno-dev=ON"
 
