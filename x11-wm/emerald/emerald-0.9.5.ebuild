@@ -18,7 +18,7 @@ KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
 IUSE=""
 
 # NOTE: emerald-0.9.5 can not bee downloaden as it chould.
-RESTRICT="fetch strip"
+#RESTRICT="fetch strip"
 
 
 PDEPEND="~x11-themes/emerald-themes-${THEMES_RELEASE}"
