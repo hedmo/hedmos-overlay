@@ -162,6 +162,7 @@ local mycmakeargs=(
 "-DCOMPIZ_PACKAGING_ENABLED=ON"
 "-DCOMPIZ_WERROR=Off"
 "-DBUILD_GTK=ON"
+"-DUSE_GTK=yes"
 "-HAVE_WNCK_WINDOW_HAS_NAME=1"
 "-Wno-dev=ON"
 
