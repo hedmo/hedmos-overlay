@@ -20,7 +20,7 @@ emaint sync -A               # all repositories
 emaint sync -a               # all auto-sync repositories
 ```
 
-To sync automatically with your usual portage sync, ensure auto-sync is enabled for this repository.
-Auto-sync defaults to true, if in doubt, check `man portage`.
+To sync automatically with your usual portage sync, ensure auto-sync is enabled for
+this repository.Auto-sync defaults to true, if in doubt, check `man portage`.
 
 After the repository is synced, unmask/mask as appropriate.
