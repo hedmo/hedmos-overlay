@@ -49,6 +49,8 @@ MODULE_NAMES="
 	razermousemat(hid:${S}/driver)
 	razerkraken(hid:${S}/driver)
 	razercore(hid:${S}/driver)
+	razeraccessory(hid:${S}/driver)
+	
 "
 	linux-mod_pkg_setup
 }
