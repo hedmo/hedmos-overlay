@@ -6,6 +6,7 @@ EAPI=7
 PYTHON_COMPAT=( python3_{5,6,7} )
 
 EGIT_REPO_URI="https://github.com/${PN}/${PN}.git"
+#EGIT_REPO_URI="https://github.com/hedmo/${PN}.git"
 
 inherit git-r3 linux-mod python-r1 readme.gentoo-r1 virtualx
 
@@ -47,7 +48,6 @@ MODULE_NAMES="
 	razermouse(hid:${S}/driver)
 	razermousemat(hid:${S}/driver)
 	razerkraken(hid:${S}/driver)
-	razermug(hid:${S}/driver)
 	razercore(hid:${S}/driver)
 "
 	linux-mod_pkg_setup
