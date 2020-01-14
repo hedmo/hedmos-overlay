@@ -24,7 +24,7 @@ RDEPEND="
 	dev-python/pygobject
 	dev-python/setproctitle
 	dev-python/requests
-
+    dev-python/distro
 	x11-libs/gtk+[introspection]
 	dev-libs/libappindicator:3[introspection]
 	net-libs/webkit-gtk[introspection]
