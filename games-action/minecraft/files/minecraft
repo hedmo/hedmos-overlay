@@ -1,0 +1,5 @@
+#!/bin/sh
+# Needed to make the launcher legible, and also work on 30bpp X screens.
+export _JAVA_OPTIONS="${_JAVA_OPTIONS:-} -Dawt.useSystemAAFontSettings=on -Dsun.java2d.opengl=true"
+exec java -Xss228K -Xms6M -Xmx32M -XX:-UsePerfData \
+    -jar /usr/share/games/minecraft/launcher.jar
