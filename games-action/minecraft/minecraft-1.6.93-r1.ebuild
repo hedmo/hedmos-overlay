@@ -9,8 +9,8 @@ MY_JAR="${PN}-launcher-${PV}.jar"
 
 DESCRIPTION="Official Java launcher for Minecraft"
 HOMEPAGE="https://minecraft.net"
-SRC_URI="http://launcher.mojang.com/mc/launcher/jar/fa896bd4c79d4e9f0d18df43151b549f865a3db6/launcher.jar.lzma -> ${MY_JAR}.lzma
-	https://minecraft.net/android-icon-192x192.png -> minecraft.png"
+SRC_URI="https://launcher.mojang.com/v1/objects/eabbff5ff8e21250e33670924a0c5e38f47c840b/launcher.jar -> ${MY_JAR}
+	https://minecraft.net/android-icon-192x192.png -> ${PN}.png"
 
 LICENSE="Minecraft-clickwrap-EULA"
 SLOT="0"
@@ -24,13 +24,18 @@ RDEPEND="
 
 S="${WORKDIR}"
 
-src_install() {
-	dobin "${FILESDIR}"/minecraft
-	doicon -s 192 "${DISTDIR}"/minecraft.png
-	insinto /usr/share/games/"${PN}"
-	newins "${MY_JAR}" launcher.jar
+src_unpack() {
+	:
+}
 
-	make_desktop_entry minecraft Minecraft minecraft
+src_install() {
+	insinto /usr/share/games/"${PN}"
+	newins "${DISTDIR}/${MY_JAR}" launcher.jar
+
+	dobin "${FILESDIR}"/minecraft
+
+	doicon -s 192 "${DISTDIR}/${PN}.png"
+	make_desktop_entry "${PN}" "${PN^}" "${PN}"
 }
 
 pkg_postinst() {
