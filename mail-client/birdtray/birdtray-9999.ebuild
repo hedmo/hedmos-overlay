@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit git-r3 qmake-utils desktop
+inherit cmake-utils git-r3 xdg-utils
 
 DESCRIPTION="Run Thunderbird with a system tray icon."
 HOMEPAGE="https://github.com/gyunaev/birdtray"
@@ -11,23 +11,21 @@ EGIT_REPO_URI="https://github.com/gyunaev/birdtray"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
-IUSE=""
+KEYWORDS="~amd64"
 
-DEPEND="dev-qt/qtx11extras:5
-	dev-db/sqlite:3"
-RDEPEND="${DEPEND}"
-BDEPEND=""
-
-src_configure() {
-	eqmake5 ./src
-}
-
-src_compile() {
-	emake
-}
+RDEPEND="
+	dev-db/sqlite
+	dev-qt/qtcore:5=
+	dev-qt/qtx11extras:5=
+	"
 
 src_install() {
-	dobin "birdtray"
-	domenu "${FILESDIR}/birdtray.desktop"
+	dobin  "${BUILD_DIR}/${PN}"
+}
+
+pkg_postinst() {
+	xdg_icon_cache_update
+}
+pkg_postrm() {
+	xdg_icon_cache_update
 }
