@@ -13,7 +13,7 @@ if [[ ${PV} == *9999* ]]; then
 	EGIT_REPO_URI="https://gitlab.com/orcus/orcus.git"
 	inherit git-r3 autotools
 else
-	SRC_URI="https://kohei.us/files/orcus/src/${P}.tar.xz"
+	SRC_URI="https://dev-www.libreoffice.org/src/${P}.tar.gz"
 	KEYWORDS="~amd64 ~arm ~arm64 ~ppc ~ppc64 ~x86"
 fi
 
