@@ -441,6 +441,7 @@ src_configure() {
 		$(use_enable bluetooth sdremote-bluetooth)
 		$(use_enable coinmp)
 		$(use_enable cups)
+		$(use_enable skia)
 		$(use_enable dbus)
 		$(use_enable debug)
 		$(use_enable eds evolution2)
