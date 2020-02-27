@@ -399,7 +399,6 @@ src_configure() {
 		--with-system-headers
 		--with-system-jars
 		--with-system-libs
-		--enable-visio
 		--enable-build-opensymbol
 		--enable-cairo-canvas
 		--enable-largefile
