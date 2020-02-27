@@ -47,7 +47,7 @@ unset DEV_URI
 # If you want them gone, patches are welcome.
 ADDONS_SRC=(
     " skia? ( ${ADDONS_URI}/skia-m81-3e98c0e1d11516347ecc594959af2c1da4d04fc9.tar.xz )"
-   
+    "java? ( ${ADDONS_URI}/dtoa-20180411.tgz )"
 	"java? ( ${ADDONS_URI}/17410483b5b5f267aa18b7e00b65e6e0-hsqldb_1_8_0.zip )"
 	# no release for 8 years, should we package it?
 	"libreoffice_extensions_wiki-publisher? ( ${ADDONS_URI}/a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip )"
