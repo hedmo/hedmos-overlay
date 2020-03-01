@@ -1,0 +1,12 @@
+diff -up thunderbird-60.6.1/intl/locale/LocaleService.cpp.debug thunderbird-60.6.1/intl/locale/LocaleService.cpp
+--- thunderbird-60.6.1/intl/locale/LocaleService.cpp.debug	2019-05-15 08:15:14.602872505 +0200
++++ thunderbird-60.6.1/intl/locale/LocaleService.cpp	2019-05-15 08:15:53.717635322 +0200
+@@ -643,8 +643,6 @@ LocaleService::GetDefaultLocale(nsACStri
+     // just use our hard-coded default below.
+     GetGREFileContents("update.locale", &locale);
+     locale.Trim(" \t\n\r");
+-    // This should never be empty.
+-    MOZ_ASSERT(!locale.IsEmpty());
+     if (SanitizeForBCP47(locale, true)) {
+       mDefaultLocale.Assign(locale);
+     }

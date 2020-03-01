@@ -1,0 +1,12 @@
+diff -up thunderbird-68.0/gfx/skia/skia/include/private/SkNx.h.1353817 thunderbird-68.0/gfx/skia/skia/include/private/SkNx.h
+--- thunderbird-68.0/gfx/skia/skia/include/private/SkNx.h.1353817	2019-08-29 16:31:20.892290062 +0200
++++ thunderbird-68.0/gfx/skia/skia/include/private/SkNx.h	2019-08-29 16:32:05.430436157 +0200
+@@ -416,7 +416,7 @@ typedef SkNx<8, uint32_t> Sk8u;
+ // Include platform specific specializations if available.
+ #if !defined(SKNX_NO_SIMD) && SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE2
+     #include "SkNx_sse.h"
+-#elif !defined(SKNX_NO_SIMD) && defined(SK_ARM_HAS_NEON)
++#elif !defined(SKNX_NO_SIMD) && (defined(SK_ARM_HAS_NEON) || defined(SK_CPU_ARM64))
+     #include "SkNx_neon.h"
+ #else
+ 
