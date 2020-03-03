@@ -125,6 +125,16 @@ DEPEND="${CDEPEND}
 	>=sys-devel/binutils-2.30
 	sys-apps/findutils
 	|| (
+	    
+	    (
+			sys-devel/clang:11
+			!clang? ( sys-devel/llvm:11 )
+			clang? (
+				=sys-devel/lld-11*
+				sys-devel/llvm:11
+				pgo? ( =sys-libs/compiler-rt-sanitizers-11*[profile] )
+			)
+		)	
 		(
 			sys-devel/clang:10
 			!clang? ( sys-devel/llvm:10 )
