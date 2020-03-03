@@ -28,7 +28,7 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 MOZ_P="${PN}-${MOZ_PV}"
 
-LLVM_MAX_SLOT=10
+LLVM_MAX_SLOT=11
 MOZCONFIG_OPTIONAL_JIT=1
 
 DESCRIPTION="Thunderbird Mail Client"
@@ -125,7 +125,6 @@ DEPEND="${CDEPEND}
 	>=sys-devel/binutils-2.30
 	sys-apps/findutils
 	|| (
-	    
 	    (
 			sys-devel/clang:11
 			!clang? ( sys-devel/llvm:11 )
