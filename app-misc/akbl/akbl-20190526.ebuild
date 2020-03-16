@@ -10,7 +10,7 @@ inherit git-r3 python-r1 systemd
 DESCRIPTION="Control the lights of Alienware computers under GNU-Linux systems" 
 HOMEPAGE="https://github.com/rsm-gh/akbl" 
 EGIT_REPO_URI="https://github.com/rsm-gh/akbl.git" 
-EGIT_COMMIT="3ff0d9e29061c723a167fb1c6dac8b72d6d9ee5d" 
+EGIT_COMMIT="8f4403c97538281725adedbee5960806c35338fb" 
 
 LICENSE="GPL-3" 
 SLOT="0" 
