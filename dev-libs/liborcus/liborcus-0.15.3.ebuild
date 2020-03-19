@@ -30,6 +30,7 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	>=dev-util/mdds-1.5.0:1
 "
+PATCHES=( "${FILESDIR}/libreoffice.patch" )
 
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
