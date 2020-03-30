@@ -21,7 +21,7 @@ RDEPEND="
 dev-python/PyQt5[${PYTHON_USEDEP}]
 dev-python/PyQt5-sip[${PYTHON_USEDEP}]
 dev-python/netifaces[${PYTHON_USEDEP}]
->=dev-python/qamash-0.6.0
+>dev-python/qamash-0.6.0
 x11-misc/x11vnc
 "
 
