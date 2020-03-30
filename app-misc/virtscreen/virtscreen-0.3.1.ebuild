@@ -23,6 +23,7 @@ dev-python/PyQt5-sip[${PYTHON_USEDEP}]
 dev-python/netifaces[${PYTHON_USEDEP}]
 >=dev-python/quamash-0.6.0
 x11-misc/x11vnc
+x11-misc/arandr
 "
 
 python_install_all() {
