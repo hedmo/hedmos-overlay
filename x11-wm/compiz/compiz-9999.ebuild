@@ -135,6 +135,7 @@ src_prepare() {
 # Gentoo 'cython3' binary is called 'cython' #
 	sed -e 's:cython3:cython:g' \
 		-i compizconfig/compizconfig-python/CMakeLists.txt || die
+		epatch "${FILESDIR}"/libdecoration-include-dirs-fix.patch
 		
 # Need to do a 'python_foreach_impl' run from python-r1 eclass to workaround corrupt generated python shebang for /usr/bin/ccsm #
 	#  Due to the way CMake invokes distutils setup.py, shebang will be inherited from the sandbox leading to runtime failure #
