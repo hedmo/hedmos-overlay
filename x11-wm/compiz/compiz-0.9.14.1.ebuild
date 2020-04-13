@@ -109,7 +109,7 @@ src_prepare() {
 # kill unneeded system-wide config in /etc
    sed -i 's:install (FILES \${_config_file} DESTINATION \${COMPIZCONFIG_CONFIG_DIR})::' \
    compizconfig/libcompizconfig/config/CMakeLists.txt
-
+epatch "${FILESDIR}"/libdecoration-include-dirs-fix.patch
 }
 
 pkg_setup() {
