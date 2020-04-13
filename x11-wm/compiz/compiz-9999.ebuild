@@ -3,7 +3,7 @@
 
 EAPI=5
 
-GIT_ECLASS="git-2"
+GIT_ECLASS="git-r3"
 EGIT_REPO_URI="https://github.com/hedmo/compiz"
 
 PYTHON_COMPAT=( python{2_7,3_6,3_7} ) # 3.4 needs to be tested
