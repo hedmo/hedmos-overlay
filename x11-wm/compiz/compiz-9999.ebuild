@@ -13,7 +13,7 @@ inherit python-any-r1  cmake-utils eutils ${GIT_ECLASS} gnome2-utils toolchain-f
 #python
 
 KEYWORDS="*"
-S="${WORKDIR}/~compiz-team/${PN}/${PV}"
+S="${WORKDIR}/${PN}-${PV}"
 DESCRIPTION="OpenGL window and compositing manager"
 HOMEPAGE="http://www.compiz.org/"
 
