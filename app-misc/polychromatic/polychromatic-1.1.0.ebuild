@@ -26,7 +26,7 @@ RDEPEND="
 	app-misc/openrazer
     dev-ruby/sass
 	
-	dev-nodejs/less
+	dev-libs/less
 	>=dev-lang/python-3.4.5
 	dev-python/distro
     dev-python/pygobject
