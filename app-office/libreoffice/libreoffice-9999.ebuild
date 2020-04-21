@@ -230,6 +230,10 @@ DEPEND="${COMMON_DEPEND}
 		media-fonts/dejavu
 		media-fonts/liberation-fonts
 	)
+	skia? (
+        sys-devel/clang
+        media-libs/vulkan-loader
+    )    
 "
 RDEPEND="${COMMON_DEPEND}
 	!app-office/libreoffice-bin
