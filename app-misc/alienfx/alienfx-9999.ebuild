@@ -7,8 +7,8 @@ PYTHON_COMPAT=( python{2_7,3_6} )
 inherit distutils-r1 udev git-r3
 
 DESCRIPTION="Core library for accessing the Microsoft Kinect."
-HOMEPAGE="https://github.github.com/trackmastersteve/${PN}.git"
-EGIT_REPO_URI="https://github.com/trackmastersteve/${PN}.git"
+HOMEPAGE="https://github.github.com/hedmo/${PN}.git"
+EGIT_REPO_URI="https://github.com/hedmo/${PN}.git"
 
 LICENSE="GPL-2"
 SLOT="0"
