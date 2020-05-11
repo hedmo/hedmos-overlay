@@ -6,7 +6,7 @@ K_SECURITY_UNSUPPORTED="1"
 K_NOSETEXTRAVERSION="1"
 XANMOD_VERSION="1"
 ETYPE="sources"
-inherit kernel-2-src-prepare-overlay
+inherit kernel-2
 detect_version
 
 DESCRIPTION="A general-purpose kernel with custom settings and new features"
