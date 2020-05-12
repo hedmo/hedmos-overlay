@@ -15,14 +15,14 @@ LICENSE+=" CDDL"
 SRC_URI="${KERNEL_BASE_URI}/linux-${KV_MAJOR}.${KV_MINOR}.tar.xz https://github.com/xanmod/linux/releases/download/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz"
 
 UNIPATCH_LIST_DEFAULT=""
-UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz"
-
+UNIPATCH_LIST=(
+               "${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz"
+               "${FILESDIR}/Strong_Stack.patch" #add a temporary patch for failing  Strong Stack Protector for gcc-10
+)
 KEYWORDS="~amd64"
 
-#add a temporary patch for failing  Strong Stack Protector for gcc-10
-PATCHES=(
-         "${FILESDIR}/Strong_Stack.patch"
-)
+
+
 
 src_prepare() {
 
