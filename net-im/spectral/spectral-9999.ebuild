@@ -19,17 +19,29 @@ LICENSE="GPL-3"
 SLOT="0"
 IUSE=""
 
-RDEPEND="dev-qt/qtgui
+RDEPEND="
+	app-text/cmark
+	dev-qt/qtdeclarative
+	dev-qt/qtgui
 	dev-qt/qtmultimedia[qml]
 	dev-qt/qtwidgets
 	>=dev-qt/qtquickcontrols2-5.12
-	>dev-libs/libQuotient-0.5.1.2
+	>=dev-libs/libQuotient-0.6_beta1
 	dev-libs/libQtOlm
-	media-fonts/noto-emoji
-	dev-qt/qtsvg"
-DEPEND="${RDEPEND}
-	>=dev-qt/qtcore-5.12"
+	dev-libs/qtkeychain
+	|| ( media-fonts/roboto media-fonts/noto )
+	dev-qt/qtsvg
+"
 
-src_configure() {
-	cmake-utils_src_configure
+DEPEND="
+	${RDEPEND}
+	>=dev-qt/qtcore-5.12
+"
+
+pkg_postinst() {
+	xdg_icon_cache_update
+}
+
+pkg_postrm() {
+	xdg_icon_cache_update
 }

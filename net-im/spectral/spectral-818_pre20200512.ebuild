@@ -6,7 +6,7 @@ EAPI=7
 DESCRIPTION="A glossy client for Matrix, written in QtQuick Controls 2 and C++."
 HOMEPAGE="https://gitlab.com/b0/spectral"
 
-inherit eutils cmake-utils git-r3
+inherit  cmake-utils git-r3
 
 EGIT_REPO_URI="https://gitlab.com/b0/spectral.git"
 EGIT_SUBMODULES=("include/SortFilterProxyModel")
@@ -22,6 +22,7 @@ IUSE=""
 
 RDEPEND="
 	app-text/cmark
+	dev-qt/qtdeclarative
 	dev-qt/qtgui
 	dev-qt/qtmultimedia[qml]
 	dev-qt/qtwidgets
@@ -29,7 +30,7 @@ RDEPEND="
 	>=dev-libs/libQuotient-0.6_beta1
 	dev-libs/libQtOlm
 	dev-libs/qtkeychain
-	media-fonts/roboto
+	|| ( media-fonts/roboto media-fonts/noto )
 	dev-qt/qtsvg
 "
 
@@ -37,10 +38,6 @@ DEPEND="
 	${RDEPEND}
 	>=dev-qt/qtcore-5.12
 "
-
-src_configure() {
-	cmake-utils_src_configure
-}
 
 pkg_postinst() {
 	xdg_icon_cache_update
