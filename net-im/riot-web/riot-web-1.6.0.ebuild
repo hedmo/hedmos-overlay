@@ -86,3 +86,8 @@ pkg_postrm() {
 	xdg_icon_cache_update
 	xdg_desktop_database_update
 }
+pkg_postinst() {
+	einfo "riot-web requires internet access"
+	einfo "To allow network access you need to disable network-sandbox:"
+	einfo "take a look at https://wiki.gentoo.org/wiki//etc/portage/package.env"
+}
