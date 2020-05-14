@@ -1,0 +1,31 @@
+# Calculate format=diff
+commit ebd632e188b9d647e31989f27c80124a8899cc33
+Author: Mir Calculate <support@calculate.ru>
+Date:   Wed Feb 13 16:43:33 2019 +0300
+
+    Добавлен перезапуск consolefont в конце загрузки системы
+
+diff --git a/plymouth.c b/plymouth.c
+index ab25871..7089150 100644
+--- a/plymouth.c
++++ b/plymouth.c
+@@ -82,6 +82,11 @@ int commandf(const char* cmd, ...)
+     return command(buffer);
+ }
+ 
++void restart_console_font()
++{
++    if(RC_SERVICE_STARTED == rc_service_state("consolefont"))
++        command("/etc/init.d/consolefont restart");
++}
+ 
+ bool ply_message(const char* hook, const char* name)
+ {
+@@ -237,6 +242,7 @@ int rc_plugin_hook(RC_HOOK hook, const char *name)
+             DBG("ply_quit(PLY_MODE_BOOT)");
+             if(!ply_quit(PLY_MODE_BOOT))
+                 rv = 1;
++            restart_console_font();
+         }
+         break;
+ 

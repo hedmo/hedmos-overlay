@@ -1,0 +1,30 @@
+# Calculate format=diff
+commit a2683bffa4c506fcf2ec440f7b482191ed37fd27
+Author: Mir Calculate <support@calculate.ru>
+Date:   Wed Feb 13 16:29:33 2019 +0300
+
+    Отключено сообщение о запускаемой/останавливаемой службе
+
+diff --git a/plymouth.c b/plymouth.c
+index e9c925b..57a4b7f 100644
+--- a/plymouth.c
++++ b/plymouth.c
+@@ -85,7 +85,7 @@ int commandf(const char* cmd, ...)
+ 
+ bool ply_message(const char* hook, const char* name)
+ {
+-    return (commandf("/bin/plymouth message --text=\"%s %s\"", hook, name) == 0);
++    return true;
+ }
+ 
+ 
+@@ -145,7 +145,8 @@ bool ply_start(int mode)
+ 
+ bool ply_update_status(int hook, const char* name)
+ {
+-    return (commandf("/bin/plymouth update --status=%d-%s", hook, name) == 0);
++    //return (commandf("/bin/plymouth update --status=%d-%s", hook, name) == 0);
++    return true;
+ }
+ 
+ 
