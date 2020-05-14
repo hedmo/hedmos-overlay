@@ -244,7 +244,7 @@ RDEPEND="${COMMON_DEPEND}
 	java? ( >=virtual/jre-1.8 )
 	kde? ( kde-frameworks/breeze-icons:* )
 "
-if [[ ${MY_PV} != *9999* ]] && [[ ${PV} != *_* ]]; then
+if [[ ${MY_PV} != *9999* ]] ; then
 	PDEPEND="=app-office/libreoffice-l10n-$(ver_cut 1-2)*"
 else
 	# Translations are not reliable on live ebuilds
