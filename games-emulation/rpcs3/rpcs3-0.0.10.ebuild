@@ -72,26 +72,23 @@ RDEPEND="${CDEPEND}
 
 
 src_prepare() {
-	default
-	 mv ${WORKDIR}/asmjit*/*   ${S}/asmjit/            || die
-	 mv ${WORKDIR}/cereal*/*   ${S}/3rdparty/cereal/   || die
-     mv ${WORKDIR}/curl*/*     ${S}/3rdparty/curl/     || die
-     mv ${WORKDIR}/FAudio*/*   ${S}/3rdparty/FAudio/   || die
-     mv ${WORKDIR}/glslang*/*  ${S}/Vulkan/glslang/    || die
-     mv ${WORKDIR}/ffmpeg*/*   ${S}/3rdparty/ffmpeg/   || die
-     mv ${WORKDIR}/hidapi*/*   ${S}/3rdparty/hidapi/   || die
-     mv ${WORKDIR}/libpng*/*   ${S}/3rdparty/libpng/   || die
-     mv ${WORKDIR}/libusb*/*   ${S}/3rdparty/libusb/   || die
-     mv ${WORKDIR}/llvm*/*     ${S}/llvm/              || die
-     mv ${WORKDIR}/pugixml*/*  ${S}/3rdparty/pugixml/  || die
-     mv ${WORKDIR}/span*/*     ${S}/3rdparty/span/     || die
-     mv ${WORKDIR}/wolfssl*/*  ${S}/3rdparty/wolfssl/  || die
-     mv ${WORKDIR}/xxHash*/*   ${S}/3rdparty/xxHash/   || die
-     mv ${WORKDIR}/yaml-cpp*/* ${S}/3rdparty/yaml-cpp/ || die
-     
-	sed -i -e '/find_program(CCACHE_FOUND/d' CMakeLists.txt
+   move_lib() {
+      local IN_DIR="${1}"
+      local OUT_DIR
+      [ -z "${2}" ] && OUT_DIR="${IN_DIR}" || OUT_DIR="${2%/}/${IN_DIR}"
+      mv "${WORKDIR}/${IN_DIR}"*/* "${S}/${OUT_DIR}" || die
+   }
 
-	cmake-utils_src_prepare
+   move_lib asmjit
+   move_lib llvm
+   move_lib glslang Vulkan
+   local thirdparty_libs=" cereal curl FAudio ffmpeg hidapi libpng libusb pugixml span wolfssl xxHash yaml-cpp" 
+   for thirdparty_lib in ${thirdparty_libs} ; do
+      move_lib "${thirdparty_lib}" 3rdparty
+   done
+
+   sed -i -e '/find_program(CCACHE_FOUND/d' CMakeLists.txt
+   cmake-utils_src_prepare
 }
 
 src_configure() {
