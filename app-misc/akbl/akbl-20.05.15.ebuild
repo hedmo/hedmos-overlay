@@ -5,13 +5,30 @@ EAPI=7
 
 PYTHON_COMPAT=( python3_{5,6,7} ) 
 
-inherit git-r3 python-r1 systemd 
+inherit python-r1 systemd 
+
+
 
 DESCRIPTION="Control the lights of Alienware computers under GNU-Linux systems" 
-HOMEPAGE="https://github.com/rsm-gh/akbl" 
-EGIT_REPO_URI="https://github.com/rsm-gh/akbl.git" 
-EGIT_COMMIT="8f4403c97538281725adedbee5960806c35338fb" 
+HOMEPAGE="https://senties-martinelli.com/software/akbl" 
 
+if [[ ${PV} == 9999 ]]
+then
+	EGIT_REPO_URI="https://github.com/rsm-gh/akbl.git"
+	inherit git-r3
+else
+    COMMIT="d33b46436ff1f421e477dcbaab5c9b42332d62a0"
+	SRC_URI="https://github.com/rsm-gh/akbl/archive/${COMMIT}.zip"
+
+	KEYWORDS="~amd64"
+fi
+
+if [[ ${PV} == 9999 ]]
+then
+S="${WORKDIR}/${P}"
+else
+S="${WORKDIR}/akbl-${COMMIT}"
+fi
 LICENSE="GPL-3" 
 SLOT="0" 
 
