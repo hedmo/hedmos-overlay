@@ -14,19 +14,22 @@ SRC_URI=""
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="experimental matrix"
+IUSE="openrazer matrix"
 
 DEPEND="dev-qt/qtdbus:5
 	dev-qt/qtnetwork:5
 	dev-qt/qtwidgets:5
 	dev-qt/qtxml:5"
 RDEPEND="${DEPEND}
-	app-misc/openrazer
 	app-misc/razer_test
 	dev-libs/libopenrazer
 	"
 BDEPEND="dev-qt/linguist-tools:5
-	virtual/pkgconfig"
+	virtual/pkgconfig
+	openrazer? (
+	app-misc/openrazer
+	)
+	"
 
 src_configure() {
 	local emesonargs=(
