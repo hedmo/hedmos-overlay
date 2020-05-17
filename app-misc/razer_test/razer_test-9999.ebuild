@@ -26,7 +26,9 @@ BDEPEND="dev-qt/linguist-tools:5
 	virtual/pkgconfig"
 
 src_configure() {
+     local emesonargs=(
 	    "$(meson_use bringup build_bringup_util)"
 	    "$(meson_use tests build_tests)"
+     )
 	meson_src_configure
 }
