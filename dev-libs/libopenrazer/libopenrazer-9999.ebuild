@@ -1,3 +1,5 @@
+ 
+ 
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
@@ -14,24 +16,17 @@ SRC_URI=""
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="experimental matrix"
+IUSE=""
 
 DEPEND="dev-qt/qtdbus:5
 	dev-qt/qtnetwork:5
 	dev-qt/qtwidgets:5
 	dev-qt/qtxml:5"
-RDEPEND="${DEPEND}
-	app-misc/openrazer
-	app-misc/razer_test
-	dev-libs/libopenrazer
-	"
+RDEPEND="${DEPEND}"
 BDEPEND="dev-qt/linguist-tools:5
 	virtual/pkgconfig"
 
 src_configure() {
-	local emesonargs=(
-		"$(meson_use experimental enable_experimental)"
-		"$(meson_use matrix include_matrix_discovery)"
-	)
+	
 	meson_src_configure
 }
