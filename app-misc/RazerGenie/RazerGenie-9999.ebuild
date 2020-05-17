@@ -30,7 +30,6 @@ BDEPEND="dev-qt/linguist-tools:5
 
 src_configure() {
 	local emesonargs=(
-		"$(meson_use experimental enable_experimental)"
 		"$(meson_use matrix include_matrix_discovery)"
 	)
 	meson_src_configure
