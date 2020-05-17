@@ -15,7 +15,7 @@ SRC_URI=""
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE=""
+IUSE="bringup tests"
 
 DEPEND="dev-qt/qtdbus:5
 	dev-qt/qtnetwork:5
@@ -26,6 +26,7 @@ BDEPEND="dev-qt/linguist-tools:5
 	virtual/pkgconfig"
 
 src_configure() {
-	
+	    "$(meson_use bringup build_bringup_util)"
+	    "$(meson_use tests build_tests)"
 	meson_src_configure
 }
