@@ -14,7 +14,7 @@ SRC_URI=""
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="openrazer matrix"
+IUSE="+openrazer matrix"
 
 DEPEND="dev-qt/qtdbus:5
 	dev-qt/qtnetwork:5
