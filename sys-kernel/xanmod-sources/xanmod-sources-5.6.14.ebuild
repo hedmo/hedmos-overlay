@@ -20,7 +20,7 @@ UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz"
 KEYWORDS="~amd64"
 
 src_prepare() {
-
+    
 	kernel-2_src_prepare
 
 	rm "${S}"/.config || die
