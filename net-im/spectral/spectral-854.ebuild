@@ -4,7 +4,7 @@
 EAPI=7
 
 DESCRIPTION="A glossy client for Matrix, written in QtQuick Controls 2 and C++."
-HOMEPAGE="https://gitlab.com/b0/spectral"
+HOMEPAGE="https://gitlab.com/spectral-im/spectral"
 
 inherit  cmake-utils 
 
@@ -17,7 +17,7 @@ then
 	EGIT_REPO_URI="https://gitlab.com/b0/spectral.git"
 	inherit git-r3
 else
-	SRC_URI="https://gitlab.com/spectral-im/spectral/-/archive/1f95e8888a70000d10317f29c76eb24287bd7390/spectral-1f95e8888a70000d10317f29c76eb24287bd7390.tar.gz -> ${P}.tar.gz
+	SRC_URI="https://gitlab.com/spectral-im/spectral/-/archive/${PV}/${P}.tar.gz
 	${COMMON_URI}"
 
 	KEYWORDS="~amd64"
@@ -45,7 +45,7 @@ DEPEND="
 	${RDEPEND}
 	>=dev-qt/qtcore-5.12
 "
-S="${WORKDIR}"/spectral-1f95e8888a70000d10317f29c76eb24287bd7390
+
 
 
 src_prepare() {
