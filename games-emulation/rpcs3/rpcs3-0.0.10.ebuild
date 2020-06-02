@@ -1,17 +1,15 @@
-# Copyright 2020 Gentoo Authors
+
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=6
 
-DESCRIPTION="Very experimental PS3 emulator"
-HOMEPAGE="https://rpcs3.net http://www.emunewz.net/forum/forumdisplay.php?fid=172"
-
-inherit cmake-utils
+inherit cmake-utils 
 
 COMMON_URI="
 https://github.com/RPCS3/yaml-cpp/archive/6a211f0bc71920beef749e6c35d7d1bcc2447715.zip
 https://github.com/RPCS3/llvm-mirror/archive/f5679565d34863e2f5917f6bb6d3867760862a1e.zip
 https://github.com/asmjit/asmjit/archive/fc251c914e77cd079e58982cdab00a47539d7fc5.zip
+
 https://github.com/FNA-XNA/FAudio/archive/9c7d2d1430c9dbe4e67c871dfe003b331f165412.zip
 https://github.com/RPCS3/cereal/archive/60c69df968d1c72c998cd5f23ba34e2e3718a84b.zip
 https://github.com/RipleyTom/curl/archive/aa1a12cb234bd31c6058d04c398a159d06b85889.zip
@@ -38,12 +36,15 @@ else
 	KEYWORDS="~amd64"
 fi
 
+DESCRIPTION="Very experimental PS3 emulator"
+HOMEPAGE="https://rpcs3.net http://www.emunewz.net/forum/forumdisplay.php?fid=172"
+
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="alsa faudio pulseaudio gdb joystick +llvm -system-llvm discord-rpc pulseaudio +z3 vulkan"
+IUSE="alsa faudio pulseaudio gdb joystick +llvm -system-llvm discord-rpc pulseaudio +z3 +test vulkan"
 
 CDEPEND="
-	vulkan? ( media-libs/vulkan-loader[wayland] )
+        vulkan? ( media-libs/vulkan-loader[wayland] )
 "
 
 RDEPEND="${CDEPEND}
@@ -55,7 +56,7 @@ RDEPEND="${CDEPEND}
 	gdb? ( sys-devel/gdb )
 	joystick? ( dev-libs/libevdev )
 	llvm? ( sys-devel/llvm )
-	media-libs/glew:0
+        media-libs/glew:0
 	media-libs/libpng:*
 	media-libs/openal
 	pulseaudio? ( media-sound/pulseaudio )
@@ -63,35 +64,36 @@ RDEPEND="${CDEPEND}
 	virtual/ffmpeg
 	virtual/opengl
 	x11-libs/libX11
-	z3? ( sci-mathematics/z3 )
-	vulkan? ( media-libs/vulkan-loader )
+        z3? ( sci-mathematics/z3 )
+        test? ( dev-cpp/gtest )
+        vulkan? ( media-libs/vulkan-loader )
+
 "
 
+
 src_prepare() {
-	if [[ ${PV} != 9999 ]]
-	then
-		move_lib() {
-			local IN_DIR="${1}"
-			local OUT_DIR[ -z "${2}" ] && OUT_DIR="${IN_DIR}" || OUT_DIR="${2%/}/${IN_DIR}"
-			mv "${WORKDIR}/${IN_DIR}"*/* "${S}/${OUT_DIR}" || die
-		}
+   move_lib() {
+      local IN_DIR="${1}"
+      local OUT_DIR
+      [ -z "${2}" ] && OUT_DIR="${IN_DIR}" || OUT_DIR="${2%/}/${IN_DIR}"
+      mv "${WORKDIR}/${IN_DIR}"*/* "${S}/${OUT_DIR}" || die
+   }
 
-		move_lib asmjit
-		move_lib llvm
-		move_lib glslang Vulkan
-			local thirdparty_libs=" cereal curl FAudio ffmpeg hidapi libpng libusb pugixml span wolfssl xxHash yaml-cpp"
-		for thirdparty_lib in ${thirdparty_libs} ; do
-		move_lib "${thirdparty_lib}" 3rdparty
-		done
-	fi
+   move_lib asmjit
+   move_lib llvm
+   move_lib glslang Vulkan
+   local thirdparty_libs=" cereal curl FAudio ffmpeg hidapi libpng libusb pugixml span wolfssl xxHash yaml-cpp" 
+   for thirdparty_lib in ${thirdparty_libs} ; do
+      move_lib "${thirdparty_lib}" 3rdparty
+   done
 
-	sed -i -e '/find_program(CCACHE_FOUND/d' CMakeLists.txt
-	cmake-utils_src_prepare
+   sed -i -e '/find_program(CCACHE_FOUND/d' CMakeLists.txt
+   cmake-utils_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
-		"-DUSE_SYSTEM_ZLIB=ON"
+        "-DUSE_SYSTEM_ZLIB=ON"
 		"-DUSE_SYSTEM_LIBPNG=ON"
 		"-DUSE_SYSTEM_FFMPEG=ON"
 		"-DUSE_VULKAN=$(usex vulkan ON OFF)"
@@ -102,11 +104,17 @@ src_configure() {
 		"-DUSE_LIBEVDEV=$(usex joystick ON OFF)"
 		"-DWITH_GDB=$(usex gdb ON OFF)"
 		"-DWITH_LLVM=$(usex llvm ON OFF)"
-		"-DBUILD_LLVM_SUBMODULE=$(usex system-llvm OFF ON)"
-		"-Wno-dev=ON"
+        "-DBUILD_LLVM_SUBMODULE=$(usex system-llvm OFF ON)"
+                "-Wno-dev=ON"
+
 
 	)
-		CCACHE_SLOPPINESS=pch_defines,time_macros
-		CMAKE_BUILD_TYPE=Release
+        CCACHE_SLOPPINESS=pch_defines,time_macros
+        CMAKE_BUILD_TYPE=Release
 	cmake-utils_src_configure
 }
+
+#pkg_postinst() {
+	# Add pax markings for hardened systems
+#	pax-mark -m "${EPREFIX}"/usr/bin/"${PN}"
+#}
