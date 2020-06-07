@@ -23,7 +23,8 @@ DEPEND="dev-qt/qtdbus:5
 	dev-qt/qtxml:5"
 RDEPEND="${DEPEND}"
 BDEPEND="dev-qt/linguist-tools:5
-	virtual/pkgconfig"
+	virtual/pkgconfig
+	dev-libs/hidapi"
 
 src_configure() {
      local emesonargs=(
