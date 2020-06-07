@@ -19,7 +19,7 @@ if [[ ${PV} == 9999 ]]; then
 	inherit git-r3
 else
 	SRC_URI="https://mesa.freedesktop.org/archive/${MY_P}.tar.xz"
-	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-linux ~x86-linux ~sparc-solaris ~x64-solaris ~x86-solaris"
+	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390  ~sparc ~x86 ~amd64-linux ~x86-linux ~sparc-solaris ~x64-solaris ~x86-solaris"
 fi
 
 LICENSE="MIT"
@@ -36,7 +36,7 @@ done
 
 IUSE="${IUSE_VIDEO_CARDS}
 	aco +classic d3d9 debug +dri3 +egl +gallium +gbm gles1 +gles2 libglvnd +llvm
-	lm-sensors opencl osmesa selinux test unwind vaapi valgrind vdpau vulkan 
+	lm-sensors opencl osmesa selinux test unwind vaapi valgrind vdpau vulkan
 	vulkan-overlay wayland +X xa xvmc +zstd"
 
 REQUIRED_USE="
@@ -263,7 +263,6 @@ llvm_check_deps() {
 
 pkg_pretend() {
 
-
 	if use opencl; then
 		if ! use video_cards_r600 &&
 		   ! use video_cards_radeonsi; then
@@ -338,15 +337,14 @@ pkg_setup() {
 }
 
 src_prepare() {
-	
- # Only add aco patches when we're use the aco flag
-	if use aco ; then
+
+# Only add aco patches when we're use the aco flag
+	if use aco; then
 		eapply "${FILESDIR}/acodef_radv_debug.patch"
 		eapply "${FILESDIR}/acodefradv_device.patch"
-		       
 	fi
 
-    eapply_user
+		eapply_user
 }
 
 doecho() {
