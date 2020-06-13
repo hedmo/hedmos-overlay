@@ -60,7 +60,7 @@ src_prepare() {
 src_compile() {
 	yarn run build || die "Build failed"
 
-	"${S}"/node_modules/.bin/electron-builder --linux --x64 || die "Bundling failed"
+	${S}/node_modules/.bin/build -l --x64  || die "Bundling failed"
 }
 
 src_install() {
