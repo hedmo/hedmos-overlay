@@ -1,12 +1,12 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=6
 
 DESCRIPTION="A glossy Matrix collaboration client for the web"
 HOMEPAGE="https://riot.im"
 
-inherit unpacker xdg-utils
+inherit eutils
 
 if [[ ${PV} == "9999" ]]; then
 	inherit git-r3
@@ -15,79 +15,60 @@ if [[ ${PV} == "9999" ]]; then
 	EGIT_REPO_URI="https://github.com/vector-im/riot-web.git"
 	EGIT_BRANCH="develop"
 else
-	SRC_URI="https://github.com/vector-im/riot-web/archive/v${PV}.tar.gz -> ${P}.tar.gz"
-	KEYWORDS="~amd64"
+	SRC_URI="https://github.com/vector-im/riot-web/archive/v${PV}.tar.gz -> ${P}.tar.gz"	
+	KEYWORDS="~amd64 ~x86"
 fi
 
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE="+emoji"
-REQUIRED_USE=""
+IUSE="abi_x86_32 abi_x86_64"
+REQUIRED_USE="abi_x86_32? ( !abi_x86_64 )
+			abi_x86_64? ( !abi_x86_32 )"
 
-DEPEND="sys-devel/binutils:*
-	>=net-libs/nodejs-12.14.0
-	sys-apps/yarn
-	x11-libs/libXScrnSaver
-	net-print/cups
-	dev-libs/nss
-	gnome-base/gconf
-	emoji? ( >=media-fonts/noto-emoji-20180823 )"
+DEPEND="sys-devel/binutils
+		sys-apps/yarn
+		x11-libs/libXScrnSaver"
 RDEPEND="${DEPEND}"
 
 QA_PREBUILT="
-	opt/Riot/chrome-sandbox
-	opt/Riot/libGLESv2.so
-	opt/Riot/libEGL.so
-	opt/Riot/libffmpeg.so
-	opt/Riot/libnode.so
-	opt/Riot/riot-web
-	opt/Riot/swiftshader/libGLESv2.so
-	opt/Riot/swiftshader/libEGL.so
-	opt/Riot/swiftshader/libvk_swiftshader.so"
+		opt/Riot/libffmpeg.so
+		opt/Riot/libnode.so
+		opt/Riot/riot-web"
 
 src_prepare() {
 	default
 
 	if [[ ${PV} == "9999" ]]; then
-		"${S}"/scripts/fetch-develop.deps.sh
+		${S}/scripts/fetch-develop.deps.sh
 	fi
+
+	rm ${S}/package-lock.json
 
 	yarn install || die "Yarn module installation failed"
 
-	cp "${S}"/config.sample.json "${S}"/config.json || die
+	cp ${S}/config.sample.json ${S}/config.json
 }
 
 src_compile() {
-	yarn run build || die "Build failed"
+	npm run build
 
-	${S}/node_modules/.bin/build -l --x64  || die "Bundling failed"
+	yarn run build || die "Building failed"
+	yarn run install:electron || die "Installing Electron failed"
+
+	if use abi_x86_32; then
+		${S}/node_modules/.bin/build -l --ia32
+	elif use abi_x86_64; then
+		${S}/node_modules/.bin/build -l --x64
+	fi
 }
 
 src_install() {
-	unpack electron_app/dist/riot-web*.deb
-	tar xvf data.tar.xz || die
-
-	mv usr/share/doc/${PN} usr/share/doc/${PF} || die
-	gunzip usr/share/doc/${PF}/changelog.gz || die
+	ar x ${S}/electron_app/dist/riot-web*.deb
+	tar xvf data.tar.xz
 
 	insinto /
 	doins -r usr
 	doins -r opt
 	fperms +x /opt/Riot/${PN}
-	dosym ../../opt/Riot/${PN} /usr/bin/${PN}
-}
-
-pkg_postinst() {
-	xdg_icon_cache_update
-	xdg_desktop_database_update
-}
-
-pkg_postrm() {
-	xdg_icon_cache_update
-	xdg_desktop_database_update
-}
-pkg_postinst() {
-	einfo "riot-web requires internet access"
-	einfo "To allow network access you need to disable network-sandbox:"
-	einfo "take a look at https://wiki.gentoo.org/wiki//etc/portage/package.env"
+	dosym /opt/Riot/${PN} /usr/bin/${PN}
 }
