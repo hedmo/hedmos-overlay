@@ -10,7 +10,7 @@ MY_PN=${PN/-bin/}
 DESCRIPTION="A glossy Matrix collaboration client for the web."
 HOMEPAGE="https://riot.im"
 SRC_URI="
-	amd64? ( https://riot.im/packages/debian/pool/main/r/${MY_PN}/${MY_PN}_${PV}_all.deb )"
+	amd64? ( https://riot.im/packages/debian/pool/main/r/${MY_PN}/${MY_PN}_${PV}_amd64.deb )"
 
 LICENSE="Apache-2.0"
 KEYWORDS="~amd64"
