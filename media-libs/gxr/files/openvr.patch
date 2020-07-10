@@ -1,0 +1,19 @@
+diff --git a/src/openvr-context.c b/src/openvr-context.c
+index 0a69afa..7ac039d 100644
+--- a/src/openvr-context.c
++++ b/src/openvr-context.c
+@@ -311,14 +311,6 @@ openvr_context_poll_event (OpenVRContext *self)
+         g_signal_emit (self, context_signals[KEYBOARD_CLOSE_EVENT], 0);
+       } break;
+ 
+-      case EVREventType_VREvent_ApplicationTransitionStarted:
+-      {
+-        shutdown_event_pending = FALSE;
+-        OpenVRQuitEvent *event = g_malloc (sizeof (OpenVRQuitEvent));
+-        event->reason = VR_QUIT_APPLICATION_TRANSITION;
+-        g_signal_emit (self, context_signals[QUIT_EVENT], 0, event);
+-      } break;
+-
+       case EVREventType_VREvent_ProcessQuit:
+       {
+         shutdown_event_pending = FALSE;

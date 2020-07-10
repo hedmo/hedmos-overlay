@@ -1,0 +1,20 @@
+--- a /src/VRMirror.cpp	2020-06-23 11:32:44.000000000 +0200
++++ b /src/VRMirror.cpp	2020-07-06 13:55:07.746753430 +0200
+@@ -1180,13 +1180,12 @@
+     return m_vrmirrorRunning;
+ }
+ 
+-// TODO
+-gboolean
+-openvr_context_is_hmd_present (void);
+-
+ bool VRMirror::isHmdConnected() const
+ {
+-    return openvr_context_is_hmd_present();
++    /* TODO: Neither OpenVR nor OpenXR provide a "good" way of monitoring
++     * VR hardware presence which is not slow/hogging resources.
++     */
++    return true;
+ }
+ 
+ void VRMirror::setActive(bool active)
