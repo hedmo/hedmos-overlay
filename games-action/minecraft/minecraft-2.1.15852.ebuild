@@ -9,7 +9,7 @@ MY_JAR="${PN}-launcher-${PV}.jar"
 
 DESCRIPTION="Official Java launcher for Minecraft"
 HOMEPAGE="https://minecraft.net"
-SRC_URI="https://launcher.mojang.com/download/Minecraft.tar.gz -> ${MY_JAR}
+SRC_URI="https://launcher.mojang.com/download/linux/x86_64/minecraft-launcher_2.1.15852.tar.gz -> ${MY_JAR}
 	https://minecraft.net/android-icon-192x192.png -> ${PN}.png"
 
 LICENSE="Minecraft-clickwrap-EULA"
