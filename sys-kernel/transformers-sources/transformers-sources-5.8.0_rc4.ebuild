@@ -4,7 +4,8 @@
 EAPI=6
 
 ETYPE=sources
-K_DEFCONFIG=""
+K_DEBLOB_AVAILABLE=1
+K_DEFCONFIG="tf300_defconfig"
 K_SECURITY_UNSUPPORTED=1
 EXTRAVERSION="-${PN}/-*"
 inherit kernel-2
@@ -21,7 +22,7 @@ DESCRIPTION="Asus Transformers pad kernel sources"
 HOMEPAGE="https://github.com/grate-driver/linux.git"
 
 KEYWORDS=""
-
+IUSE="deblob"
 src_unpack() {
 	git-r3_src_unpack
 	unpack_set_extraversion
