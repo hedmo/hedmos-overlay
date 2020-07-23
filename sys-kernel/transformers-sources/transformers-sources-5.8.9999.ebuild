@@ -4,7 +4,6 @@
 EAPI=6
 
 ETYPE=sources
-K_DEBLOB_AVAILABLE=1
 K_DEFCONFIG="tf300_defconfig"
 K_SECURITY_UNSUPPORTED=1
 EXTRAVERSION="-${PN}/-*"
@@ -13,7 +12,6 @@ detect_version
 detect_arch
 
 inherit git-r3 eapi7-ver
-SRC_URI="https://linux-libre.fsfla.org/pub/linux-libre/releases/5.8-rc6-gnu/linux-libre-5.8-rc6-gnu.tar.xz"
 EGIT_REPO_URI="https://github.com/grate-driver/linux.git -> transformers-linux.git"
 EGIT_BRANCH="master"
 EGIT_CHECKOUT_DIR="${WORKDIR}/linux-${PV/_/-}-transformers"
@@ -23,7 +21,6 @@ DESCRIPTION="Asus Transformers pad kernel sources"
 HOMEPAGE="https://github.com/grate-driver/linux.git"
 
 KEYWORDS=""
-IUSE="deblob"
 src_unpack() {
 	git-r3_src_unpack
 	unpack_set_extraversion
