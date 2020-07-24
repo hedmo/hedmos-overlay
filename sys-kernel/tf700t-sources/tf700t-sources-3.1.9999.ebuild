@@ -12,7 +12,7 @@ detect_version
 detect_arch
 
 inherit git-r3 eapi7-ver
-EGIT_REPO_URI="https://github.com/toqu/tf700t-linux.git -> tf700-linux.git"
+EGIT_REPO_URI="https://github.com/toqu/tf700t-linux.git -> tf700t-linux.git"
 EGIT_BRANCH="master"
 EGIT_CHECKOUT_DIR="${WORKDIR}/linux-${PV}-tf700t"
 EGIT_CLONE_TYPE="shallow"
