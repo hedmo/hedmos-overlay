@@ -13,7 +13,7 @@ detect_arch
 
 inherit git-r3 eapi7-ver
 EGIT_REPO_URI="https://github.com/hedmo/tf700-kernel.git -> tf700-linux.git"
-EGIT_BRANCH="master"
+EGIT_BRANCH="tf700/master"
 EGIT_CHECKOUT_DIR="${WORKDIR}/linux-${PV}-tf700"
 EGIT_CLONE_TYPE="shallow"
 
