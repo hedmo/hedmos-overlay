@@ -46,9 +46,8 @@ unset DEV_URI
 # These are bundles that can't be removed for now due to huge patchsets.
 # If you want them gone, patches are welcome.
 ADDONS_SRC=(
-    " ( ${ADDONS_URI}/box2d-2.3.1.tar.gz )"
     " ( ${ADDONS_URI}/skia-m84-c1baf6e1c2a5454148adb516f0f833483b5a0353.tar.xz )"
-    " ( ${ADDONS_URI}/dtoa-20180411.tgz )"
+    "java? ( ${ADDONS_URI}/dtoa-20180411.tgz )"
 	"java? ( ${ADDONS_URI}/17410483b5b5f267aa18b7e00b65e6e0-hsqldb_1_8_0.zip )"
 	# no release for 8 years, should we package it?
 	"libreoffice_extensions_wiki-publisher? ( ${ADDONS_URI}/a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip )"
@@ -222,9 +221,8 @@ DEPEND="${COMMON_DEPEND}
 	x11-libs/libXt
 	x11-libs/libXtst
 	java? (
-	    dev-java/ant-core
-		>=virtual/jdk-11
-		
+		dev-java/ant-core
+		>=virtual/jdk-1.8
 	)
 	test? (
 		app-crypt/gnupg
@@ -243,10 +241,10 @@ RDEPEND="${COMMON_DEPEND}
 	!app-office/openoffice
 	media-fonts/liberation-fonts
 	|| ( x11-misc/xdg-utils kde-plasma/kde-cli-tools )
-	java? ( >=virtual/jre-11-r1 )
+	java? ( >=virtual/jre-1.8 )
 	kde? ( kde-frameworks/breeze-icons:* )
 "
-if [[ ${MY_PV} != *9999* ]] && [[ ${PV} != *_* ]]; then
+if [[ ${MY_PV} != *9999* ]] ; then
 	PDEPEND="=app-office/libreoffice-l10n-$(ver_cut 1-2)*"
 else
 	# Translations are not reliable on live ebuilds
@@ -263,7 +261,7 @@ PATCHES=(
 	"${FILESDIR}/${PN}-6.1-nomancompress.patch"
 	
 	# TODO: upstream (for now taken from Arch Linux)
-	"${FILESDIR}/libreoffice-6.4.2.2-poppler-0.86.patch" # bug 711102
+	#"${FILESDIR}/libreoffice-6.4.2.2-poppler-0.86.patch" # bug 711102
 )
 
 S="${WORKDIR}/${PN}-${MY_PV}"
@@ -400,7 +398,6 @@ src_configure() {
 	# --without-{fonts,myspell-dicts,ppsd}: prevent install of sys pkgs
 	# --disable-report-builder: too much java packages pulled in without pkgs
 	# --without-system-sane: just sane.h header that is used for scan in writer,
-    #--without-system-box2d : use buildin for now (did not find the headers)
 	#   not linked or anything else, worthless to depend on
 	# --disable-pdfium: not yet packaged
 	local myeconfargs=(
@@ -448,7 +445,6 @@ src_configure() {
 		--without-helppack-integration
 		--with-system-gpgmepp
 		--without-system-sane
-		--without-system-box2d 
 		$(use_enable bluetooth sdremote-bluetooth)
 		$(use_enable coinmp)
 		$(use_enable cups)
@@ -556,10 +552,7 @@ src_install() {
 pkg_postinst() {
 	xdg_icon_cache_update
 	xdg_desktop_database_update
-	xdg_mimeinfo_database_update	
-	 einfo "libreoffice needs jdk9+ for USE=java and is masked (-gentoo-vm) at the moment."
-	 einfo "if you want to override it.. have a look in:"
-	 einfo "https://wiki.gentoo.org/wiki//etc/portage/profile/package.use.mask"
+	xdg_mimeinfo_database_update
 }
 
 pkg_postrm() {
