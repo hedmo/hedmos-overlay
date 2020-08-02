@@ -24,7 +24,7 @@ IUSE="offlinehelp"
 # when changing the language lists, please be careful to preserve the spaces (bug 491728)
 #
 # "en:en-US" for mapping from Gentoo "en" to upstream "en-US" etc.
-LANGUAGES_HELP=" de en-GB en:en-US ru"
+LANGUAGES_HELP=" de en-GB en:en-US"
 LANGUAGES="${LANGUAGES_HELP} "
 
 for lang in ${LANGUAGES_HELP}; do
