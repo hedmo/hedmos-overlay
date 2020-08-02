@@ -263,7 +263,7 @@ PATCHES=(
 	"${FILESDIR}/${PN}-6.1-nomancompress.patch"
 	
 	# TODO: upstream (for now taken from Arch Linux)
-	"${FILESDIR}/libreoffice-6.4.2.2-poppler-0.86.patch" # bug 711102
+	#"${FILESDIR}/libreoffice-6.4.2.2-poppler-0.86.patch" # bug 711102
 )
 
 S="${WORKDIR}/${PN}-${MY_PV}"
