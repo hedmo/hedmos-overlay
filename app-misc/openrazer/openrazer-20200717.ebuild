@@ -5,7 +5,7 @@ EAPI=7
 
 PYTHON_COMPAT=( python3_7 )
 
-inherit distutils-r1 python-r1 git-r3 udev desktop linux-mod
+inherit distutils-r1 python-r1 udev desktop linux-mod
 
 DESCRIPTION="Drivers for Razer peripherals on GNU/Linux"
 HOMEPAGE="https://openrazer.github.io/"
