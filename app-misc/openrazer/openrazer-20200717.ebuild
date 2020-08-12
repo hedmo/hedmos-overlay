@@ -17,7 +17,7 @@ COMMIT="6c71ccfc2bbecc014bb13dd301b2b703ef75fcfa"
 SRC_URI="https://github.com/${PN}/${PN}/archive/${COMMIT}.zip"
 	KEYWORDS=" ~amd64  ~x86 "
 fi
-
+S="${WORKDIR}"/${PN}-${COMMIT}
 LICENSE="GPL-2"
 SLOT="0"
 
