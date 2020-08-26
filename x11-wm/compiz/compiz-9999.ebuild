@@ -1,28 +1,23 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI=7
 
-GIT_ECLASS="git-r3"
-EGIT_REPO_URI="https://github.com/hedmo/compiz"
+PYTHON_COMPAT=( python{3_6,3_7} ) # 3.4 needs to be tested
 
-PYTHON_COMPAT=( python{2_7,3_6,3_7} ) # 3.4 needs to be tested
+inherit python-single-r1  cmake eutils  gnome2-utils toolchain-funcs 
 
-inherit python-any-r1  cmake-utils eutils ${GIT_ECLASS} gnome2-utils toolchain-funcs 
-
-#python
-
-KEYWORDS="*"
-S="${WORKDIR}/${PN}-${PV}"
 DESCRIPTION="OpenGL window and compositing manager"
 HOMEPAGE="http://www.compiz.org/"
+SRC_URI="https://launchpad.net/compiz/0.9.14/0.9.14.1/+download/compiz-0.9.14.1.tar.xz"
 
-
+KEYWORDS="*"
 LICENSE="GPL-2 LGPL-2.1 MIT"
 SLOT="0.9"
 
 IUSE="+cairo debug dbus fuse gnome gtk  +svg test"
 
+S="${WORKDIR}/${PN}-${PV}"
 
 COMMONDEPEND="
 		dev-libs/boost
@@ -140,9 +135,9 @@ src_prepare() {
 # Need to do a 'python_foreach_impl' run from python-r1 eclass to workaround corrupt generated python shebang for /usr/bin/ccsm #
 	#  Due to the way CMake invokes distutils setup.py, shebang will be inherited from the sandbox leading to runtime failure #
 	python_copy_sources
-	cmake-utils_src_prepare
+	cmake_src_prepare
 	
-cmake-utils_src_prepare 		
+	
 }
 
 
@@ -158,7 +153,7 @@ local mycmakeargs=(
 "-DCMAKE_INSTALL_PREFIX=/usr"
 "-DCMAKE_C_FLAGS=$(usex debug '-DDEBUG -ggdb' '')"
 "-DCMAKE_CXX_FLAGS=$(usex debug '-DDEBUG -ggdb' '')"
-"-DCOMPIZ_DEFAULT_PLUGINS=ccp "
+"-DCOMPIZ_DEFAULT_PLUGINS=composite,opengl,decor,resize,place,move,compiztoolbox,staticswitcher,regex,animation,wall,ccp"
 "-DCOMPIZ_DISABLE_SCHEMAS_INSTALL=ON"
 "-DCOMPIZ_PACKAGING_ENABLED=ON"
 "-DCOMPIZ_WERROR=Off"
@@ -166,7 +161,7 @@ local mycmakeargs=(
 "-Wno-dev=ON"
 
 )
-cmake-utils_src_configure
+cmake_src_configure
 }
 
 src_install() {
