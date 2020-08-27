@@ -35,7 +35,7 @@ for card in ${VIDEO_CARDS}; do
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	-aco +classic d3d9 debug +dri3 +egl +gallium +gbm gles1 +gles2 libglvnd +llvm
+	aco +classic d3d9 debug +dri3 +egl +gallium +gbm gles1 +gles2 libglvnd +llvm
 	lm-sensors opencl osmesa selinux test unwind vaapi valgrind vdpau vulkan
 	vulkan-overlay wayland +X xa xvmc +zstd"
 
@@ -336,16 +336,16 @@ pkg_setup() {
 	python-any-r1_pkg_setup
 }
 
-src_prepare() {
+#src_prepare() {
 
 # Only add aco patches when we're use the aco flag
-	if use aco; then
-		eapply "${FILESDIR}/acodef_radv_debug.patch"
-		eapply "${FILESDIR}/acodefradv_device.patch"
-	fi
-
-		eapply_user
-}
+#	if use aco; then
+#		eapply "${FILESDIR}/acodef_radv_debug.patch"
+#		eapply "${FILESDIR}/acodefradv_device.patch"
+#	fi
+#
+#		eapply_user
+#}
 
 doecho() {
 	echo "$@"
@@ -492,6 +492,7 @@ multilib_src_configure() {
 	}
 
 	emesonargs+=(
+		$(meson_use aco build-aco-tests)
 		$(meson_use test build-tests)
 		-Dglx=$(usex X dri disabled)
 		-Dshared-glapi=true
