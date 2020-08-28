@@ -21,7 +21,6 @@ S="${WORKDIR}"/${PN}-${COMMIT}
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
 IUSE="+openrazer matrix"
 
 DEPEND="dev-qt/qtdbus:5
