@@ -21,7 +21,7 @@ LICENSE="MIT"
 SLOT="0"
 RESTRICT="mirror"
 
-KEYWORDS="~amd64 ~x86"
+#KEYWORDS="~amd64 ~x86"
 IUSE="alsa ffmpeg gstreamer nodejs +pulseaudio qt5 youtube-dl"
 
 RDEPEND="	gstreamer? ( media-libs/gstreamer )
