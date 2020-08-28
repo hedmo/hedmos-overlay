@@ -18,7 +18,7 @@ else
 	COMMIT="d789d128ab9c5ef873216932efc3c6049ead4ee9"
 	SRC_URI="https://github.com/muammar/${PN}/archive/${COMMIT}.tar.gz"
 	KEYWORDS="~amd64"
-	S="${WORKDIR}"/${PN}-${COMMIT}
+	S="${WORKDIR}"/${PN}-${COMMIT}-python3_7
 fi
 
 LICENSE="MIT"
