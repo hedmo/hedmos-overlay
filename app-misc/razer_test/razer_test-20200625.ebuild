@@ -19,7 +19,6 @@ S="${WORKDIR}"/${PN}-${COMMIT}
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
 IUSE="bringup tests"
 
 DEPEND="dev-qt/qtdbus:5
