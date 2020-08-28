@@ -3,7 +3,6 @@
 
 EAPI=7
 
-https://github.com/z3ntu/RazerGenie.git
 
 inherit meson
 
