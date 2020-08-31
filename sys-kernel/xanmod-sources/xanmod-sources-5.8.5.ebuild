@@ -4,7 +4,7 @@
 EAPI="6"
 K_SECURITY_UNSUPPORTED="1"
 K_NOSETEXTRAVERSION="1"
-XANMOD_VERSION="2"
+XANMOD_VERSION="1"
 ETYPE="sources"
 inherit kernel-2
 detect_version
@@ -18,8 +18,15 @@ UNIPATCH_LIST_DEFAULT=""
 UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz"
 
 KEYWORDS="~amd64"
+IUSE="cachy"
 
 src_prepare() {
+
+	if use cachy; then
+		eapply "${FILESDIR}/0001-sched-Introduce-the-Cachy-CPU-scheduler-v5.8.patch"
+	fi
+
+
 
 	kernel-2_src_prepare
 
