@@ -12,7 +12,8 @@ detect_version
 DESCRIPTION="A general-purpose kernel with custom settings and new features"
 HOMEPAGE="https://xanmod.org"
 LICENSE+=" CDDL"
-SRC_URI="${KERNEL_BASE_URI}/linux-${KV_MAJOR}.${KV_MINOR}.tar.xz https://github.com/xanmod/linux/releases/download/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz"
+SRC_URI="${KERNEL_BASE_URI}/linux-${KV_MAJOR}.${KV_MINOR}.tar.xz https://github.com/xanmod/linux/releases/download/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz
+https://dl.xanmod.org/experimental/cachy_cpu_sched/0001-sched-Introduce-the-Cachy-CPU-scheduler-v5.8.patch"
 
 UNIPATCH_LIST_DEFAULT=""
 UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz"
@@ -23,7 +24,7 @@ IUSE="cachy"
 src_prepare() {
 
 	if use cachy; then
-		eapply "${FILESDIR}/0001-sched-Introduce-the-Cachy-CPU-scheduler-v5.8.patch"
+		eapply "${DISTDIR}/0001-sched-Introduce-the-Cachy-CPU-scheduler-v5.8.patch"
 	fi
 
 
