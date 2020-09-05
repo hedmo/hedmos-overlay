@@ -14,7 +14,7 @@ HOMEPAGE="https://xanmod.org"
 LICENSE+=" CDDL"
 KEYWORDS="~amd64"
 LTO_URI="https://gist.githubusercontent.com/hedmo/71324532409a8d6dc1005f5d8b80cced/raw/5dec03184b759184d9aa2ed981eac26bd4defe11/5.8-lto.patch"
-CACHY_URI="https://dl.xanmod.org/experimental/cachy_cpu_sched/0001-sched-Introduce-the-Cachy-CPU-scheduler-v5.8.patch"
+CACHY_URI="https://raw.githubusercontent.com/hedmo/cachy-sched/master/patches/cachy/cachy-5.8.patch"
 IUSE="cachy lto"
 SRC_URI="${KERNEL_BASE_URI}/linux-${KV_MAJOR}.${KV_MINOR}.tar.xz https://github.com/xanmod/linux/releases/download/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz
 ( ${CACHY_URI} )
@@ -27,7 +27,7 @@ UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz"
 src_prepare() {
 
 	if use cachy; then
-		eapply "${DISTDIR}/0001-sched-Introduce-the-Cachy-CPU-scheduler-v5.8.patch"
+		eapply "${DISTDIR}/cachy-5.8.patch"
 	fi
 
 	if use lto; then
