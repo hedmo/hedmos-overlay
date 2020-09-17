@@ -27,8 +27,6 @@ DEPEND="dev-qt/qtdbus:5
 	dev-qt/qtwidgets:5
 	dev-qt/qtxml:5"
 RDEPEND="${DEPEND}
-	app-misc/razer_test
-	dev-libs/libopenrazer
 	"
 BDEPEND="dev-qt/linguist-tools:5
 	virtual/pkgconfig
