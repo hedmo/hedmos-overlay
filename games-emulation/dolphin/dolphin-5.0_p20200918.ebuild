@@ -14,7 +14,7 @@ then
 	inherit git-r3
 else
 	inherit vcs-snapshot
-	commit=c36ae84b966327bd9d78d3eabf2309f82d37792e
+	commit=6ada03fca2e5f8a55992d5c9fd35c91e2825fff7
 	SRC_URI="https://github.com/dolphin-emu/dolphin/archive/${commit}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="amd64"
 fi
