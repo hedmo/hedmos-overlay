@@ -131,6 +131,7 @@ COMMON_DEPEND="${PYTHON_DEPS}
 	dev-libs/libxslt
 	dev-libs/nspr
 	dev-libs/nss
+	dev-libs/qrcodegen
 	>=dev-libs/redland-1.0.16
 	>=dev-libs/xmlsec-1.2.28[nss]
 	media-gfx/fontforge
