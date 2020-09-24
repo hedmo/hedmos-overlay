@@ -17,7 +17,7 @@ else
 fi
 
 LICENSE="MIT"
-SLOT="0/9999"
+SLOT="0"
 IUSE=""
 REQUIRED_USE=""
 
