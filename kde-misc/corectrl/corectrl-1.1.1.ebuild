@@ -22,6 +22,8 @@ IUSE=""
 REQUIRED_USE=""
 
 DEPEND="
+	dev-qt/qtxmlpatterns
+	dev-qt/qtsvg
 	dev-qt/qtcore:5
 	dev-qt/qtcharts:5
 	dev-qt/qtdbus:5
