@@ -13,8 +13,8 @@ if [[ ${PV} == 9999 ]]; then
 	EGIT_REPO_URI="https://github.com/${PN}/${PN}.git"
     inherit git-r3
 else
-COMMIT="c0719a48477e1939bf1c2643b46e4a327452267d"
-SRC_URI="https://github.com/${PN}/${PN}/archive/${COMMIT}.tar.gz"
+COMMIT="784b99c5c0b300cfffe3bfd6f1cfb83a39e97c7f"
+SRC_URI="https://github.com/${PN}/${PN}/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS=" ~amd64"
 fi
 S="${WORKDIR}"/${PN}-${COMMIT}
@@ -58,10 +58,8 @@ BUILD_PARAMS="-C ${S} SUBDIRS=${S}/driver KERNELDIR=${KERNEL_DIR}"
 MODULE_NAMES="
 	razerkbd(hid:${S}/driver)
 	razermouse(hid:${S}/driver)
-	razermousemat(hid:${S}/driver)
 	razerkraken(hid:${S}/driver)
 	razeraccessory(hid:${S}/driver)
-	razercore(hid:${S}/driver)
 "
 
 src_prepare() {
@@ -121,4 +119,4 @@ src_install() {
 		fi
 	}
 	python_foreach_impl python_install
-} 
+}
