@@ -35,7 +35,7 @@ src_prepare() {
 }
 
 pkg_postinst() {
-    einfo "MICROCODES"
-    einfo "Use xanmod-sources with microcodes"  
-    einfo "Read https://wiki.gentoo.org/wiki/Intel_microcode"
+    elog "MICROCODES"
+    elog "Use xanmod-sources with microcodes"  
+    elog "Read https://wiki.gentoo.org/wiki/Intel_microcode"
 }
