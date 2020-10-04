@@ -14,10 +14,8 @@ HOMEPAGE="https://xanmod.org"
 LICENSE+=" CDDL"
 KEYWORDS="~amd64"
 LTO_URI="https://gist.githubusercontent.com/hedmo/71324532409a8d6dc1005f5d8b80cced/raw/5dec03184b759184d9aa2ed981eac26bd4defe11/5.8-lto.patch"
-CACHY_URI="https://raw.githubusercontent.com/hedmo/cachy-sched/master/patches/cachy/cachy-5.8.patch"
-IUSE="cachy lto"
+IUSE="lto"
 SRC_URI="${KERNEL_BASE_URI}/linux-${KV_MAJOR}.${KV_MINOR}.tar.xz https://github.com/xanmod/linux/releases/download/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz
-( ${CACHY_URI} )
 ( ${LTO_URI} )
 "
 
@@ -26,9 +24,7 @@ UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz"
 
 src_prepare() {
 
-	if use cachy; then
-		eapply "${DISTDIR}/cachy-5.8.patch"
-	fi
+	eapply "${FILESDIR}/cachy5.8.pick.patch"
 
 	if use lto; then
 		eapply "${DISTDIR}/5.8-lto.patch"
@@ -38,4 +34,10 @@ src_prepare() {
 
 	rm "${S}"/.config || die
 
+}
+
+pkg_postinst() {
+    elog "MICROCODES"
+    elog "Use xanmod-sources with microcodes"  
+    elog "Read https://wiki.gentoo.org/wiki/Intel_microcode"
 }
