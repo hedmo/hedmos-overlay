@@ -558,9 +558,9 @@ pkg_postinst() {
 	xdg_icon_cache_update
 	xdg_desktop_database_update
 	xdg_mimeinfo_database_update	
-	 einfo "libreoffice needs jdk9+ for USE=java and is masked (-gentoo-vm) at the moment."
-	 einfo "if you want to override it.. have a look in:"
-	 einfo "https://wiki.gentoo.org/wiki//etc/portage/profile/package.use.mask"
+	 elog "libreoffice needs jdk9+ for USE=java and is masked (-gentoo-vm) at the moment."
+	 elog "if you want to override it.. have a look in:"
+	 elog "https://wiki.gentoo.org/wiki//etc/portage/profile/package.use.mask"
 }
 
 pkg_postrm() {
