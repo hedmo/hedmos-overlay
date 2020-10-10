@@ -14,7 +14,7 @@ then
 	inherit git-r3
 else
 	inherit vcs-snapshot
-	commit=6ada03fca2e5f8a55992d5c9fd35c91e2825fff7
+	commit=696f08ede3c3bd1c88429ca5fe9c8baf42679c56
 	SRC_URI="https://github.com/dolphin-emu/dolphin/archive/${commit}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="amd64"
 fi
@@ -89,6 +89,10 @@ src_prepare() {
 		# no support for for using system library
 		glslang
 		imgui
+
+		# not packaged, tiny header library
+		rangeset
+
 		# FIXME: xxhash can't be found by cmake
 		xxhash
 		# no support for for using system library
@@ -152,6 +156,9 @@ src_configure() {
 		# All dolphin's libraries are private
 		# and rely on circular dependency resolution.
 		-DBUILD_SHARED_LIBS=OFF
+
+		# Avoid warning spam around unset variables.
+		-Wno-dev
 	)
 
 	cmake_src_configure
@@ -178,4 +185,4 @@ pkg_postinst() {
 
 pkg_postrm() {
 	xdg_icon_cache_update
-} 
+}
