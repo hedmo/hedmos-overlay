@@ -9,7 +9,7 @@ DESCRIPTION="The GNU Compiler Collection"
 HOMEPAGE="https://gcc.gnu.org/"
 
 GCC_URI="https://github.com/gcc-mirror/gcc/archive"
-COMMIT="c74a0e82fa305f52b84e5c4cd2c9e0d0e8e4f265"
+COMMIT="8be127cac959d0f0ca0f8f9aa311828a9ee03f24"
 PATCH_GCC_URI="https://dev.gentoo.org/~slyfox/distfiles"
 PATCH_GCC_VER="11.0.0"
 PATCH_VER="4"
