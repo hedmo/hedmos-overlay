@@ -12,7 +12,7 @@ detect_version
 detect_arch
 
 inherit git-r3 eapi7-ver
-EGIT_REPO_URI="wget ${SRC_URI} && https://github.com/grate-driver/linux.git -> transformers-linux.git"
+EGIT_REPO_URI=" https://github.com/grate-driver/linux.git -> transformers-linux.git"
 EGIT_BRANCH="master"
 GIT_COMMIT="e6e8676ad3b902e71a8ca347140066bef1459231"
 EGIT_CHECKOUT_DIR="${WORKDIR}/linux-${PV/_/-}-transformers"
