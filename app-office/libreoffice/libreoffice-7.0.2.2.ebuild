@@ -1,5 +1,4 @@
- 
-# Copyright 1999-2020 Gentoo Authors
+ # Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -259,12 +258,9 @@ PATCHES=(
 	# "${WORKDIR}"/${PATCHSET/.tar.xz/}
 
 	# not upstreamable stuff
-	"${FILESDIR}/${PN}-5.4-system-pyuno.patch"
 	"${FILESDIR}/${PN}-5.3.4.2-kioclient5.patch"
 	"${FILESDIR}/${PN}-6.1-nomancompress.patch"
-	
-	# TODO: upstream (for now taken from Arch Linux)
-	#"${FILESDIR}/libreoffice-6.4.2.2-poppler-0.86.patch" # bug 711102
+
 )
 
 S="${WORKDIR}/${PN}-${MY_PV}"
