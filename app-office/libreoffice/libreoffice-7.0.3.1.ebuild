@@ -46,7 +46,7 @@ unset DEV_URI
 # If you want them gone, patches are welcome.
 ADDONS_SRC=(
     " ( ${ADDONS_URI}/box2d-2.3.1.tar.gz )"
-    " ( ${ADDONS_URI}/skia-m84-c1baf6e1c2a5454148adb516f0f833483b5a0353.tar.xz )"
+    " ( ${ADDONS_URI}/skia-m85-e684c6daef6bfb774a325a069eda1f76ca6ac26c.tar.xz )"
     " ( ${ADDONS_URI}/dtoa-20180411.tgz )"
 	"java? ( ${ADDONS_URI}/17410483b5b5f267aa18b7e00b65e6e0-hsqldb_1_8_0.zip )"
 	# no release for 8 years, should we package it?
@@ -419,15 +419,12 @@ src_configure() {
 		--disable-ccache
 		--disable-epm
 		--disable-fetch-external
-		--disable-gstreamer-0-10
-		--disable-gtk
 		--disable-gtk3-kde5
 		--disable-online-update
 		--disable-openssl
 		--disable-pdfium
 		--disable-report-builder
 		--disable-vlc
-		--with-build-version="${gentoo_buildid}"
 		--enable-extension-integration
 		--with-external-dict-dir="${EPREFIX}/usr/share/myspell"
 		--with-external-hyph-dir="${EPREFIX}/usr/share/myspell"
@@ -444,8 +441,7 @@ src_configure() {
 		--with-help="html"
 		--without-helppack-integration
 		--with-system-gpgmepp
-		--without-system-sane
-		--without-system-box2d 
+		--without-system-sane 
 		$(use_enable bluetooth sdremote-bluetooth)
 		$(use_enable coinmp)
 		$(use_enable cups)
