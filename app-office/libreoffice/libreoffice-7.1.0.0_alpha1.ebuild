@@ -146,7 +146,7 @@ COMMON_DEPEND="${PYTHON_DEPS}
 	>=media-libs/libpng-1.4:0=
 	>=media-libs/libvisio-0.1.0
 	media-libs/libzmf
-	net-libs/neon
+	>=net-libs/neon-0.31.1
 	net-misc/curl
 	sci-mathematics/lpsolve
 	sys-libs/zlib
@@ -382,10 +382,6 @@ src_configure() {
 		export MOC5="$(qt5_get_bindir)/moc"
 	fi
 
-	local gentoo_buildid="Gentoo official package"
-	if [[ -n ${LOCOREGIT_VERSION} ]]; then
-		gentoo_buildid+=" (from git: ${LOCOREGIT_VERSION})"
-	fi
 
 	# system headers/libs/...: enforce using system packages
 	# --disable-breakpad: requires not-yet-in-tree dev-utils/breakpad
@@ -419,15 +415,12 @@ src_configure() {
 		--disable-ccache
 		--disable-epm
 		--disable-fetch-external
-		--disable-gstreamer-0-10
-		--disable-gtk
 		--disable-gtk3-kde5
 		--disable-online-update
 		--disable-openssl
 		--disable-pdfium
 		--disable-report-builder
 		--disable-vlc
-		--with-build-version="${gentoo_buildid}"
 		--enable-extension-integration
 		--with-external-dict-dir="${EPREFIX}/usr/share/myspell"
 		--with-external-hyph-dir="${EPREFIX}/usr/share/myspell"
