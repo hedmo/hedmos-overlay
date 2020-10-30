@@ -245,10 +245,11 @@ RDEPEND="${COMMON_DEPEND}
 	!app-office/openoffice
 	media-fonts/liberation-fonts
 	|| ( x11-misc/xdg-utils kde-plasma/kde-cli-tools )
-	java? (
+	java? ( || (
 	dev-java/openjdk:11
 	dev-java/openjdk-jre-bin:11
-	>=virtual/jre-11-r1 )
+	>=virtual/jre-11-r1 
+	) )
 	kde? ( kde-frameworks/breeze-icons:* )
 "
 if [[ ${MY_PV} != *9999* ]] && [[ ${PV} != *_* ]]; then
