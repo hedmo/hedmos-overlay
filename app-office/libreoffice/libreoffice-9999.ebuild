@@ -1,5 +1,4 @@
- 
-# Copyright 1999-2020 Gentoo Authors
+ # Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -47,7 +46,7 @@ unset DEV_URI
 # If you want them gone, patches are welcome.
 ADDONS_SRC=(
     " ( ${ADDONS_URI}/box2d-2.3.1.tar.gz )"
-    " ( ${ADDONS_URI}/skia-m84-c1baf6e1c2a5454148adb516f0f833483b5a0353.tar.xz )"
+    " ( ${ADDONS_URI}/skia-m86-e1e24080421116cf5d63b55cd5042176bebc0a43.tar.xz )"
     " ( ${ADDONS_URI}/dtoa-20180411.tgz )"
 	"java? ( ${ADDONS_URI}/17410483b5b5f267aa18b7e00b65e6e0-hsqldb_1_8_0.zip )"
 	# no release for 8 years, should we package it?
@@ -125,12 +124,13 @@ COMMON_DEPEND="${PYTHON_DEPS}
 	dev-libs/icu:=
 	dev-libs/libassuan
 	dev-libs/libgpg-error
-	>=dev-libs/liborcus-0.14.0
+	>=dev-libs/liborcus-0.16.0
 	dev-libs/librevenge
 	dev-libs/libxml2
 	dev-libs/libxslt
 	dev-libs/nspr
 	dev-libs/nss
+	dev-libs/qrcodegen
 	>=dev-libs/redland-1.0.16
 	>=dev-libs/xmlsec-1.2.28[nss]
 	media-gfx/fontforge
@@ -146,7 +146,7 @@ COMMON_DEPEND="${PYTHON_DEPS}
 	>=media-libs/libpng-1.4:0=
 	>=media-libs/libvisio-0.1.0
 	media-libs/libzmf
-	net-libs/neon
+	>=net-libs/neon-0.31.1
 	net-misc/curl
 	sci-mathematics/lpsolve
 	sys-libs/zlib
@@ -222,9 +222,11 @@ DEPEND="${COMMON_DEPEND}
 	x11-libs/libXt
 	x11-libs/libXtst
 	java? (
-	    dev-java/ant-core
-		>=virtual/jdk-11
-		
+		dev-java/ant-core
+		|| (
+				dev-java/openjdk:11
+				dev-java/openjdk-bin:11
+		)
 	)
 	test? (
 		app-crypt/gnupg
@@ -243,7 +245,10 @@ RDEPEND="${COMMON_DEPEND}
 	!app-office/openoffice
 	media-fonts/liberation-fonts
 	|| ( x11-misc/xdg-utils kde-plasma/kde-cli-tools )
-	java? ( >=virtual/jre-11-r1 )
+	java? (
+	dev-java/openjdk:11
+	dev-java/openjdk-jre-bin:11
+	>=virtual/jre-11-r1 )
 	kde? ( kde-frameworks/breeze-icons:* )
 "
 if [[ ${MY_PV} != *9999* ]] && [[ ${PV} != *_* ]]; then
@@ -258,12 +263,9 @@ PATCHES=(
 	# "${WORKDIR}"/${PATCHSET/.tar.xz/}
 
 	# not upstreamable stuff
-	"${FILESDIR}/${PN}-5.4-system-pyuno.patch"
 	"${FILESDIR}/${PN}-5.3.4.2-kioclient5.patch"
 	"${FILESDIR}/${PN}-6.1-nomancompress.patch"
-	
-	# TODO: upstream (for now taken from Arch Linux)
-	"${FILESDIR}/libreoffice-6.4.2.2-poppler-0.86.patch" # bug 711102
+
 )
 
 S="${WORKDIR}/${PN}-${MY_PV}"
@@ -385,10 +387,6 @@ src_configure() {
 		export MOC5="$(qt5_get_bindir)/moc"
 	fi
 
-	local gentoo_buildid="Gentoo official package"
-	if [[ -n ${LOCOREGIT_VERSION} ]]; then
-		gentoo_buildid+=" (from git: ${LOCOREGIT_VERSION})"
-	fi
 
 	# system headers/libs/...: enforce using system packages
 	# --disable-breakpad: requires not-yet-in-tree dev-utils/breakpad
@@ -422,15 +420,12 @@ src_configure() {
 		--disable-ccache
 		--disable-epm
 		--disable-fetch-external
-		--disable-gstreamer-0-10
-		--disable-gtk
 		--disable-gtk3-kde5
 		--disable-online-update
 		--disable-openssl
 		--disable-pdfium
 		--disable-report-builder
 		--disable-vlc
-		--with-build-version="${gentoo_buildid}"
 		--enable-extension-integration
 		--with-external-dict-dir="${EPREFIX}/usr/share/myspell"
 		--with-external-hyph-dir="${EPREFIX}/usr/share/myspell"
@@ -557,9 +552,9 @@ pkg_postinst() {
 	xdg_icon_cache_update
 	xdg_desktop_database_update
 	xdg_mimeinfo_database_update	
-	 einfo "libreoffice needs jdk9+ for USE=java and is masked (-gentoo-vm) at the moment."
-	 einfo "if you want to override it.. have a look in:"
-	 einfo "https://wiki.gentoo.org/wiki//etc/portage/profile/package.use.mask"
+	 elog "libreoffice needs jdk9+ for USE=java and is masked (-gentoo-vm) at the moment."
+	 elog "if you want to override it.. have a look in:"
+	 elog "https://wiki.gentoo.org/wiki//etc/portage/profile/package.use.mask"
 }
 
 pkg_postrm() {
