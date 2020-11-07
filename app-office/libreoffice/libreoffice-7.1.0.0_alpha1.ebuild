@@ -66,8 +66,8 @@ unset ADDONS_SRC
 # Extensions that need extra work:
 LO_EXTS="nlpsolver scripting-beanshell scripting-javascript wiki-publisher"
 
-IUSE="accessibility bluetooth +branding +skia coinmp +cups dbus debug eds firebird
-googledrive gstreamer +gtk kde ldap +mariadb odk pdfimport postgres test
+IUSE="accessibility bluetooth +branding coinmp +cups dbus debug eds firebird -gcc-only 
+googledrive gstreamer +gtk kde ldap +mariadb odk pdfimport postgres +skia test
 $(printf 'libreoffice_extensions_%s ' ${LO_EXTS})"
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}
@@ -354,6 +354,12 @@ src_prepare() {
 		-e "s,/usr/share/bash-completion/completions,$(get_bashcompdir)," \
 		-e "s,\$INSTALLDIRNAME.sh,${PN}," \
 		bin/distro-install-desktop-integration || die
+
+	if use gcc-only; then
+		# hack to force skia to be build with gcc and not clang...
+		export LO_CLANG_CC="$(tc-getCC)"
+		export LO_CLANG_CXX="$(tc-getCXX)"
+	fi
 
 	if use branding; then
 		# hack...
