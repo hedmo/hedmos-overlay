@@ -1,27 +1,27 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
 PYTHON_COMPAT=( python3_7 )
 
+inherit distutils-r1 python-r1 udev desktop linux-mod
 
-inherit  linux-mod python-r1 readme.gentoo-r1 virtualx
-
-#https://github.com/openrazer/openrazer/releases/download/v2.7.0/openrazer-2.7.0.tar.xz
-
-DESCRIPTION="Linux drivers for the Razer devices"
-HOMEPAGE="https://openrazer.github.io"
-inherit  linux-mod python-r1 readme.gentoo-r1 virtualx 
+DESCRIPTION="Drivers for Razer peripherals on GNU/Linux"
+HOMEPAGE="https://openrazer.github.io/"
 
 if [[ ${PV} == 9999 ]]; then
 	EGIT_REPO_URI="https://github.com/${PN}/${PN}.git"
-    inherit git-r3
+inherit git-r3
 else
 
-SRC_URI="https://github.com/${PN}/${PN}/releases/download/v${PV}/${PN}-${PV}.tar.xz"
-	KEYWORDS=" ~amd64  ~x86 "
+COMMIT="03df9f3bde2a3e7e47153c2e142d942da9d68564"
+SRC_URI="https://github.com/${PN}/${PN}/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
+	KEYWORDS=" ~amd64"
 fi
+S="${WORKDIR}"/${PN}-${COMMIT}
+LICENSE="GPL-2"
+SLOT="0"
 
 IUSE="+daemon client"
 REQUIRED_USE="
