@@ -57,7 +57,6 @@ unset DEV_URI
 # These are bundles that can't be removed for now due to huge patchsets.
 # If you want them gone, patches are welcome.
 ADDONS_SRC=(
-	" ( ${ADDONS_URI}/box2d-2.3.1.tar.gz )"
 	" ( ${ADDONS_URI}/skia-m86-e1e24080421116cf5d63b55cd5042176bebc0a43.tar.xz )"
     " ( ${ADDONS_URI}/dtoa-20180411.tgz )"
 	"base? (
@@ -437,7 +436,6 @@ src_configure() {
 	# --without-{fonts,myspell-dicts,ppsd}: prevent install of sys pkgs
 	# --disable-report-builder: too much java packages pulled in without pkgs
 	# --without-system-sane: just sane.h header that is used for scan in writer,
-    #--without-system-box2d : use buildin for now (did not find the headers)
 	#   not linked or anything else, worthless to depend on
 	# --disable-pdfium: not yet packaged
 	local myeconfargs=(
@@ -485,7 +483,6 @@ src_configure() {
 		--without-system-jfreereport
 		--without-system_apache_commons
 		--without-system-sane
-		--without-system-box2d
 		$(use_enable base report-builder)
 		$(use_enable bluetooth sdremote-bluetooth)
 		$(use_enable coinmp)
