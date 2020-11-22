@@ -91,7 +91,7 @@ unset ADDONS_SRC
 # Extensions that need extra work:
 LO_EXTS="nlpsolver scripting-beanshell scripting-javascript wiki-publisher"
 
-IUSE="accessibility base bluetooth +branding vulkan -gcc-only coinmp +cups dbus debug eds firebird
+IUSE="accessibility base bluetooth +branding vulkan -custom-cflags coinmp +cups dbus debug eds firebird
 googledrive gstreamer +gtk kde ldap +mariadb odk pdfimport postgres test
 $(printf 'libreoffice_extensions_%s ' ${LO_EXTS})"
 
@@ -260,9 +260,18 @@ DEPEND="${COMMON_DEPEND}
 		media-fonts/liberation-fonts
 	)
 	vulkan? (
-		sys-devel/clang
 		media-libs/vulkan-loader
-	)    
+	!custom-cflags? (
+		|| (
+			(	sys-devel/clang:12
+				sys-devel/llvm:12	)
+			(	sys-devel/clang:11
+				sys-devel/llvm:11	)
+			(	sys-devel/clang:10
+				sys-devel/llvm:10	)
+		)
+	)
+	)
 "
 RDEPEND="${COMMON_DEPEND}
 	!app-office/libreoffice-bin
@@ -292,6 +301,7 @@ PATCHES=(
 	"${FILESDIR}/${PN}-5.3.4.2-kioclient5.patch"
 	"${FILESDIR}/${PN}-6.1-nomancompress.patch"
 	"${FILESDIR}/${PN}-7.1.0.0+-include-gcc11.patch"
+	"${FILESDIR}/${PN}-qt5detect.patch"
 
 )
 	if [[ ${MY_PV} != ${PV/_$DATE} ]]; then
@@ -382,11 +392,22 @@ src_prepare() {
 		-e "s,\$INSTALLDIRNAME.sh,${PN}," \
 		bin/distro-install-desktop-integration || die
 
-	if use gcc-only; then
 		# hack to force skia to be build with gcc and not clang...
-		export LO_CLANG_CC="$(tc-getCC)"
-		export LO_CLANG_CXX="$(tc-getCXX)"
+		if use custom-cflags ; then
+		# Force gcc
+		einfo "Enforcing the use of gcc due to USE=custom-cflags.."
+		AR=gcc-ar
+		CC=${CHOST}-gcc
+		CXX=${CHOST}-g++
+		NM=gcc-nm
+		RANLIB=gcc-ranlib
+		strip-unsupported-flags
+	export LO_CLANG_CC=${CC}
+	export LO_CLANG_CXX=${CXX}
 	fi
+	
+	# Ensure we use correct toolchain
+	tc-export CC CXX LD AR NM OBJDUMP RANLIB PKG_CONFIG
 
 	if use branding; then
 		# hack...
@@ -415,11 +436,7 @@ src_configure() {
 	export PYTHON_CFLAGS=$(python_get_CFLAGS)
 	export PYTHON_LIBS=$(python_get_LIBS)
 
-	if use kde; then
-		export QT_SELECT=5 # bug 639620 needs proper fix though
-		export QT5DIR="$(qt5_get_bindir)/../"
-		export MOC5="$(qt5_get_bindir)/moc"
-	fi
+	use kde && export QT5DIR="$(qt5_get_bindir)/.."
 
 	local gentoo_buildid="Gentoo official package"
 	if [[ -n ${LOCOREGIT_VERSION} ]]; then
@@ -631,6 +648,17 @@ pkg_postinst() {
 	 elog "libreoffice needs jdk9+ for USE=java and is masked (-gentoo-vm) at the moment."
 	 elog "if you want to override it.. have a look in:"
 	 elog "https://wiki.gentoo.org/wiki//etc/portage/profile/package.use.mask"
+	 if  use custom-cflags; then
+	 elog "vulkan (skia) prefers to be build with clang/-custom-cflags" 
+	 elog "because of performance issues" 
+	 elog "use an other compiler/custom-cflags at your own risk"
+	 else
+	 elog "vulkan (skia) has been build with clang"
+	 elog "if it fails please check your cflags before reporting issues"
+	 # Show flags set 
+	 elog "Preset CFLAGS:    ${CFLAGS}"
+	 elog "Preset LDFLAGS:   ${LDFLAGS}"
+	 fi
 }
 
 pkg_postrm() {
