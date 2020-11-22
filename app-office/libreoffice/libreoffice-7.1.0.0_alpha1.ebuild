@@ -25,7 +25,7 @@ BRANDING="${PN}-branding-gentoo-0.8.tar.xz"
 # PATCHSET="${P}-patchset-01.tar.xz"
 
 [[ ${MY_PV} == *9999* ]] && inherit git-r3
-inherit autotools bash-completion-r1 check-reqs flag-o-matic java-pkg-opt-2 multiprocessing python-single-r1 qmake-utils toolchain-funcs xdg-utils
+inherit autotools bash-completion-r1 check-reqs flag-o-matic java-pkg-opt-2 multiprocessing python-single-r1 qmake-utils toolchain-funcs xdg-utils 
 
 DESCRIPTION="A full office productivity suite"
 HOMEPAGE="https://www.libreoffice.org"
@@ -287,7 +287,7 @@ RDEPEND="${COMMON_DEPEND}
 	) )
 	kde? ( kde-frameworks/breeze-icons:* )
 "
-if [[ ${MY_PV} != *9999* ]] ; then
+if [[ ${MY_PV} != *9999* ]] &&  [[ ${PV} != *_p* ]]; then
 	PDEPEND="=app-office/libreoffice-l10n-$(ver_cut 1-2)*"
 else
 	# Translations are not reliable on live ebuilds
@@ -653,12 +653,6 @@ pkg_postinst() {
 	 elog "vulkan (skia) prefers to be build with clang/-custom-cflags" 
 	 elog "because of performance issues" 
 	 elog "use an other compiler/custom-cflags at your own risk"
-	 else
-	 elog "vulkan (skia) has been build with clang"
-	 elog "if it fails please check your cflags before reporting issues"
-	 # Show flags set 
-	 elog "Preset CFLAGS:    ${CFLAGS}"
-	 elog "Preset LDFLAGS:   ${LDFLAGS}"
 	 fi
 }
 
