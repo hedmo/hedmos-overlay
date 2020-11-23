@@ -394,7 +394,7 @@ src_prepare() {
 		bin/distro-install-desktop-integration || die
 
 		# hack to force skia to be build with gcc and not clang...
-		if use custom-cflags ; then
+	if use custom-cflags ; then
 		# Force gcc
 		einfo "Enforcing the use of gcc due to USE=custom-cflags.."
 		AR=gcc-ar
@@ -403,8 +403,14 @@ src_prepare() {
 		NM=gcc-nm
 		RANLIB=gcc-ranlib
 		strip-unsupported-flags
-	export LO_CLANG_CC=${CC}
-	export LO_CLANG_CXX=${CXX}
+		export LO_CLANG_CC=${CC}
+		export LO_CLANG_CXX=${CXX}
+	else
+		strip-flags
+		einfo "the flags has been stiped due to vulkan/skia builds with clang"
+		# Show flags set 
+		einfo "Preset CFLAGS:    ${CFLAGS}"
+		einfo "Preset LDFLAGS:   ${LDFLAGS}"
 	fi
 	
 	# Ensure we use correct toolchain
@@ -413,6 +419,7 @@ src_prepare() {
 	if use branding; then
 		# hack...
 		mv -v "${WORKDIR}/branding-intro.png" "icon-themes/colibre/brand/intro.png" || die
+
 	fi
 
 	# Don't list pdfimport support in desktop when built with none, bug # 605464
