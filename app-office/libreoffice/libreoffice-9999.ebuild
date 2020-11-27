@@ -1,11 +1,14 @@
- # Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
 PYTHON_COMPAT=( python3_{6,7,8} )
 PYTHON_REQ_USE="threads(+),xml"
-
+CORE_COMMIT="e64f9356df76c41e3c5c432984e11110ce1d25ca"
+HELP_COMMIT="535ed65d68c14ae2b43c8f5fabbd7af574fe33c5"
+DATE="p20201030"
+MY_PV="${PV/_$DATE}"
 MY_PV="${PV/_alpha/.alpha}"
 MY_PV="${MY_PV/_beta/.beta}"
 # experimental ; release ; old
@@ -22,12 +25,21 @@ BRANDING="${PN}-branding-gentoo-0.8.tar.xz"
 # PATCHSET="${P}-patchset-01.tar.xz"
 
 [[ ${MY_PV} == *9999* ]] && inherit git-r3
-inherit autotools bash-completion-r1 check-reqs flag-o-matic java-pkg-opt-2 multiprocessing python-single-r1 qmake-utils toolchain-funcs xdg-utils
+inherit autotools bash-completion-r1 check-reqs flag-o-matic java-pkg-opt-2 multiprocessing python-single-r1 qmake-utils toolchain-funcs xdg-utils 
 
 DESCRIPTION="A full office productivity suite"
 HOMEPAGE="https://www.libreoffice.org"
 SRC_URI="branding? ( https://dev.gentoo.org/~dilfridge/distfiles/${BRANDING} )"
 [[ -n ${PATCHSET} ]] && SRC_URI+=" https://dev.gentoo.org/~asturm/distfiles/${PATCHSET}"
+
+if [[ ${MY_PV} != ${PV/_$DATE} ]]; then
+	for i in ${DEV_URI}; do
+		SRC_URI+=" https://github.com/LibreOffice/core/archive/${CORE_COMMIT}.tar.gz -> ${PN}-${MY_PV}.tar.gz"
+		SRC_URI+=" https://github.com/LibreOffice/help/archive/${HELP_COMMIT}.tar.gz -> ${PN}-help-${MY_PV}.tar.gz"
+	done
+	unset i
+fi
+unset DEV_URI
 
 # Split modules following git/tarballs; Core MUST be first!
 # Help is used for the image generator
@@ -45,9 +57,22 @@ unset DEV_URI
 # These are bundles that can't be removed for now due to huge patchsets.
 # If you want them gone, patches are welcome.
 ADDONS_SRC=(
-    " ( ${ADDONS_URI}/box2d-2.3.1.tar.gz )"
-    " ( ${ADDONS_URI}/skia-m86-e1e24080421116cf5d63b55cd5042176bebc0a43.tar.xz )"
+	" ( ${ADDONS_URI}/skia-m86-e1e24080421116cf5d63b55cd5042176bebc0a43.tar.xz )"
     " ( ${ADDONS_URI}/dtoa-20180411.tgz )"
+	"base? (
+		${ADDONS_URI}/commons-logging-1.2-src.tar.gz
+		${ADDONS_URI}/ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
+		${ADDONS_URI}/d8bd5eed178db6e2b18eeed243f85aa8-flute-1.1.6.zip
+		${ADDONS_URI}/eeb2c7ddf0d302fba4bfc6e97eac9624-libbase-1.1.6.zip
+		${ADDONS_URI}/3bdf40c0d199af31923e900d082ca2dd-libfonts-1.1.6.zip
+		${ADDONS_URI}/3404ab6b1792ae5f16bbd603bd1e1d03-libformula-1.1.7.zip
+		${ADDONS_URI}/db60e4fde8dd6d6807523deb71ee34dc-liblayout-0.2.10.zip
+		${ADDONS_URI}/97b2d4dba862397f446b217e2b623e71-libloader-1.1.6.zip
+		${ADDONS_URI}/8ce2fcd72becf06c41f7201d15373ed9-librepository-1.1.6.zip
+		${ADDONS_URI}/f94d9870737518e3b597f9265f4e9803-libserializer-1.1.6.zip
+		${ADDONS_URI}/ace6ab49184e329db254e454a010f56d-libxml-1.1.7.zip
+		${ADDONS_URI}/39bb3fcea1514f1369fcfc87542390fd-sacjava-1.3.zip
+	)"
 	"java? ( ${ADDONS_URI}/17410483b5b5f267aa18b7e00b65e6e0-hsqldb_1_8_0.zip )"
 	# no release for 8 years, should we package it?
 	"libreoffice_extensions_wiki-publisher? ( ${ADDONS_URI}/a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip )"
@@ -66,7 +91,7 @@ unset ADDONS_SRC
 # Extensions that need extra work:
 LO_EXTS="nlpsolver scripting-beanshell scripting-javascript wiki-publisher"
 
-IUSE="accessibility bluetooth +branding +skia coinmp +cups dbus debug eds firebird
+IUSE="accessibility base bluetooth +branding vulkan -custom-cflags coinmp +cups dbus debug eds firebird
 googledrive gstreamer +gtk kde ldap +mariadb odk pdfimport postgres test
 $(printf 'libreoffice_extensions_%s ' ${LO_EXTS})"
 
@@ -83,7 +108,7 @@ RESTRICT="!test? ( test )"
 LICENSE="|| ( LGPL-3 MPL-1.1 )"
 SLOT="0"
 [[ ${MY_PV} == *9999* ]] || \
-KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~x86 ~amd64-linux ~x86-linux"
+
 
 BDEPEND="
 	dev-util/intltool
@@ -130,7 +155,6 @@ COMMON_DEPEND="${PYTHON_DEPS}
 	dev-libs/libxslt
 	dev-libs/nspr
 	dev-libs/nss
-	dev-libs/qrcodegen
 	>=dev-libs/redland-1.0.16
 	>=dev-libs/xmlsec-1.2.28[nss]
 	media-gfx/fontforge
@@ -234,10 +258,19 @@ DEPEND="${COMMON_DEPEND}
 		media-fonts/dejavu
 		media-fonts/liberation-fonts
 	)
-	skia? (
-        sys-devel/clang
-        media-libs/vulkan-loader
-    )    
+	vulkan? (
+		media-libs/vulkan-loader
+	!custom-cflags? (
+		|| (
+			(	sys-devel/clang:12
+				sys-devel/llvm:12	)
+			(	sys-devel/clang:11
+				sys-devel/llvm:11	)
+			(	sys-devel/clang:10
+				sys-devel/llvm:10	)
+		)
+	)
+	)
 "
 RDEPEND="${COMMON_DEPEND}
 	!app-office/libreoffice-bin
@@ -252,7 +285,7 @@ RDEPEND="${COMMON_DEPEND}
 	) )
 	kde? ( kde-frameworks/breeze-icons:* )
 "
-if [[ ${MY_PV} != *9999* ]] && [[ ${PV} != *_* ]]; then
+if [[ ${MY_PV} != *9999* ]] &&  [[ ${PV} != *_p* ]]; then
 	PDEPEND="=app-office/libreoffice-l10n-$(ver_cut 1-2)*"
 else
 	# Translations are not reliable on live ebuilds
@@ -266,10 +299,15 @@ PATCHES=(
 	# not upstreamable stuff
 	"${FILESDIR}/${PN}-5.3.4.2-kioclient5.patch"
 	"${FILESDIR}/${PN}-6.1-nomancompress.patch"
+	"${FILESDIR}/${PN}-7.1.0.0+-include-gcc11.patch"
+	"${FILESDIR}/${PN}-qt5detect.patch"
 
 )
-
-S="${WORKDIR}/${PN}-${MY_PV}"
+	if [[ ${MY_PV} != ${PV/_$DATE} ]]; then
+		S="${WORKDIR}/core-${CORE_COMMIT}"
+	else
+		S="${WORKDIR}/${PN}-${MY_PV}"
+	fi
 
 _check_reqs() {
 	CHECKREQS_MEMORY="512M"
@@ -326,6 +364,10 @@ src_unpack() {
 src_prepare() {
 	default
 
+	if [[ ${MY_PV} != ${PV/_$DATE} ]]; then
+		mv  "${WORKDIR}/help-${HELP_COMMIT}"/* "helpcontent2/" || die
+	fi
+
 	# sandbox violations on many systems, we don't need it. Bug #646406
 	sed -i \
 		-e "/KF5_CONFIG/s/kf5-config/no/" \
@@ -335,12 +377,6 @@ src_prepare() {
 	# hack in the autogen.sh
 	touch autogen.lastrun
 
-	# system pyuno mess
-	sed -i \
-		-e "s:%eprefix%:${EPREFIX}:g" \
-		-e "s:%libdir%:$(get_libdir):g" \
-		pyuno/source/module/uno.py \
-		pyuno/source/officehelper.py || die
 	# sed in the tests
 	sed -i \
 		-e "s#all : build unitcheck#all : build#g" \
@@ -355,9 +391,33 @@ src_prepare() {
 		-e "s,\$INSTALLDIRNAME.sh,${PN}," \
 		bin/distro-install-desktop-integration || die
 
+		# hack to force skia to be build with gcc and not clang...
+	if use custom-cflags ; then
+		# Force gcc
+		einfo "Enforcing the use of gcc due to USE=custom-cflags.."
+		AR=gcc-ar
+		CC=${CHOST}-gcc
+		CXX=${CHOST}-g++
+		NM=gcc-nm
+		RANLIB=gcc-ranlib
+		strip-unsupported-flags
+		export LO_CLANG_CC=${CC}
+		export LO_CLANG_CXX=${CXX}
+	else
+		strip-flags
+		einfo "the flags has been stiped due to vulkan/skia builds with clang"
+		# Show flags set 
+		einfo "Preset CFLAGS:    ${CFLAGS}"
+		einfo "Preset LDFLAGS:   ${LDFLAGS}"
+	fi
+	
+	# Ensure we use correct toolchain
+	tc-export CC CXX LD AR NM OBJDUMP RANLIB PKG_CONFIG
+
 	if use branding; then
 		# hack...
 		mv -v "${WORKDIR}/branding-intro.png" "icon-themes/colibre/brand/intro.png" || die
+
 	fi
 
 	# Don't list pdfimport support in desktop when built with none, bug # 605464
@@ -382,12 +442,12 @@ src_configure() {
 	export PYTHON_CFLAGS=$(python_get_CFLAGS)
 	export PYTHON_LIBS=$(python_get_LIBS)
 
-	if use kde; then
-		export QT_SELECT=5 # bug 639620 needs proper fix though
-		export QT5DIR="$(qt5_get_bindir)/../"
-		export MOC5="$(qt5_get_bindir)/moc"
-	fi
+	use kde && export QT5DIR="$(qt5_get_bindir)/.."
 
+	local gentoo_buildid="Gentoo official package"
+	if [[ -n ${LOCOREGIT_VERSION} ]]; then
+		gentoo_buildid+=" (from git: ${LOCOREGIT_VERSION})"
+	fi
 
 	# system headers/libs/...: enforce using system packages
 	# --disable-breakpad: requires not-yet-in-tree dev-utils/breakpad
@@ -399,7 +459,6 @@ src_configure() {
 	# --without-{fonts,myspell-dicts,ppsd}: prevent install of sys pkgs
 	# --disable-report-builder: too much java packages pulled in without pkgs
 	# --without-system-sane: just sane.h header that is used for scan in writer,
-    #--without-system-box2d : use buildin for now (did not find the headers)
 	#   not linked or anything else, worthless to depend on
 	# --disable-pdfium: not yet packaged
 	local myeconfargs=(
@@ -427,6 +486,7 @@ src_configure() {
 		--disable-pdfium
 		--disable-report-builder
 		--disable-vlc
+		--with-extra-buildid="${gentoo_buildid}"
 		--enable-extension-integration
 		--with-external-dict-dir="${EPREFIX}/usr/share/myspell"
 		--with-external-hyph-dir="${EPREFIX}/usr/share/myspell"
@@ -443,12 +503,13 @@ src_configure() {
 		--with-help="html"
 		--without-helppack-integration
 		--with-system-gpgmepp
+		--without-system-jfreereport
+		--without-system_apache_commons
 		--without-system-sane
-		--without-system-box2d 
+		$(use_enable base report-builder)
 		$(use_enable bluetooth sdremote-bluetooth)
 		$(use_enable coinmp)
 		$(use_enable cups)
-		$(use_enable skia)
 		$(use_enable dbus)
 		$(use_enable debug)
 		$(use_enable eds evolution2)
@@ -468,6 +529,12 @@ src_configure() {
 		$(use_with java)
 		$(use_with odk doxygen)
 	)
+
+	if use vulkan; then
+		myeconfargs+=( --enable-skia )
+	else
+		myeconfargs+=( --disable-skia )
+	fi
 
 	if use eds || use gtk; then
 		myeconfargs+=( --enable-dconf --enable-gio )
@@ -547,6 +614,37 @@ src_install() {
 		dodir /etc/env.d
 		echo "CONFIG_PROTECT=/usr/$(get_libdir)/${PN}/program/sofficerc" > "${ED}"/etc/env.d/99${PN} || die
 	fi
+
+	# bug 703474
+	insinto /usr/include
+	doins -r include/LibreOfficeKit
+
+	local lodir=/usr/$(get_libdir)/libreoffice
+	# patching this would break tests
+	cat <<-EOF > "${T}"/uno.py
+import sys, os
+sys.path.append('${EPREFIX}${lodir}/program')
+os.putenv('URE_BOOTSTRAP', 'vnd.sun.star.pathname:${EPREFIX}${lodir}/program/fundamentalrc')
+EOF
+	sed -e "/^import sys/d" -e "/^import os/d" \
+		-i "${D}"${lodir}/program/uno.py || die "cleanup dupl imports failed"
+	cat "${D}"${lodir}/program/uno.py >> "${T}"/uno.py || die
+	cp "${T}"/uno.py "${D}"${lodir}/program/uno.py || die
+
+	# more system pyuno mess
+	sed -e "/sOffice = \"\" # lets hope for the best/s:\"\":\"${EPREFIX}${lodir}/program\":" \
+		-i "${D}"${lodir}/program/officehelper.py || die
+
+	python_optimize "${D}"${lodir}/program
+	# link python bridge in site-packages, bug 667802
+	local py pyc loprogdir=$(get_libdir)/libreoffice/program
+	for py in uno.py unohelper.py officehelper.py; do
+		dosym ../../../${loprogdir}/${py} $(python_get_sitedir)/${py}
+		while IFS="" read -d $'\0' -r pyc; do
+			pyc=${pyc//*\/}
+			dosym ../../../../${loprogdir}/__pycache__/${pyc} $(python_get_sitedir)/__pycache__/${pyc}
+		done < <(find "${D}"${lodir}/program -type f -name ${py/.py/*.pyc} -print0)
+	done
 }
 
 pkg_postinst() {
@@ -556,6 +654,11 @@ pkg_postinst() {
 	 elog "libreoffice needs jdk9+ for USE=java and is masked (-gentoo-vm) at the moment."
 	 elog "if you want to override it.. have a look in:"
 	 elog "https://wiki.gentoo.org/wiki//etc/portage/profile/package.use.mask"
+	 if  use custom-cflags; then
+	 elog "vulkan (skia) prefers to be build with clang/-custom-cflags" 
+	 elog "because of performance issues" 
+	 elog "use an other compiler/custom-cflags at your own risk"
+	 fi
 }
 
 pkg_postrm() {
