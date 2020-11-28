@@ -1,9 +1,8 @@
-
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
-inherit cmake-utils 
+inherit cmake
 
 COMMON_URI="
 https://github.com/RPCS3/yaml-cpp/archive/6a211f0bc71920beef749e6c35d7d1bcc2447715.tar.gz
@@ -32,10 +31,10 @@ https://github.com/madler/zlib/archive/cacf7f1d4e3d44d871b605da3b647f07d718623f.
 if [[ ${PV} == 9999 ]]
 then
 	EGIT_REPO_URI="https://github.com/RPCS3/rpcs3"
+inherit git-r3
 else
 	SRC_URI="https://github.com/RPCS3/rpcs3/archive/v${PV}.tar.gz -> ${P}.tar.gz
 	${COMMON_URI}"
-
 	KEYWORDS="~amd64"
 fi
 
@@ -92,7 +91,7 @@ src_prepare() {
 	 done
 
 	sed -i -e '/find_program(CCACHE_FOUND/d' CMakeLists.txt
-	cmake-utils_src_prepare
+	cmake_src_prepare
 }
 
 src_configure() {
@@ -113,6 +112,9 @@ src_configure() {
 )
 	CACHE_SLOPPINESS=pch_defines,time_macros
 	CMAKE_BUILD_TYPE=Release
-	cmake-utils_src_configure
+	cmake_src_configure
 }
+
+
+
 
