@@ -44,7 +44,7 @@ HOMEPAGE="https://rpcs3.net http://www.emunewz.net/forum/forumdisplay.php?fid=17
 
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="alsa faudio pulseaudio gdb joystick +llvm -system-llvm discord-rpc pulseaudio +z3 +test vulkan"
+IUSE="alsa faudio gdb joystick +llvm -system-llvm discord-rpc pulseaudio +z3 +test vulkan"
 
 CDEPEND="
         vulkan? ( media-libs/vulkan-loader[wayland] )
@@ -59,46 +59,45 @@ RDEPEND="${CDEPEND}
 	gdb? ( sys-devel/gdb )
 	joystick? ( dev-libs/libevdev )
 	llvm? ( sys-devel/llvm )
-        media-libs/glew:0
+	media-libs/glew:0
 	media-libs/libpng:*
 	media-libs/openal
 	pulseaudio? ( media-sound/pulseaudio )
 	sys-libs/zlib
-	virtual/ffmpeg
+	>=media-video/ffmpeg-3.1.3:0
 	virtual/opengl
 	x11-libs/libX11
-        z3? ( sci-mathematics/z3 )
-        test? ( dev-cpp/gtest )
-        vulkan? ( media-libs/vulkan-loader )
-
+	z3? ( sci-mathematics/z3 )
+	test? ( dev-cpp/gtest )
+	vulkan? ( media-libs/vulkan-loader )
 "
 
 
 src_prepare() {
-   move_lib() {
-      local IN_DIR="${1}"
-      local OUT_DIR
-      [ -z "${2}" ] && OUT_DIR="${IN_DIR}" || OUT_DIR="${2%/}/${IN_DIR}"
-      mv "${WORKDIR}/${IN_DIR}"*/* "${S}/${OUT_DIR}" || die
+	move_lib() {
+		local IN_DIR="${1}"
+		local OUT_DIR
+		[ -z "${2}" ] && OUT_DIR="${IN_DIR}" || OUT_DIR="${2%/}/${IN_DIR}"
+	mv "${WORKDIR}/${IN_DIR}"*/* "${S}/${OUT_DIR}" || die
    }
 
-   move_lib asmjit
-   move_lib llvm
-   move_lib glslang Vulkan
-   move_lib spirv-tools Vulkan
-   move_lib spirv-headers Vulkan
-   local thirdparty_libs=" cereal curl FAudio ffmpeg hidapi libpng libusb pugixml span wolfssl xxHash yaml-cpp flatbuffers zlib " 
-   for thirdparty_lib in ${thirdparty_libs} ; do
-      move_lib "${thirdparty_lib}" 3rdparty
-   done
+	move_lib asmjit
+	move_lib llvm
+	move_lib glslang Vulkan
+	move_lib spirv-tools Vulkan
+	move_lib spirv-headers Vulkan
+	local thirdparty_libs=" cereal curl FAudio ffmpeg hidapi libpng libusb pugixml span wolfssl xxHash yaml-cpp flatbuffers zlib " 
+	for thirdparty_lib in ${thirdparty_libs} ; do
+	move_lib "${thirdparty_lib}" 3rdparty
+	 done
 
-   sed -i -e '/find_program(CCACHE_FOUND/d' CMakeLists.txt
-   cmake-utils_src_prepare
+	sed -i -e '/find_program(CCACHE_FOUND/d' CMakeLists.txt
+	cmake-utils_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
-        "-DUSE_SYSTEM_ZLIB=ON"
+		"-DUSE_SYSTEM_ZLIB=ON"
 		"-DUSE_SYSTEM_LIBPNG=ON"
 		"-DUSE_SYSTEM_FFMPEG=ON"
 		"-DUSE_VULKAN=$(usex vulkan ON OFF)"
@@ -109,17 +108,11 @@ src_configure() {
 		"-DUSE_LIBEVDEV=$(usex joystick ON OFF)"
 		"-DWITH_GDB=$(usex gdb ON OFF)"
 		"-DWITH_LLVM=$(usex llvm ON OFF)"
-        "-DBUILD_LLVM_SUBMODULE=$(usex system-llvm OFF ON)"
-                "-Wno-dev=ON"
-
-
-	)
-        CCACHE_SLOPPINESS=pch_defines,time_macros
-        CMAKE_BUILD_TYPE=Release
+		"-DBUILD_LLVM_SUBMODULE=$(usex system-llvm OFF ON)"
+		"-Wno-dev=ON"
+)
+	CACHE_SLOPPINESS=pch_defines,time_macros
+	CMAKE_BUILD_TYPE=Release
 	cmake-utils_src_configure
 }
 
-#pkg_postinst() {
-	# Add pax markings for hardened systems
-#	pax-mark -m "${EPREFIX}"/usr/bin/"${PN}"
-#}
