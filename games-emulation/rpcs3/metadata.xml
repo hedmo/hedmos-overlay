@@ -8,7 +8,6 @@
     <use>
         <flag name="alsa"> Enables alsa support. </flag>
         <flag name="faudio"> Enables faudio. </flag>
-        <flag name="gdb"> Enables Enables GNU debugger. </flag>
         <flag name="joystick"> Enables joystick support. </flag>
         <flag name="llvm"> Enables llvm support. </flag>
         <flag name="system-llvm"> Enables build with system llvm. </flag>

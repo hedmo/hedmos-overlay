@@ -9,10 +9,8 @@ COMMON_URI="
 https://github.com/RPCS3/yaml-cpp/archive/6a211f0bc71920beef749e6c35d7d1bcc2447715.tar.gz
 https://github.com/RPCS3/llvm-mirror/archive/8c02f52a12550c2044fef262c9864ca2e3cc193e.tar.gz
 https://github.com/asmjit/asmjit/archive/fc251c914e77cd079e58982cdab00a47539d7fc5.tar.gz
-
 https://github.com/FNA-XNA/FAudio/archive/9c7d2d1430c9dbe4e67c871dfe003b331f165412.tar.gz
 https://github.com/RPCS3/cereal/archive/60c69df968d1c72c998cd5f23ba34e2e3718a84b.tar.gz
-https://github.com/curl/curl/archive/9d954e49bce3706a9a2efb119ecd05767f0f2a9e.tar.gz
 https://github.com/RPCS3/ffmpeg-core/archive/e5fb13bbb07ac3ba2e1998e2f5688f3714870d93.tar.gz
 https://github.com/RPCS3/hidapi/archive/9220f5e77c27b8b3717b277ec8d3121deeb50242.tar.gz
 https://github.com/glennrp/libpng/archive/eddf9023206dc40974c26f589ee2ad63a4227a1e.tar.gz
@@ -44,7 +42,7 @@ HOMEPAGE="https://rpcs3.net http://www.emunewz.net/forum/forumdisplay.php?fid=17
 
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="alsa faudio gdb joystick +llvm -system-llvm discord-rpc pulseaudio +z3 +test vulkan"
+IUSE="alsa faudio joystick +llvm -system-llvm discord-rpc pulseaudio +z3 +test vulkan"
 
 CDEPEND="
 	vulkan? ( media-libs/vulkan-loader[wayland] )
@@ -56,7 +54,6 @@ DEPEND="${CDEPEND}
 	dev-qt/qtgui:5
 	dev-qt/qtwidgets:5
 	alsa? ( media-libs/alsa-lib )
-	gdb? ( sys-devel/gdb )
 	joystick? ( dev-libs/libevdev )
 	llvm? ( sys-devel/llvm )
 	media-libs/glew:0
@@ -85,7 +82,7 @@ src_prepare() {
 	move_lib glslang Vulkan
 	move_lib spirv-tools Vulkan
 	move_lib spirv-headers Vulkan
-	local thirdparty_libs=" cereal curl FAudio ffmpeg hidapi libpng libusb pugixml span wolfssl xxHash yaml-cpp flatbuffers zlib "
+	local thirdparty_libs=" cereal FAudio ffmpeg hidapi libpng libusb pugixml span wolfssl xxHash yaml-cpp flatbuffers zlib "
 	for thirdparty_lib in ${thirdparty_libs} ; do
 	move_lib "${thirdparty_lib}" 3rdparty
 	 done
@@ -96,19 +93,24 @@ src_prepare() {
 
 src_configure() {
 	local mycmakeargs=(
-		"-DUSE_SYSTEM_ZLIB=ON"
-		"-DUSE_SYSTEM_LIBPNG=ON"
-		"-DUSE_SYSTEM_FFMPEG=ON"
-		"-DUSE_VULKAN=$(usex vulkan ON OFF)"
-		"-DUSE_ALSA=$(usex alsa ON OFF)"
-		"-DUSE_FAUDIO=$(usex faudio ON OFF)"
-		"-DUSE_DISCORD_RPC=$(usex discord-rpc ON OFF)"
-		"-DUSE_PULSE=$(usex pulseaudio ON OFF)"
-		"-DUSE_LIBEVDEV=$(usex joystick ON OFF)"
-		"-DWITH_GDB=$(usex gdb ON OFF)"
-		"-DWITH_LLVM=$(usex llvm ON OFF)"
-		"-DBUILD_LLVM_SUBMODULE=$(usex system-llvm OFF ON)"
-		"-Wno-dev=ON"
+		-DUSE_SYSTEM_ZLIB=ON
+		-DUSE_SYSTEM_CURL=ON
+		-DUSE_SYSTEM_LIBPNG=ON
+		-DUSE_SYSTEM_FFMPEG=ON
+		-DUSE_PRECOMPILED_HEADERS=OFF
+		-DUSE_VULKAN=$(usex vulkan ON OFF)
+		-DUSE_ALSA=$(usex alsa ON OFF)
+		-DUSE_FAUDIO=$(usex faudio ON OFF)
+		-DUSE_DISCORD_RPC=$(usex discord-rpc ON OFF)
+		-DUSE_PULSE=$(usex pulseaudio ON OFF)
+		-DUSE_NATIVE_INSTRUCTIONS=OFF
+		-DUSE_LIBEVDEV=$(usex joystick ON OFF)
+		-DWITH_LLVM=$(usex llvm ON OFF)
+		-DCMAKE_C_FLAGS="${CFLAGS}"
+		-DCMAKE_CXX_FLAGS="${CXXFLAGS}"
+		-DBUILD_SHARED_LIBS=OFF
+		-DBUILD_LLVM_SUBMODULE=$(usex system-llvm OFF ON)
+		-Wno-dev=ON
 )
 	CACHE_SLOPPINESS=pch_defines,time_macros
 	CMAKE_BUILD_TYPE=Release
