@@ -47,10 +47,10 @@ SLOT="0"
 IUSE="alsa faudio gdb joystick +llvm -system-llvm discord-rpc pulseaudio +z3 +test vulkan"
 
 CDEPEND="
-        vulkan? ( media-libs/vulkan-loader[wayland] )
+	vulkan? ( media-libs/vulkan-loader[wayland] )
 "
 
-RDEPEND="${CDEPEND}
+DEPEND="${CDEPEND}
 	dev-qt/qtcore:5
 	dev-qt/qtdbus:5
 	dev-qt/qtgui:5
@@ -72,21 +72,20 @@ RDEPEND="${CDEPEND}
 	vulkan? ( media-libs/vulkan-loader )
 "
 
-
 src_prepare() {
 	move_lib() {
 		local IN_DIR="${1}"
 		local OUT_DIR
 		[ -z "${2}" ] && OUT_DIR="${IN_DIR}" || OUT_DIR="${2%/}/${IN_DIR}"
 	mv "${WORKDIR}/${IN_DIR}"*/* "${S}/${OUT_DIR}" || die
-   }
+}
 
 	move_lib asmjit
 	move_lib llvm
 	move_lib glslang Vulkan
 	move_lib spirv-tools Vulkan
 	move_lib spirv-headers Vulkan
-	local thirdparty_libs=" cereal curl FAudio ffmpeg hidapi libpng libusb pugixml span wolfssl xxHash yaml-cpp flatbuffers zlib " 
+	local thirdparty_libs=" cereal curl FAudio ffmpeg hidapi libpng libusb pugixml span wolfssl xxHash yaml-cpp flatbuffers zlib "
 	for thirdparty_lib in ${thirdparty_libs} ; do
 	move_lib "${thirdparty_lib}" 3rdparty
 	 done
@@ -115,7 +114,3 @@ src_configure() {
 	CMAKE_BUILD_TYPE=Release
 	cmake_src_configure
 }
-
-
-
-
