@@ -1,0 +1,11 @@
+--- a/resources/main.py   2020-06-10 11:15:48.000000000 +0200
++++ b/resources/main.py  2020-12-06 08:07:24.945494186 +0100
+@@ -107,7 +107,7 @@
+ def makeScriptExec():
+ 	scriptPath = os.path.join(scripts_path, 'steam-launcher.sh')
+ 	if os.path.isfile(scriptPath):
+-		if '\r\n' in open(scriptPath,'rb').read():
++		if '\r\n' in open(scriptPath,'r').read():
+ 			log('Windows line endings found in %s, converting to unix line endings.' % scriptPath)
+ 			with open(scriptPath, 'rb') as f:
+ 				content = f.read()

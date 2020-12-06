@@ -20,7 +20,7 @@ case ${PV} in
 	;;
 *)
 	KEYWORDS="-* ~amd64"
-	SRC_URI="https://www.dropbox.com/s/j9ooae28k1uutng/script.steam.launcher-3.5.0-beta.zip?dl=1 -> ${MY_P}.zip"
+	SRC_URI="https://www.dropbox.com/s/ry7dbmuh72l55nu/script.steam.launcher.zip?dl=0 -> ${MY_P}.zip"
 	S="${WORKDIR}/${MY_PN}"
 	;;
 esac
@@ -38,6 +38,10 @@ RDEPEND="
 	>=dev-python/pycparser-2.18
 	dev-python/pycryptodomex
 "
+PATCHES=(
+#	"${FILESDIR}/startup_error.patch"
+
+)
 
 src_compile() {
 	# no-op
