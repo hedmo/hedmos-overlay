@@ -53,6 +53,7 @@ DEPEND="${CDEPEND}
 	dev-qt/qtdbus:5
 	dev-qt/qtgui:5
 	dev-qt/qtwidgets:5
+	dev-qt/qtconcurrent:5
 	alsa? ( media-libs/alsa-lib )
 	joystick? ( dev-libs/libevdev )
 	llvm? ( sys-devel/llvm )
