@@ -28,7 +28,7 @@ UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}*.xz "
 src_prepare() {
 
 	if use cacule; then
-		eapply "${DISTDIR}/localversion.patch"
+		eapply "${FILESDIR}/localversion.patch"
 	fi
 
 	kernel-2_src_prepare
