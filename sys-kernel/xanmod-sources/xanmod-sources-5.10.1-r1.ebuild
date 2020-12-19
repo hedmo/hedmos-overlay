@@ -29,6 +29,7 @@ src_prepare() {
 
 	if use cacule; then
 		eapply "${FILESDIR}/localversion.patch"
+		eapply "${FILESDIR}/smoother.patch"
 	fi
 
 	kernel-2_src_prepare
