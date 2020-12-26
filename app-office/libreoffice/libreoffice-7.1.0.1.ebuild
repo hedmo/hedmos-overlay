@@ -411,14 +411,13 @@ src_prepare() {
 		einfo "Preset CFLAGS:    ${CFLAGS}"
 		einfo "Preset LDFLAGS:   ${LDFLAGS}"
 	fi
-	
+
 	# Ensure we use correct toolchain
 	tc-export CC CXX LD AR NM OBJDUMP RANLIB PKG_CONFIG
 
 	if use branding; then
 		# hack...
 		mv -v "${WORKDIR}/branding-intro.png" "icon-themes/colibre/brand/intro.png" || die
-
 	fi
 
 	# Don't list pdfimport support in desktop when built with none, bug # 605464
@@ -561,16 +560,12 @@ src_configure() {
 			--with-jdk-home=$(java-config --jdk-home 2>/dev/null)
 			--with-jvm-path="${EPREFIX}/usr/lib/"
 		)
-
 		use libreoffice_extensions_scripting-beanshell && \
 			myeconfargs+=( --with-beanshell-jar=$(java-pkg_getjar bsh bsh.jar) )
-
 		use libreoffice_extensions_scripting-javascript && \
 			myeconfargs+=( --with-rhino-jar=$(java-pkg_getjar rhino-1.6 js.jar) )
 	fi
-
 	is-flagq "-flto*" && myeconfargs+=( --enable-lto )
-
 	MARIADBCONFIG="$(type -p $(usex mariadb mariadb mysql)_config)" \
 	econf "${myeconfargs[@]}"
 }
@@ -651,13 +646,13 @@ EOF
 pkg_postinst() {
 	xdg_icon_cache_update
 	xdg_desktop_database_update
-	xdg_mimeinfo_database_update	
+	xdg_mimeinfo_database_update
 	 elog "libreoffice needs jdk9+ for USE=java and is masked (-gentoo-vm) at the moment."
 	 elog "if you want to override it.. have a look in:"
 	 elog "https://wiki.gentoo.org/wiki//etc/portage/profile/package.use.mask"
 	 if  use custom-cflags; then
-	 elog "vulkan (skia) prefers to be build with clang/-custom-cflags" 
-	 elog "because of performance issues" 
+	 elog "vulkan (skia) prefers to be build with clang/-custom-cflags"
+	 elog "because of performance issues"
 	 elog "use an other compiler/custom-cflags at your own risk"
 	 fi
 }
