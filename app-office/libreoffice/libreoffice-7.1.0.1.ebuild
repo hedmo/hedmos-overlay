@@ -31,7 +31,7 @@ HOMEPAGE="https://www.libreoffice.org"
 SRC_URI="branding? ( https://dev.gentoo.org/~dilfridge/distfiles/${BRANDING} )"
 [[ -n ${PATCHSET} ]] && SRC_URI+=" https://dev.gentoo.org/~asturm/distfiles/${PATCHSET}"
 
-if [[ ${MY_PV} != ${PV/_$DATE} ]]; then
+if [[ ${MY_PV} = ${PV/_$DATE} ]]; then
 	for i in ${DEV_URI}; do
 		SRC_URI+=" https://github.com/LibreOffice/core/archive/${CORE_COMMIT}.tar.gz -> ${PN}-${MY_PV}.tar.gz"
 		SRC_URI+=" https://github.com/LibreOffice/help/archive/${HELP_COMMIT}.tar.gz -> ${PN}-help-${MY_PV}.tar.gz"
