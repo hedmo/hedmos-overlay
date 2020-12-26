@@ -3,12 +3,9 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{6,7,8} )
+PYTHON_COMPAT=( python3_{6,7,8,9} )
 PYTHON_REQ_USE="threads(+),xml"
-CORE_COMMIT="e64f9356df76c41e3c5c432984e11110ce1d25ca"
-HELP_COMMIT="535ed65d68c14ae2b43c8f5fabbd7af574fe33c5"
-DATE="p20201030"
-MY_PV="${PV/_$DATE}"
+
 MY_PV="${PV/_alpha/.alpha}"
 MY_PV="${MY_PV/_beta/.beta}"
 # experimental ; release ; old
@@ -24,21 +21,12 @@ BRANDING="${PN}-branding-gentoo-0.8.tar.xz"
 # PATCHSET="${P}-patchset-01.tar.xz"
 
 [[ ${MY_PV} == *9999* ]] && inherit git-r3
-inherit autotools bash-completion-r1 check-reqs flag-o-matic java-pkg-opt-2 multiprocessing python-single-r1 qmake-utils toolchain-funcs xdg-utils
+inherit autotools bash-completion-r1 check-reqs eapi8-dosym flag-o-matic java-pkg-opt-2 multiprocessing python-single-r1 qmake-utils toolchain-funcs xdg-utils
 
 DESCRIPTION="A full office productivity suite"
 HOMEPAGE="https://www.libreoffice.org"
 SRC_URI="branding? ( https://dev.gentoo.org/~dilfridge/distfiles/${BRANDING} )"
 [[ -n ${PATCHSET} ]] && SRC_URI+=" https://dev.gentoo.org/~asturm/distfiles/${PATCHSET}"
-
-if [[ ${MY_PV} = ${PV/_$DATE} ]]; then
-	for i in ${DEV_URI}; do
-		SRC_URI+=" https://github.com/LibreOffice/core/archive/${CORE_COMMIT}.tar.gz -> ${PN}-${MY_PV}.tar.gz"
-		SRC_URI+=" https://github.com/LibreOffice/help/archive/${HELP_COMMIT}.tar.gz -> ${PN}-help-${MY_PV}.tar.gz"
-	done
-	unset i
-fi
-unset DEV_URI
 
 # Split modules following git/tarballs; Core MUST be first!
 # Help is used for the image generator
@@ -56,8 +44,8 @@ unset DEV_URI
 # These are bundles that can't be removed for now due to huge patchsets.
 # If you want them gone, patches are welcome.
 ADDONS_SRC=(
-	" ( ${ADDONS_URI}/skia-m86-e1e24080421116cf5d63b55cd5042176bebc0a43.tar.xz )"
-	" ( ${ADDONS_URI}/dtoa-20180411.tgz )"
+	" ( ${ADDONS_URI}/skia-m88-59bafeeaa7de9eb753e3778c414e01dcf013dcd8.tar.xz )"
+    " ( ${ADDONS_URI}/dtoa-20180411.tgz )"
 	"base? (
 		${ADDONS_URI}/commons-logging-1.2-src.tar.gz
 		${ADDONS_URI}/ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
@@ -282,11 +270,11 @@ RDEPEND="${COMMON_DEPEND}
 	java? ( || (
 	dev-java/openjdk:11
 	dev-java/openjdk-jre-bin:11
-	>=virtual/jre-11-r1
+	>=virtual/jre-11-r1 
 	) )
 	kde? ( kde-frameworks/breeze-icons:* )
 "
-if [[ ${MY_PV} != *9999* ]] &&  [[ ${PV} != *_p* ]]; then
+if [[ ${MY_PV} != *9999* ]] && [[ ${PV} != *_* ]]; then
 	PDEPEND="=app-office/libreoffice-l10n-$(ver_cut 1-2)*"
 else
 	# Translations are not reliable on live ebuilds
@@ -304,11 +292,8 @@ PATCHES=(
 	"${FILESDIR}/${PN}-qt5detect.patch"
 
 )
-	if [[ ${MY_PV} != ${PV/_$DATE} ]]; then
-		S="${WORKDIR}/core-${CORE_COMMIT}"
-	else
-		S="${WORKDIR}/${PN}-${MY_PV}"
-	fi
+S="${WORKDIR}/${PN}-${MY_PV}"
+
 
 _check_reqs() {
 	CHECKREQS_MEMORY="512M"
@@ -365,10 +350,6 @@ src_unpack() {
 src_prepare() {
 	default
 
-	if [[ ${MY_PV} != ${PV/_$DATE} ]]; then
-		mv  "${WORKDIR}/help-${HELP_COMMIT}"/* "helpcontent2/" || die
-	fi
-
 	# sandbox violations on many systems, we don't need it. Bug #646406
 	sed -i \
 		-e "/KF5_CONFIG/s/kf5-config/no/" \
@@ -411,13 +392,14 @@ src_prepare() {
 		einfo "Preset CFLAGS:    ${CFLAGS}"
 		einfo "Preset LDFLAGS:   ${LDFLAGS}"
 	fi
-
+	
 	# Ensure we use correct toolchain
 	tc-export CC CXX LD AR NM OBJDUMP RANLIB PKG_CONFIG
 
 	if use branding; then
 		# hack...
 		mv -v "${WORKDIR}/branding-intro.png" "icon-themes/colibre/brand/intro.png" || die
+
 	fi
 
 	# Don't list pdfimport support in desktop when built with none, bug # 605464
@@ -560,12 +542,16 @@ src_configure() {
 			--with-jdk-home=$(java-config --jdk-home 2>/dev/null)
 			--with-jvm-path="${EPREFIX}/usr/lib/"
 		)
+
 		use libreoffice_extensions_scripting-beanshell && \
 			myeconfargs+=( --with-beanshell-jar=$(java-pkg_getjar bsh bsh.jar) )
+
 		use libreoffice_extensions_scripting-javascript && \
 			myeconfargs+=( --with-rhino-jar=$(java-pkg_getjar rhino-1.6 js.jar) )
 	fi
+
 	is-flagq "-flto*" && myeconfargs+=( --enable-lto )
+
 	MARIADBCONFIG="$(type -p $(usex mariadb mariadb mysql)_config)" \
 	econf "${myeconfargs[@]}"
 }
@@ -646,13 +632,13 @@ EOF
 pkg_postinst() {
 	xdg_icon_cache_update
 	xdg_desktop_database_update
-	xdg_mimeinfo_database_update
+	xdg_mimeinfo_database_update	
 	 elog "libreoffice needs jdk9+ for USE=java and is masked (-gentoo-vm) at the moment."
 	 elog "if you want to override it.. have a look in:"
 	 elog "https://wiki.gentoo.org/wiki//etc/portage/profile/package.use.mask"
 	 if  use custom-cflags; then
-	 elog "vulkan (skia) prefers to be build with clang/-custom-cflags"
-	 elog "because of performance issues"
+	 elog "vulkan (skia) prefers to be build with clang/-custom-cflags" 
+	 elog "because of performance issues" 
 	 elog "use an other compiler/custom-cflags at your own risk"
 	 fi
 }
