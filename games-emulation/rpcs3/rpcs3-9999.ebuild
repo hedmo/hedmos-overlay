@@ -70,6 +70,7 @@ DEPEND="${CDEPEND}
 "
 
 src_prepare() {
+if [[ ${PV} != *9999* ]]; then
 	move_lib() {
 		local IN_DIR="${1}"
 		local OUT_DIR
@@ -86,7 +87,7 @@ src_prepare() {
 	for thirdparty_lib in ${thirdparty_libs} ; do
 	move_lib "${thirdparty_lib}" 3rdparty
 	 done
-
+fi
 	sed -i -e '/find_program(CCACHE_FOUND/d' CMakeLists.txt
 	cmake_src_prepare
 }
