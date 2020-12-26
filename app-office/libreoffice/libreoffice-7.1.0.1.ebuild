@@ -45,7 +45,7 @@ unset DEV_URI
 # If you want them gone, patches are welcome.
 ADDONS_SRC=(
 	" ( ${ADDONS_URI}/skia-m88-59bafeeaa7de9eb753e3778c414e01dcf013dcd8.tar.xz )"
-    " ( ${ADDONS_URI}/dtoa-20180411.tgz )"
+	" ( ${ADDONS_URI}/dtoa-20180411.tgz )"
 	"base? (
 		${ADDONS_URI}/commons-logging-1.2-src.tar.gz
 		${ADDONS_URI}/ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
@@ -270,7 +270,7 @@ RDEPEND="${COMMON_DEPEND}
 	java? ( || (
 	dev-java/openjdk:11
 	dev-java/openjdk-jre-bin:11
-	>=virtual/jre-11-r1 
+	>=virtual/jre-11-r1
 	) )
 	kde? ( kde-frameworks/breeze-icons:* )
 "
@@ -293,7 +293,6 @@ PATCHES=(
 
 )
 S="${WORKDIR}/${PN}-${MY_PV}"
-
 
 _check_reqs() {
 	CHECKREQS_MEMORY="512M"
@@ -392,7 +391,6 @@ src_prepare() {
 		einfo "Preset CFLAGS:    ${CFLAGS}"
 		einfo "Preset LDFLAGS:   ${LDFLAGS}"
 	fi
-	
 	# Ensure we use correct toolchain
 	tc-export CC CXX LD AR NM OBJDUMP RANLIB PKG_CONFIG
 
@@ -632,13 +630,13 @@ EOF
 pkg_postinst() {
 	xdg_icon_cache_update
 	xdg_desktop_database_update
-	xdg_mimeinfo_database_update	
+	xdg_mimeinfo_database_update
 	 elog "libreoffice needs jdk9+ for USE=java and is masked (-gentoo-vm) at the moment."
 	 elog "if you want to override it.. have a look in:"
 	 elog "https://wiki.gentoo.org/wiki//etc/portage/profile/package.use.mask"
 	 if  use custom-cflags; then
-	 elog "vulkan (skia) prefers to be build with clang/-custom-cflags" 
-	 elog "because of performance issues" 
+	 elog "vulkan (skia) prefers to be build with clang/-custom-cflags"
+	 elog "because of performance issues"
 	 elog "use an other compiler/custom-cflags at your own risk"
 	 fi
 }
