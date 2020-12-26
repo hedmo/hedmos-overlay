@@ -288,7 +288,6 @@ PATCHES=(
 	# not upstreamable stuff
 	"${FILESDIR}/${PN}-5.3.4.2-kioclient5.patch"
 	"${FILESDIR}/${PN}-6.1-nomancompress.patch"
-	"${FILESDIR}/${PN}-7.1.0.0+-include-gcc11.patch"
 	"${FILESDIR}/${PN}-qt5detect.patch"
 
 )
