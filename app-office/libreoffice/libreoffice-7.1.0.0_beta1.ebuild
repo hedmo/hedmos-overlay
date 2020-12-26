@@ -17,7 +17,6 @@ DEV_URI="
 	https://dev-builds.libreoffice.org/pre-releases/src
 	https://download.documentfoundation.org/libreoffice/src/${MY_PV:0:5}/
 	https://downloadarchive.documentfoundation.org/libreoffice/old/${MY_PV}/src
-	
 "
 ADDONS_URI="https://dev-www.libreoffice.org/src/"
 
@@ -25,7 +24,7 @@ BRANDING="${PN}-branding-gentoo-0.8.tar.xz"
 # PATCHSET="${P}-patchset-01.tar.xz"
 
 [[ ${MY_PV} == *9999* ]] && inherit git-r3
-inherit autotools bash-completion-r1 check-reqs flag-o-matic java-pkg-opt-2 multiprocessing python-single-r1 qmake-utils toolchain-funcs xdg-utils 
+inherit autotools bash-completion-r1 check-reqs flag-o-matic java-pkg-opt-2 multiprocessing python-single-r1 qmake-utils toolchain-funcs xdg-utils
 
 DESCRIPTION="A full office productivity suite"
 HOMEPAGE="https://www.libreoffice.org"
@@ -58,7 +57,7 @@ unset DEV_URI
 # If you want them gone, patches are welcome.
 ADDONS_SRC=(
 	" ( ${ADDONS_URI}/skia-m86-e1e24080421116cf5d63b55cd5042176bebc0a43.tar.xz )"
-    " ( ${ADDONS_URI}/dtoa-20180411.tgz )"
+	" ( ${ADDONS_URI}/dtoa-20180411.tgz )"
 	"base? (
 		${ADDONS_URI}/commons-logging-1.2-src.tar.gz
 		${ADDONS_URI}/ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
@@ -283,7 +282,7 @@ RDEPEND="${COMMON_DEPEND}
 	java? ( || (
 	dev-java/openjdk:11
 	dev-java/openjdk-jre-bin:11
-	>=virtual/jre-11-r1 
+	>=virtual/jre-11-r1
 	) )
 	kde? ( kde-frameworks/breeze-icons:* )
 "
