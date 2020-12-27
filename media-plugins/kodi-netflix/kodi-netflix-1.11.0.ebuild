@@ -36,7 +36,7 @@ RDEPEND="
 	media-plugins/kodi-addon-signals
 	media-plugins/kodi-inputstreamhelper
 	>=dev-python/pycparser-2.18
-	dev-python/pycryptodomex
+	dev-python/pycryptodome
 "
 
 src_compile() {
