@@ -464,7 +464,6 @@ src_configure() {
 		--disable-openssl
 		--disable-pdfium
 		--disable-report-builder
-		--disable-vlc
 		--with-extra-buildid="${gentoo_buildid}"
 		--enable-extension-integration
 		--with-external-dict-dir="${EPREFIX}/usr/share/myspell"
