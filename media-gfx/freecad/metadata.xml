@@ -47,6 +47,11 @@
 		<flag name="netgen">
 			Support <pkg>sci-mathematics/netgen</pkg> with the FEM workbench
 		</flag>
+		<flag name="oce">
+			If set, build against the community edition of opencascade,
+			<pkg>sci-libs/oce</pkg>. If unset, the package is built against
+			the official version <pkg>sci-libs/opencascade</pkg>.
+		</flag>
 		<flag name="openscad">
 			Build the OpenSCAD module for interoperability with OpenSCAD 
 			and repairing Constructive Solid Geometry (CSG) history
@@ -114,7 +119,6 @@ NOTE: Below flags were once in the ebuild, but have been removed as
 USE flags for maintainability and reducing number of USE flags.
 They are either enabled by default, or enabled through the use of
 other USE flags.
-
 default enabled:
 draft - Build the draft module and workbench for 2D tools and basic 2D and 3D CAD operations
 import - Build the import module for importing various file formats
@@ -122,17 +126,14 @@ part - Build the part module and workbench to work with CAD parts
 sketcher - Build the sketcher module and workbench to work with geometry-constrained sketches
 start - Build the start center workbench, which allows you to quickly jump to one of the most common workbenches
 web - Build the web module and workbench, which provides a browser window
-
 enabled through USE=mesh
 flat_mesh - Build the flat mesh module
 mesh_part - Build the mesh part module
 smesh - Build the smesh module for optimized mesh handling
-
 enabled through USE=debug
 sandbox - Build the sanbox module (only for testing / debugging)
 template - Build the template module (only for testing / debugging)
 test - Build the test framework module and workbench used for debugging
-
 disabled: The Occulus SDK development for linux seems to be stalled. 
 As long as there is no stable means to add a package for it, we disable the use of vr.
 vr - Build the VR module and workbench which provides Occulus Rift support (needs Occulus SDK 4.x or higher)
