@@ -40,7 +40,7 @@ src_prepare() {
 		eapply "${FILESDIR}/localversion.patch"
 	fi
 
-	if use experimental cacule; then
+	if use experimental ; then
 		eapply "${FILESDIR}/interactivity_score_fix.patch"
 	fi
 
