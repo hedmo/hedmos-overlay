@@ -26,7 +26,7 @@ else
 
 fi
 
-[[ ${PV} == *9999 ]] && S="${WORKDIR}/freecad-${PV}" || S="${WORKDIR}/FreeCAD-${COMMIT}"
+[[ ${PV} == *9999 ]] && S="${WORKDIR}/freecad-${COMMIT}" || S="${WORKDIR}/FreeCAD-${COMMIT}"
 
 # code is licensed LGPL-2
 # examples are licensed CC-BY-SA (without note of specific version)
