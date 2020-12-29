@@ -14,7 +14,7 @@ DESCRIPTION="Full XanMod sources with cacule option and including the Gentoo pat
 HOMEPAGE="https://xanmod.org"
 LICENSE+=" CDDL"
 KEYWORDS="~amd64"
-IUSE="cacule"
+IUSE="cacule experimental"
 XANMOD_VERSION="1"
 XANMOD_URI="https://github.com/xanmod/linux/releases/download/"
 SRC_URI="
@@ -38,6 +38,9 @@ src_prepare() {
 
 	if use cacule; then
 		eapply "${FILESDIR}/localversion.patch"
+	fi
+
+	if use experimental cacule; then
 		eapply "${FILESDIR}/no_reset_on_migration.patch"
 	fi
 
