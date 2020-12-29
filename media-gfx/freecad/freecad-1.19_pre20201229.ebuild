@@ -26,7 +26,7 @@ else
 
 fi
 
-[[ ${PV} == *9999 ]] && S="${WORKDIR}/freecad-${COMMIT}" || S="${WORKDIR}/FreeCAD-${COMMIT}"
+[[ ${PV} == *9999 ]] && S="${WORKDIR}/freecad-${PV}" || S="${WORKDIR}/FreeCAD-${COMMIT}"
 
 # code is licensed LGPL-2
 # examples are licensed CC-BY-SA (without note of specific version)
@@ -134,7 +134,6 @@ DOCS=( README.md ChangeLog.txt )
 
 CHECKREQS_DISK_BUILD="7G"
 
-[[ ${PV} == *9999 ]] && S="${WORKDIR}/freecad-${PV}" || S="${WORKDIR}/FreeCAD-${PV}"
 
 pkg_setup() {
 	check-reqs_pkg_setup
