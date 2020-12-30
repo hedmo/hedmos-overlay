@@ -1,5 +1,5 @@
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 335efc1c6f06..feac0a642d20 100644
+index 335efc1c6f06..f81f2f38659e 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
 @@ -43,6 +43,7 @@ unsigned int sysctl_sched_latency			= 6000000ULL;
@@ -92,14 +92,3 @@ index 335efc1c6f06..feac0a642d20 100644
  #else
  	curr->vruntime += calc_delta_fair(delta_exec, curr);
  	update_min_vruntime(cfs_rq);
-@@ -6996,10 +7037,8 @@ static void migrate_task_rq_fair(struct task_struct *p, int new_cpu)
- 	/* Tell new CPU we are migrated */
- 	p->se.avg.last_update_time = 0;
- 
--#if !defined(CONFIG_CACULE_SCHED)
- 	/* We have migrated, no longer consider this task hot */
- 	p->se.exec_start = 0;
--#endif
- 
- 	update_scan_period(p, new_cpu);
- }
