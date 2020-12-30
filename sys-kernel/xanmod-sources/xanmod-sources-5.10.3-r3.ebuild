@@ -38,10 +38,11 @@ src_prepare() {
 
 	if use cacule; then
 		eapply "${FILESDIR}/localversion.patch"
+		eapply "${FILESDIR}/interactivity_score_fix_xanmod.patch"
 	fi
 
 	if use experimental ; then
-		eapply "${FILESDIR}/interactivity_score_fix.patch"
+		eapply "${FILESDIR}/no_reset_on_migration.patch"
 	fi
 
 	kernel-2_src_prepare
