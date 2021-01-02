@@ -41,7 +41,7 @@ src_prepare() {
 	fi
 
 	if use experimental ; then
-		eapply "${FILESDIR}/grq-r2.patch"
+		eapply "${FILESDIR}/no_reset_on_migration.patch"
 	fi
 
 	kernel-2_src_prepare
