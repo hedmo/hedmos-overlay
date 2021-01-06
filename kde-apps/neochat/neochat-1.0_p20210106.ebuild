@@ -16,8 +16,8 @@ then
 	EGIT_REPO_URI="https://github.com/KDE/${PN}.git"
 	inherit git-r3
 else
-	SRC_URI="https://github.com/KDE/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
-
+	COMMIT="43c7e00ec5097da9b58257a768c31b81afc16c15"
+	SRC_URI="https://github.com/KDE/${PN}/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64"
 fi
 
