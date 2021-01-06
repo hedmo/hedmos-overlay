@@ -19,6 +19,7 @@ else
 	COMMIT="43c7e00ec5097da9b58257a768c31b81afc16c15"
 	SRC_URI="https://github.com/KDE/${PN}/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~amd64"
+	S="${WORKDIR}"/${PN}-${COMMIT}
 fi
 
 LICENSE="GPL-3"
