@@ -49,10 +49,7 @@ DEPEND="
 RDEPEND="
 	${DEPEND}
 	"
-	
-src_prepare() {
-	default
-}
+
 
 src_compile() {
 	# no-op
