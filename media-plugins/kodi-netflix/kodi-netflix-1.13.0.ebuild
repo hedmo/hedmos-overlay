@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit multilib kodi-addon
+inherit multilib
 
 DESCRIPTION="Inputstream based Netflix plugin for Kodi"
 HOMEPAGE="https://github.com/CastagnaIT/plugin.video.netflix"
@@ -49,7 +49,6 @@ DEPEND="
 RDEPEND="
 	${DEPEND}
 	"
-
 
 src_compile() {
 	# no-op
