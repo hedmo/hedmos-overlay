@@ -1,19 +1,21 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
+K_WANT_GENPATCHES="base extras"
+K_GENPATCHES_VER="1"
 K_SECURITY_UNSUPPORTED="1"
 K_NOSETEXTRAVERSION="1"
 ETYPE="sources"
 inherit kernel-2
 detect_version
 
-DESCRIPTION="A general-purpose kernel with custom settings and new features"
+DESCRIPTION="Full XanMod sources with cacule option and including the Gentoo patchset "
 HOMEPAGE="https://xanmod.org"
 LICENSE+=" CDDL"
 KEYWORDS="~amd64"
+IUSE="cacule experimental"
 XANMOD_VERSION="1"
-IUSE="cacule"
 XANMOD_URI="https://github.com/xanmod/linux/releases/download/"
 SRC_URI="
 	${KERNEL_BASE_URI}/linux-${KV_MAJOR}.${KV_MINOR}.tar.xz
@@ -36,6 +38,9 @@ src_prepare() {
 
 	if use cacule; then
 		eapply "${FILESDIR}/localversion.patch"
+	fi
+
+	if use experimental ; then
 		eapply "${FILESDIR}/no_reset_on_migration.patch"
 	fi
 
