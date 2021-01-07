@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit multilib kodi-addon
+inherit multilib 
 
 DESCRIPTION="steam launcher plugin for Kodi"
 HOMEPAGE="https://github.com/teeedubb/teeedubb-xbmc-repo.git"
