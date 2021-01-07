@@ -9,7 +9,7 @@ MY_P="${PN}-core-${PV}_git2813"
 
 DESCRIPTION="Xapian Probabilistic Information Retrieval library"
 HOMEPAGE="https://www.xapian.org/"
-SRC_URI="https://oligarchy.co.uk/xapian/master/xapian-core-1.5.0_git2813.tar.xz"
+SRC_URI="https://github.com/hedmo/stuff/raw/main/tars/${MY_P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0/30" # ABI version of libxapian.so
@@ -22,7 +22,6 @@ RDEPEND="${DEPEND}"
 S="${WORKDIR}/${MY_P}"
 PATCHES=(
 	"${FILESDIR}/gcc11_include.patch"
-
 )
 multilib_src_configure() {
 	local myconf=""
