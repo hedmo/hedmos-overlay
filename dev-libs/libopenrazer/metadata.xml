@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>hedmoo@yahoo.com</email>
+		<name>Andreas Westman Dorcsak</name>
+	</maintainer>
+	<use>
+		<flag name="demo">enable demo support.</flag>
+</use>
+	<upstream>
+		<remote-id type="gitlab">/z3ntu/RazerGenie</remote-id>
+	</upstream>
+</pkgmetadata>
