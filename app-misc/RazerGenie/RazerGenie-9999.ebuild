@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -14,7 +14,7 @@ SRC_URI=""
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="+openrazer matrix"
+IUSE="openrazer matrix"
 
 DEPEND="dev-qt/qtdbus:5
 	dev-qt/qtnetwork:5
@@ -22,13 +22,11 @@ DEPEND="dev-qt/qtdbus:5
 	dev-qt/qtxml:5"
 RDEPEND="${DEPEND}
 	app-misc/razer_test
+	openrazer? ( app-misc/openrazer )
 	dev-libs/libopenrazer
 	"
 BDEPEND="dev-qt/linguist-tools:5
 	virtual/pkgconfig
-	openrazer? (
-	app-misc/openrazer
-	)
 	"
 
 src_configure() {
