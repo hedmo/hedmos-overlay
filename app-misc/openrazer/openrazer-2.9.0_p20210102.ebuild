@@ -15,7 +15,7 @@ if [[ ${PV} == 9999 ]]; then
 inherit git-r3
 else
 
-COMMIT="03df9f3bde2a3e7e47153c2e142d942da9d68564"
+COMMIT="a095508ce16460bfcd3f6e462e2ffd47d2f7bae6"
 SRC_URI="https://github.com/${PN}/${PN}/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS=" ~amd64"
 fi
