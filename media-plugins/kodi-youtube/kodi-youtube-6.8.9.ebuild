@@ -47,6 +47,6 @@ src_compile() {
 }
 
 src_install() {
-	insinto /usr/$(get_libdir)/kodi/addons/plugin.video.netflix
+	insinto /usr/$(get_libdir)/kodi/addons/${MY_PN}
 	doins -r *
 }
