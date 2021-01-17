@@ -6,35 +6,40 @@ EAPI=7
 inherit  meson
 
 DESCRIPTION="A work-in-progress replacement for OpenRazer"
-HOMEPAGE="https://github.com/z3ntu/RazerGenie"
+HOMEPAGE="https://github.com/z3ntu/razer_test"
 if [[ ${PV} == 9999 ]]; then
 	EGIT_REPO_URI="https://github.com/z3ntu/${PN}.git"
-    inherit git-r3
+	inherit git-r3
 else
-COMMIT="b9cdb73aaabb2b6c8c74efb56b0dfabf387f3245"
-SRC_URI="https://github.com/z3ntu/${PN}/archive/${COMMIT}.zip"
-	KEYWORDS=" ~amd64  ~x86 "
+	COMMIT="bb609cf0036d95c1afff855f2a5bce8cf4a41c11"
+	SRC_URI="https://github.com/z3ntu/${PN}/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
+	KEYWORDS=" ~amd64 "
+	S="${WORKDIR}"/${PN}-${COMMIT}
 fi
-S="${WORKDIR}"/${PN}-${COMMIT}
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
 IUSE="bringup tests"
 
-DEPEND="dev-qt/qtdbus:5
+DEPEND="
+	dev-qt/qtdbus:5
 	dev-qt/qtnetwork:5
+	dev-qt/linguist-tools:5
 	dev-qt/qtwidgets:5
-	dev-qt/qtxml:5"
-RDEPEND="${DEPEND}"
-BDEPEND="dev-qt/linguist-tools:5
+	dev-qt/qtxml:5
+	"
+RDEPEND="${DEPEND}
+	dev-libs/hidapi
+	"
+BDEPEND="
 	virtual/pkgconfig
-	dev-libs/hidapi"
+	dev-libs/hidapi
+	"
 
 src_configure() {
-     local emesonargs=(
-	    "$(meson_use bringup build_bringup_util)"
-	    "$(meson_use tests build_tests)"
-     )
+	local emesonargs=(
+		"$(meson_use bringup build_bringup_util)"
+		"$(meson_use tests build_tests)"
+	)
 	meson_src_configure
 }
