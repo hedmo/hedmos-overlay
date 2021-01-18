@@ -12,10 +12,9 @@ if [[ ${PV} == "9999" ]]; then
 	inherit git-r3
 	EGIT_REPO_URI="https://github.com/quotient-im/${PN}.git"
 else
-	COMMIT="0990ab8121002e1613ac68558e07c74855370713"
-	SRC_URI="https://github.com/quotient-im/libQuotient/archive/${COMMIT}.tar.gz -> "${P}".tar.gz"
+	SRC_URI="https://github.com/quotient-im/libQuotient/archive/${PV}.tar.gz -> "${P}".tar.gz"
 	KEYWORDS="~amd64"
-	S="${WORKDIR}"/${PN}-${COMMIT}
+	S="${WORKDIR}"/${PN}-${PV}
 fi
 
 LICENSE="GPL-3"
