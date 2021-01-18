@@ -20,7 +20,7 @@ else
 	KEYWORDS="~amd64"
 	S="${WORKDIR}"/${PN}-${PV}
 fi
-https://github.com/KDE/neochat/archive/v1.0.1.tar.gz
+
 LICENSE="GPL-3"
 SLOT="0"
 IUSE=""
