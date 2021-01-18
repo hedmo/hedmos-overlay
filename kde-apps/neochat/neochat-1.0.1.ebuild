@@ -36,7 +36,6 @@ DEPEND="
 	>=dev-qt/qtquickcontrols2-${QTMIN}:5
 	>=dev-qt/qtsvg-${QTMIN}:5
 	>=dev-libs/qtkeychain-0.11.1
-	>=dev-libs/libQuotient-0.7_p20210102
 	>=kde-frameworks/kquickimageeditor-0.1.2
 	>=kde-frameworks/kconfig-${KFMIN}:5
 	>=kde-frameworks/kcoreaddons-${KFMIN}:5
@@ -44,6 +43,7 @@ DEPEND="
 	>=kde-frameworks/ki18n-${KFMIN}:5
 	>=kde-frameworks/knotifications-${KFMIN}:5
 	|| ( media-fonts/roboto media-fonts/noto )
+	>=net-libs/libQuotient-0.6.4
 	sys-devel/gettext
 "
 
