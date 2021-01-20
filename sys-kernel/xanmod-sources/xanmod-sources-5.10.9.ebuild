@@ -1,4 +1,4 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
@@ -38,7 +38,6 @@ src_prepare() {
 
 	if use cacule; then
 		eapply "${FILESDIR}/localversion.patch"
-		eapply "${FILESDIR}/interactivity_score_fix_xanmod.patch"
 	fi
 
 	if use experimental ; then
