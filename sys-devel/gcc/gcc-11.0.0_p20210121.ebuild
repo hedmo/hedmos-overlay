@@ -9,10 +9,10 @@ DESCRIPTION="The GNU Compiler Collection"
 HOMEPAGE="https://gcc.gnu.org/"
 
 GCC_URI="https://github.com/gcc-mirror/gcc/archive"
-COMMIT="f03851e1a6dac72127e97629e259ad01a2b1e7b6"
+COMMIT="f645da0e4ab9438dfd0c047c710c7ec6a7d6d8f3"
 PATCH_GCC_URI="https://dev.gentoo.org/~slyfox/distfiles"
 PATCH_GCC_VER="11.0.0"
-PATCH_VER="4"
+PATCH_VER="5"
 
 SRC_URI="${GCC_URI}/${COMMIT}.tar.gz -> ${P}.tar.gz
 ${PATCH_GCC_URI}/gcc-${PATCH_GCC_VER}-patches-${PATCH_VER}.tar.bz2"
