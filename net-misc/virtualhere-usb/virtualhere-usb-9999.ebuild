@@ -12,20 +12,12 @@ DESCRIPTION="Share USB devices over the network"
 HOMEPAGE="https://virtualhere.com"
 SRC_URI="client? (
 		amd64? ( ${CLIENT_URI/_arch_/clientx86_64} )
-		arm?   ( ${CLIENT_URI/_arch_/clientarmhf} )
-		x86?   ( ${CLIENT_URI/_arch_/clienti386} )
 	)
 	gui? (
 		amd64? ( ${CLIENT_URI/_arch_/uit64} )
-		arm?   ( ${CLIENT_URI/_arch_/uitarm7} )
-		x86?   ( ${CLIENT_URI/_arch_/uit32} )
 	)
 	server? (
 		amd64? ( ${SERVER_URI/_arch_/usbdx86_64} )
-		arm?   ( ${SERVER_URI/_arch_/usbdarm} )
-		arm64? ( ${SERVER_URI/_arch_/usbdarm64} )
-		mips?  ( ${SERVER_URI/_arch_/usbdmips} )
-		x86?   ( ${SERVER_URI/_arch_/usbdi386} )
 	)"
 LICENSE="openssl no-source-code"
 SLOT="0"
@@ -67,8 +59,6 @@ src_install() {
 		doexe vhclient*
 		newconfd "${FILESDIR}"/vhusb-client.confd vhusb-client
 		use amd64 && newinitd "${FILESDIR}"/vhusb-client.amd64 vhusb-client
-		use arm   && newconfd "${FILESDIR}"/vhusb-client.arm   vhusb-client
-		use x86   && newconfd "${FILESDIR}"/vhusb-client.x86   vhusb-client
 	fi
 
 	if use server ; then
@@ -76,9 +66,6 @@ src_install() {
 		doins "${FILESDIR}"/config.ini
 		newconfd "${FILESDIR}"/vhusb-server.confd vhusb-server
 		use amd64 && newinitd "${FILESDIR}"/vhusb-server.amd64 vhusb-server
-		use arm   && newinitd "${FILESDIR}"/vhusb-server.arm   vhusb-server
-		use arm64 && newinitd "${FILESDIR}"/vhusb-server.arm64 vhusb-server
-		use mips  && newinitd "${FILESDIR}"/vhusb-server.mips  vhusb-server
-		use x86   && newinitd "${FILESDIR}"/vhusb-server.x86   vhusb-server
+
 	fi
 }
