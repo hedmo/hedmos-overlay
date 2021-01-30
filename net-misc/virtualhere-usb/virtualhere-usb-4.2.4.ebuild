@@ -14,7 +14,7 @@ SRC_URI="client? (
 		amd64? ( ${CLIENT_URI/_arch_/clientx86_64} ) -> vhclientx86_64-${PV}
 	)
 	gui? (
-		amd64? ( ${CLIENT_URI/_arch_/uit64} ) -> vhuit64_64-${PV}
+		amd64? ( ${CLIENT_URI/_arch_/uit64} ) -> vhuit64-${PV}
 	)
 	server? (
 		amd64? ( ${SERVER_URI/_arch_/usbdx86_64} ) -> vhusbdx86_64-${PV}
