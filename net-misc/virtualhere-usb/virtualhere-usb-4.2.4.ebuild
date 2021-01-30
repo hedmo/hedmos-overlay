@@ -49,7 +49,7 @@ src_unpack() {
 	done
 }
 src_prepare() {
-    default
+default
 	if use client ; then
 		mv -v "${WORKDIR}/vhclientx86_64-${PV}" "${WORKDIR}/vhclientx86_64" || die
 	fi
