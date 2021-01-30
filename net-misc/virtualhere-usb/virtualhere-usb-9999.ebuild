@@ -21,7 +21,7 @@ SRC_URI="client? (
 	)"
 LICENSE="openssl no-source-code"
 SLOT="0"
-KEYWORDS="~amd64 "
+#KEYWORDS="~amd64 "
 IUSE="client gui +server"
 REQUIRED_USE="|| ( client gui server )"
 RESTRICT="mirror"
