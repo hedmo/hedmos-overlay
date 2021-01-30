@@ -11,13 +11,13 @@ inherit linux-info
 DESCRIPTION="Share USB devices over the network"
 HOMEPAGE="https://virtualhere.com"
 SRC_URI="client? (
-		amd64? ( ${CLIENT_URI/_arch_/clientx86_64?raw=true} ) -> vhclientx86_64-${PV}
+		amd64? ( ${CLIENT_URI}vhclientx86_64 ) -> vhclientx86_64-${PV}
 	)
 	gui? (
-		amd64? ( ${CLIENT_URI/_arch_/uit64?raw=true} ) -> vhuit64-${PV}
+		amd64? ( ${CLIENT_URI}vhuit64 ) -> vhuit64-${PV}
 	)
 	server? (
-		amd64? ( ${SERVER_URI/_arch_/usbdx86_64?raw=true} ) -> vhusbdx86_64-${PV}
+		amd64? ( ${SERVER_URI}vhusbdx86_64 ) -> vhusbdx86_64-${PV}
 	)"
 LICENSE="openssl no-source-code"
 SLOT="0"
