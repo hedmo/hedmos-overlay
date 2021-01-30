@@ -54,7 +54,7 @@ default
 		mv -v "${WORKDIR}/vhclientx86_64-${PV}" "${WORKDIR}/vhclientx86_64" || die
 	fi
 
-		mv -v "${WORKDIR}/vhuit64_64-${PV}" "${WORKDIR}/vhuit64_64" || die
+		mv -v "${WORKDIR}/vhuit64-${PV}" "${WORKDIR}/vhuit64" || die
 		mv -v "${WORKDIR}/vhusbdx86_64-${PV}" "${WORKDIR}/vhusbdx86_64" || die
 
 }
