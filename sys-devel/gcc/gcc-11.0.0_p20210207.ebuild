@@ -12,7 +12,7 @@ GCC_URI="https://github.com/gcc-mirror/gcc/archive"
 COMMIT="3d912941f29c27b2ac7c79b9e7cb2f1150e75758"
 PATCH_GCC_URI="https://dev.gentoo.org/~slyfox/distfiles"
 PATCH_GCC_VER="11.0.0"
-PATCH_VER="5"
+PATCH_VER="6"
 
 SRC_URI="${GCC_URI}/${COMMIT}.tar.gz -> ${P}.tar.gz
 ${PATCH_GCC_URI}/gcc-${PATCH_GCC_VER}-patches-${PATCH_VER}.tar.bz2"
