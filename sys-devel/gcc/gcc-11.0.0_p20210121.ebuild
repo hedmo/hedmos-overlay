@@ -26,5 +26,6 @@ BDEPEND="${CATEGORY}/binutils"
 
 src_prepare() {
 	has_version '>=sys-libs/glibc-2.32-r1' && rm -v "${WORKDIR}/patch/23_all_disable-riscv32-ABIs.patch"
+	 rm -v "${WORKDIR}/patch/07_all_i386_libgcc_note.GNU-stack.patch"
 	toolchain_src_prepare
 }
