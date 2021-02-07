@@ -12,7 +12,7 @@ GCC_URI="https://github.com/gcc-mirror/gcc/archive"
 COMMIT="f645da0e4ab9438dfd0c047c710c7ec6a7d6d8f3"
 PATCH_GCC_URI="https://dev.gentoo.org/~slyfox/distfiles"
 PATCH_GCC_VER="11.0.0"
-PATCH_VER="5"
+PATCH_VER="6"
 
 SRC_URI="${GCC_URI}/${COMMIT}.tar.gz -> ${P}.tar.gz
 ${PATCH_GCC_URI}/gcc-${PATCH_GCC_VER}-patches-${PATCH_VER}.tar.bz2"
@@ -26,6 +26,5 @@ BDEPEND="${CATEGORY}/binutils"
 
 src_prepare() {
 	has_version '>=sys-libs/glibc-2.32-r1' && rm -v "${WORKDIR}/patch/23_all_disable-riscv32-ABIs.patch"
-	 rm -v "${WORKDIR}/patch/07_all_i386_libgcc_note.GNU-stack.patch"
 	toolchain_src_prepare
 }
