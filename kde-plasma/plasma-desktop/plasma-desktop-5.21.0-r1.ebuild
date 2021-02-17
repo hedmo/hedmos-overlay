@@ -120,7 +120,7 @@ RDEPEND="${COMMON_DEPEND}
 
 PATCHES=(
 	"${WORKDIR}/${XORGHDRS}/override-include-dirs.patch" # downstream patch
-	"${FILESDIR}/${P}gcc-11_include.patch" # autostartmodel.cpp missing #include <optional>
+	"${FILESDIR}/${P}-gcc-11_include.patch" # autostartmodel.cpp missing #include <optional>
 )
 
 src_prepare() {
