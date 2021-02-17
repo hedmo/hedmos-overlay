@@ -1,0 +1,10 @@
+--- a/kcms/autostart/autostartmodel.cpp	2021-02-15 13:23:38.000000000 +0100
++++ b/kcms/autostart/autostartmodel.cpp	2021-02-17 07:45:17.126561873 +0100
+@@ -17,6 +17,7 @@
+  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA          *
+  ***************************************************************************/
+ #include "autostartmodel.h"
++#include <optional>
+ 
+ #include <KConfigGroup>
+ #include <KDesktopFile>
