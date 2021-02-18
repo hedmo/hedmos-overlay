@@ -18,11 +18,23 @@ GIT_COMMIT="1ea03bba615de59a3282b37e5ec31d14c985e772"
 EGIT_CHECKOUT_DIR="${WORKDIR}/linux-${PV/_/-}-landlock"
 EGIT_CLONE_TYPE="shallow"
 
+XANMOD_VERSION="1"
+XANMOD_URI="https://github.com/xanmod/linux/releases/download/"
+OKV="5.11.0"
+SRC_URI=" experimental? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz  )"
+
 DESCRIPTION="landlock kernel sources"
 HOMEPAGE="https://github.com/landlock-lsm/linux.git"
 
 KEYWORDS=""
+IUSE="experimental"
 src_unpack() {
 	git-r3_src_unpack
 	unpack_set_extraversion
+
+UNIPATCH_LIST_DEFAULT=""
+	if use experimental; then
+		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz "
+	fi
+		kernel-2_src_unpack
 }
