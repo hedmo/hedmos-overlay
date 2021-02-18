@@ -35,7 +35,7 @@ src_unpack() {
 
 src_prepare() {
 	if use experimental; then
-		UNIPATCH_LIST="${FILESDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz"
+		UNIPATCH_LIST="${FILESDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.patch"
 	fi
 	kernel-2_src_prepare
 }
