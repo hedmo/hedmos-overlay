@@ -31,7 +31,7 @@ src_unpack() {
 	git-r3_src_unpack
 	unpack_set_extraversion
 
-UNIPATCH_LIST_DEFAULT=""
+
 	if use experimental; then
 		UNIPATCH_LIST="${FILESDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz "
 	fi
