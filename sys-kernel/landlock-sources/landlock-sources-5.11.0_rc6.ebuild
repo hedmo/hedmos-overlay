@@ -31,9 +31,11 @@ src_unpack() {
 	git-r3_src_unpack
 	unpack_set_extraversion
 
+}
 
+src_prepare() {
 	if use experimental; then
-		UNIPATCH_LIST="${FILESDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz "
+		eapply "${FILESDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz"
 	fi
-		kernel-2_src_unpack
+	kernel-2_src_prepare
 }
