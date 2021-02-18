@@ -21,7 +21,7 @@ SRC_URI="
 	${KERNEL_BASE_URI}/linux-${KV_MAJOR}.${KV_MINOR}.tar.xz
 	cacule? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}-cacule/patch-${OKV}-xanmod${XANMOD_VERSION}-cacule.xz  )
 	!cacule? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz  )
-	experimental? ( https://github.com/smeso/sara/releases/download/SARAv6/sara-4.14.y.patch )
+	experimental? ( https://github.com/smeso/sara/releases/download/SARAv6/sara-4.4.y.patch )
 	${GENPATCHES_URI}
 "
 
@@ -42,7 +42,7 @@ src_prepare() {
 	fi
 
 	if use experimental ; then
-		eapply "${DISTDIR}/sara-4.14.y.patch"
+		eapply "${DISTDIR}/sara-4.4.y.patch"
 	fi
 
 	kernel-2_src_prepare
