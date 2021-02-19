@@ -3,7 +3,7 @@
 
 EAPI="7"
 
-PYTHON_COMPAT=( python{2_7,3_6} )
+PYTHON_COMPAT=( python{2_7,3_8} )
 inherit distutils-r1 udev 
 
 DESCRIPTION="AlienFX is a Linux utility to control the lighting effects of your Alienware computer."
