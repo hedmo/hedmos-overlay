@@ -15,19 +15,21 @@ HOMEPAGE="https://xanmod.org"
 LICENSE+=" CDDL"
 KEYWORDS="~amd64"
 IUSE="cacule experimental"
+CACULE=""
 XANMOD_VERSION="1"
 XANMOD_URI="https://github.com/xanmod/linux/releases/download/"
 SRC_URI="
 	${KERNEL_BASE_URI}/linux-${KV_MAJOR}.${KV_MINOR}.tar.xz
-	cacule? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}-cacule/patch-${OKV}-xanmod${XANMOD_VERSION}-cacule.xz  )
+	cacule? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}${CACULE}/patch-${OKV}-xanmod${XANMOD_VERSION}${CACULE}.xz  )
 	!cacule? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz  )
 	${GENPATCHES_URI}
+	experimental? ( https://raw.githubusercontent.com/hedmo/stuff/main/patches/cacule5.11-rdb.patch )
 "
 
 src_unpack() {
 UNIPATCH_LIST_DEFAULT=""
 	if use cacule; then
-		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}-cacule.xz "
+		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}${CACULE}.xz "
 	else
 		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz "
 	fi
@@ -36,12 +38,12 @@ UNIPATCH_LIST_DEFAULT=""
 
 src_prepare() {
 
-	if use cacule; then
-		eapply "${FILESDIR}/localversion.patch"
-	fi
+#	if use cacule; then
+#		eapply "${FILESDIR}/localversion.patch"
+#	fi
 
 	if use experimental ; then
-		eapply "${FILESDIR}/no_reset_on_migration.patch"
+		eapply "${DISTDIR}/cacule5.11-rdb.patch"
 	fi
 
 	kernel-2_src_prepare
