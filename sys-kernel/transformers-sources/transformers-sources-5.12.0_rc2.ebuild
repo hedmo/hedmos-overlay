@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -12,8 +12,9 @@ detect_version
 detect_arch
 
 inherit git-r3 eapi7-ver
-EGIT_REPO_URI="https://github.com/grate-driver/linux.git -> transformers-linux.git"
+EGIT_REPO_URI=" https://github.com/grate-driver/linux.git -> transformers-linux.git"
 EGIT_BRANCH="master"
+GIT_COMMIT="3201b8b89388b3f688fee9f352d3002aec200ecc"
 EGIT_CHECKOUT_DIR="${WORKDIR}/linux-${PV/_/-}-transformers"
 EGIT_CLONE_TYPE="shallow"
 
