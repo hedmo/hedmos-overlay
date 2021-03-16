@@ -17,7 +17,7 @@ EGIT_BRANCH="master"
 GIT_COMMIT="2440cf4645dde776aa505bdf5e1656e7764cd265"
 EGIT_CHECKOUT_DIR="${WORKDIR}/linux-${PV}-tf700t"
 EGIT_CLONE_TYPE="shallow"
-
+SRC_URI="https://raw.githubusercontent.com/hedmo/stuff/main/dot_files/.config-transformers -> .config" 
 DESCRIPTION="Asus Transformers pad tf700t kernel sources"
 HOMEPAGE="https://github.com/clamor95/linux"
 
@@ -27,3 +27,4 @@ src_unpack() {
 	git-r3_src_unpack
 	unpack_set_extraversion
 }
+
