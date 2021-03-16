@@ -14,6 +14,7 @@ if [[ ${PV} == 99999999* ]]; then
 else
 	if [[ -n "${MY_COMMIT}" ]]; then
 		SRC_URI="https://github.com/clamor95/linux-firmware/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
+		S="${WORKDIR}/linux-firmware-${MY_COMMIT}"
 	else
 		SRC_URI="https://mirrors.edge.kernel.org/pub/linux/kernel/firmware/${P}.tar.xz"
 	fi
