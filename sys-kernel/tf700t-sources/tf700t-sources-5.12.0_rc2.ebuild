@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -13,8 +13,8 @@ detect_arch
 
 inherit git-r3 eapi7-ver
 EGIT_REPO_URI="https://github.com/clamor95/linux.git -> tf700t-linux.git"
-EGIT_BRANCH="tf700t"
-GIT_COMMIT="db32a08be148c363cc3e7dddebe290ce0447157c"
+EGIT_BRANCH="master"
+GIT_COMMIT="2440cf4645dde776aa505bdf5e1656e7764cd265"
 EGIT_CHECKOUT_DIR="${WORKDIR}/linux-${PV}-tf700t"
 EGIT_CLONE_TYPE="shallow"
 
