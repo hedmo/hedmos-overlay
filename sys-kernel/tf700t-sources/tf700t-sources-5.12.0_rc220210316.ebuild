@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -12,13 +12,14 @@ detect_version
 detect_arch
 
 inherit git-r3 eapi7-ver
-EGIT_REPO_URI="https://github.com/toqu/tf700t-linux.git -> tf700t-linux.git"
+EGIT_REPO_URI="https://github.com/clamor95/linux.git -> tf700t-linux.git"
 EGIT_BRANCH="master"
+GIT_COMMIT="0865a985789a7983a9bf2b7388a39d2231e6d4a3"
 EGIT_CHECKOUT_DIR="${WORKDIR}/linux-${PV}-tf700t"
 EGIT_CLONE_TYPE="shallow"
-
-DESCRIPTION="Asus Transformers pad original kernel sources"
-HOMEPAGE="https://github.com/grate-driver/linux.git"
+SRC_URI="https://raw.githubusercontent.com/hedmo/stuff/main/dot_files/.config-transformers -> .config" 
+DESCRIPTION="Asus Transformers pad tf700t kernel sources"
+HOMEPAGE="https://github.com/clamor95/linux"
 
 KEYWORDS=""
 
@@ -26,3 +27,4 @@ src_unpack() {
 	git-r3_src_unpack
 	unpack_set_extraversion
 }
+
