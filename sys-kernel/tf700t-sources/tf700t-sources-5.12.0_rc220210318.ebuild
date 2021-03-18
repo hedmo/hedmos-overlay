@@ -13,9 +13,10 @@ detect_arch
 
 inherit git-r3 eapi7-ver
 EGIT_REPO_URI="https://github.com/clamor95/linux.git -> tf700t-linux.git"
+VERSION="5.12.0_rc220210318"
 EGIT_BRANCH="master"
 GIT_COMMIT="1969dcb47c99f45ff71d87bb1a8ee2c57b251332"
-EGIT_CHECKOUT_DIR="${WORKDIR}/linux-${PV}-tf700t"
+EGIT_CHECKOUT_DIR="${WORKDIR}/linux-${VERSION}-tf700t"
 EGIT_CLONE_TYPE="shallow"
 SRC_URI="https://raw.githubusercontent.com/hedmo/stuff/main/dot_files/.config-transformers -> .config"
 DESCRIPTION="Asus Transformers pad tf700t kernel sources"
