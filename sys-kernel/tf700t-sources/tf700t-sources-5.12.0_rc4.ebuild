@@ -30,6 +30,11 @@ src_unpack() {
 	# We want to rename the unpacked directory to a nice normalised string
 	# bug #762766
 	mv "${WORKDIR}"/linux-${COMMIT} "${WORKDIR}"/linux-${KV_FULL} || die
+}
+
+src_prepare() {
 	#if one wants to use my .config 
+	if use config; then
 	mv "${WORKDIR}"/.config "${WORKDIR}"/linux-${KV_FULL}/.config || die 
+	fi
 }
