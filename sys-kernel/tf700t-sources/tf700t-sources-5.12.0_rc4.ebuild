@@ -11,14 +11,21 @@ inherit kernel-2
 detect_version
 detect_arch
 
-inherit  eapi7-ver
-COMMIT="c1c0020b1593cb3cbdfa415ab618fbe180ac572b"
-SRC_URI="https://github.com/clamor95/linux/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
 DESCRIPTION="Asus Transformers pad tf700t kernel sources"
 HOMEPAGE="https://github.com/clamor95/linux"
 
-KEYWORDS=""
+
+inherit  eapi7-ver
+COMMIT="c1c0020b1593cb3cbdfa415ab618fbe180ac572b"
+SRC_URI="https://github.com/clamor95/linux/archive/${COMMIT}.tar.gz -> linux-${KV_FULL}.tar.gz"
+
+KEYWORDS="~arm ~arm64"
 
 src_unpack() {
-	unpack_set_extraversion
+	default
+
+	# We want to rename the unpacked directory to a nice normalised string
+	# bug #762766
+	mv "${WORKDIR}"/linux-${COMMIT} "${WORKDIR}"/linux-${KV_FULL} || die
 }
+
