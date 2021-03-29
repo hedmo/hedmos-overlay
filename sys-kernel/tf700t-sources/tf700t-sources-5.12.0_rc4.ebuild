@@ -14,7 +14,6 @@ detect_arch
 DESCRIPTION="Asus Transformers pad tf700t kernel sources"
 HOMEPAGE="https://github.com/clamor95/linux"
 
-
 inherit  eapi7-ver
 IUSE="config"
 COMMIT="c1c0020b1593cb3cbdfa415ab618fbe180ac572b"
@@ -32,6 +31,5 @@ src_unpack() {
 	# bug #762766
 	mv "${WORKDIR}"/linux-${COMMIT} "${WORKDIR}"/linux-${KV_FULL} || die
 	#if one wants to use my .config 
-	mv "${WORKDIR}"/.config "${WORKDIR}"/linux-${KV_FULL}/.config || die  
+	mv "${WORKDIR}"/.config "${WORKDIR}"/linux-${KV_FULL}/.config || die 
 }
-
