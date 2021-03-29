@@ -14,7 +14,7 @@ detect_arch
 inherit git-r3 eapi7-ver
 EGIT_REPO_URI="https://github.com/clamor95/linux.git -> tf700t-linux.git"
 EGIT_BRANCH="master"
-GIT_COMMIT="c1c0020b1593cb3cbdfa415ab618fbe180ac572b"
+EGIT_COMMIT="c1c0020b1593cb3cbdfa415ab618fbe180ac572b"
 EGIT_CHECKOUT_DIR="${WORKDIR}/linux-${PV/_/-}-tf700t"
 EGIT_CLONE_TYPE="shallow"
 SRC_URI="https://raw.githubusercontent.com/hedmo/stuff/main/dot_files/.config-transformers -> .config"
