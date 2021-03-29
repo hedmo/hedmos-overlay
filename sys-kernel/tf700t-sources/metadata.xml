@@ -5,6 +5,9 @@
 		<email>hedmoo@yahoo.com</email>
 		<name>Andreas Westman Dorcsak</name>
 	</maintainer>
+	<use>
+		<flag name="config"> My default .config on my tf700t and tf300t  </flag>
+	</use>
 	<upstream>
 		<remote-id type="github">clamor95/linux</remote-id>
 	</upstream>

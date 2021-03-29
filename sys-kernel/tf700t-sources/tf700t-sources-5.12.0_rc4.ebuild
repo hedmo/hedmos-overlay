@@ -16,10 +16,14 @@ HOMEPAGE="https://github.com/clamor95/linux"
 
 
 inherit  eapi7-ver
+IUSE="config"
 COMMIT="c1c0020b1593cb3cbdfa415ab618fbe180ac572b"
-SRC_URI="https://github.com/clamor95/linux/archive/${COMMIT}.tar.gz -> linux-${KV_FULL}.tar.gz"
+SRC_URI="
+https://github.com/clamor95/linux/archive/${COMMIT}.tar.gz -> linux-${KV_FULL}.tar.gz
+	config? ( https://raw.githubusercontent.com/hedmo/stuff/main/dot_files/.config-transformers -> .config )
+"
 
-KEYWORDS="~arm ~arm64"
+KEYWORDS="~arm"
 
 src_unpack() {
 	default
@@ -27,5 +31,7 @@ src_unpack() {
 	# We want to rename the unpacked directory to a nice normalised string
 	# bug #762766
 	mv "${WORKDIR}"/linux-${COMMIT} "${WORKDIR}"/linux-${KV_FULL} || die
+	#if one wants to use my .config 
+	mv "${WORKDIR}"/.config "${WORKDIR}"/linux-${KV_FULL}/.config || die  
 }
 
