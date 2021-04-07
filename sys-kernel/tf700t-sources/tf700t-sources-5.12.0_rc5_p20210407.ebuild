@@ -6,7 +6,7 @@ EAPI=6
 ETYPE=sources
 K_DEFCONFIG="tegra3_defconfig"
 K_SECURITY_UNSUPPORTED=1
-EXTRAVERSION="-${PN}/-*"
+EXTRAVERSION=""
 inherit kernel-2
 detect_version
 detect_arch
@@ -16,7 +16,7 @@ HOMEPAGE="https://github.com/clamor95/linux"
 
 inherit  eapi7-ver
 IUSE="config"
-COMMIT="c1c0020b1593cb3cbdfa415ab618fbe180ac572b"
+COMMIT="2317196d7e1fc2947a2302d9beeeeb923a6989a1"
 SRC_URI="
 https://github.com/clamor95/linux/archive/${COMMIT}.tar.gz -> linux-${KV_FULL}.tar.gz
 	config? ( https://raw.githubusercontent.com/hedmo/stuff/main/dot_files/.config-transformers -> .config )
