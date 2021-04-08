@@ -6,6 +6,7 @@
 		<name>Andreas Westman Dorcsak</name>
 	</maintainer>
 	<use>
+		<flag name="cacule"> CacULE is a newer version of Cachy. The CacULE CPU scheduler is based on interactivity score mechanism. The interactivity score is inspired by the ULE scheduler (FreeBSD scheduler). </flag>
 		<flag name="config"> My default .config on my tf700t and tf300t  </flag>
 	</use>
 	<upstream>

@@ -15,11 +15,13 @@ DESCRIPTION="Asus Transformers pad tf700t kernel sources"
 HOMEPAGE="https://github.com/clamor95/linux"
 
 inherit  eapi7-ver
-IUSE="config"
+IUSE="config cacule"
 COMMIT="2317196d7e1fc2947a2302d9beeeeb923a6989a1"
+EXTRAS_URI="https://raw.githubusercontent.com/hedmo/stuff/main"
 SRC_URI="
 https://github.com/clamor95/linux/archive/${COMMIT}.tar.gz -> linux-${KV_FULL}.tar.gz
-	config? ( https://raw.githubusercontent.com/hedmo/stuff/main/dot_files/.config-transformers -> .config )
+	config? ( ${EXTRAS_URI}/dot_files/.config-transformers -> .config )
+	cacule? ( ${EXTRAS_URI}/patches/CacULE-5.12.patch )
 "
 
 KEYWORDS="~arm"
@@ -38,5 +40,9 @@ default
 	#if one wants to use my .config 
 	if use config; then
 	cp "${DISTDIR}"/.config "${WORKDIR}"/linux-${KV_FULL}/ || die 
+	fi
+
+	if use cacule; then
+		eapply "${DISTDIR}/CacULE-5.12.patch" || die
 	fi
 }
