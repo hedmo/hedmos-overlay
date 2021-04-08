@@ -21,7 +21,7 @@ EXTRAS_URI="https://raw.githubusercontent.com/hedmo/stuff/main"
 SRC_URI="
 https://github.com/clamor95/linux/archive/${COMMIT}.tar.gz -> linux-${KV_FULL}.tar.gz
 	config? ( ${EXTRAS_URI}/dot_files/.config-transformers -> .config )
-	cacule? ( ${EXTRAS_URI}/patches/CacULE-5.12.patch )
+	cacule? ( ${EXTRAS_URI}/patches/CacULE-5.12-32bit.patch )
 "
 
 KEYWORDS="~arm"
@@ -43,6 +43,6 @@ default
 	fi
 
 	if use cacule; then
-		eapply "${DISTDIR}/CacULE-5.12.patch" || die
+		eapply "${DISTDIR}/CacULE-5.12-32bit.patch" || die
 	fi
 }
