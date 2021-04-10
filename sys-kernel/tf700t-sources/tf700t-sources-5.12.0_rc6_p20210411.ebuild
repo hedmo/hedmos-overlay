@@ -39,7 +39,7 @@ default
 
 	#if one wants to use my .config
 	if use config; then
-	cp "${DISTDIR}"/.config "${WORKDIR}"/linux-${KV_FULL}/ || die 
+	cp "${DISTDIR}"/.config "${WORKDIR}"/linux-${KV_FULL}/ || die
 	fi
 
 	if use cacule; then
