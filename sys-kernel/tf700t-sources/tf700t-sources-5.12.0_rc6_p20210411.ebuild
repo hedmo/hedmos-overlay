@@ -37,7 +37,7 @@ src_unpack() {
 src_prepare() {
 default
 
-	#if one wants to use my .config 
+	#if one wants to use my .config
 	if use config; then
 	cp "${DISTDIR}"/.config "${WORKDIR}"/linux-${KV_FULL}/ || die 
 	fi
