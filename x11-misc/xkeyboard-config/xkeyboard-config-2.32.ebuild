@@ -16,7 +16,7 @@ else
 	SRC_URI="https://github.com/hedmo/stuff/raw/main/tars/${P}.tar.gz"
 	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~riscv ~s390 ~sparc ~x86 ~amd64-linux ~x86-linux ~ppc-macos ~sparc-solaris ~x86-solaris"
 fi
-https://github.com/hedmo/stuff/raw/main/tars/xkeyboard-config-2.32.tar.gz
+
 LICENSE="MIT"
 SLOT="0"
 IUSE=""
