@@ -25,12 +25,12 @@ IUSE="openrazer matrix"
 DEPEND="
 	dev-qt/qtdbus:5
 	dev-qt/qtnetwork:5
-	dev-qt/linguist-tools:5
 	dev-qt/qtnetwork:5
 	dev-qt/qtwidgets:5
 	dev-qt/qtxml:5"
 RDEPEND="${DEPEND}
 	app-misc/razer_test
+	dev-qt/linguist-tools:5
 	openrazer? ( app-misc/openrazer )
 	dev-libs/libopenrazer
 	"
