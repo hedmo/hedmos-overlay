@@ -12,7 +12,7 @@ if [[ ${PV} == 9999 ]]; then
 	EGIT_REPO_URI="https://github.com/z3ntu/${PN}.git"
 	inherit git-r3
 else
-	COMMIT="751cd6ca2b7e9608d7a1ca7119d8a81f261f2b4a"
+	COMMIT="7e4706058d2fec5ad72e6648edd3b091620c29f6"
 	SRC_URI="https://github.com/z3ntu/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS=" ~amd64 "
 	S="${WORKDIR}"/${PN}-${COMMIT}
