@@ -15,11 +15,13 @@ DESCRIPTION="Asus Transformers pad tf700t kernel sources"
 HOMEPAGE="https://github.com/clamor95/linux"
 
 inherit  eapi7-ver
-IUSE="config"
-COMMIT="bf950cef0275a99100b7401ade166511f50db02a"
+IUSE="config cacule"
+COMMIT="2f7734c53bdb5f00b30cf28f5513aaa42e2dfac4"
+EXTRAS_URI="https://raw.githubusercontent.com/hedmo/stuff/main"
 SRC_URI="
 https://github.com/clamor95/linux/archive/${COMMIT}.tar.gz -> linux-${KV_FULL}.tar.gz
-	config? ( https://raw.githubusercontent.com/hedmo/stuff/main/dot_files/.config-transformers -> .config )
+	config? ( ${EXTRAS_URI}/dot_files/.config-transformers -> .config )
+	cacule? ( ${EXTRAS_URI}/patches/cacule-5-grate-dev.patch )
 "
 
 KEYWORDS="~arm"
@@ -35,8 +37,12 @@ src_unpack() {
 src_prepare() {
 default
 
-	#if one wants to use my .config 
+	#if one wants to use my .config
 	if use config; then
-	cp "${DISTDIR}"/.config "${WORKDIR}"/linux-${KV_FULL}/ || die 
+	cp "${DISTDIR}"/.config "${WORKDIR}"/linux-${KV_FULL}/ || die
+	fi
+
+	if use cacule; then
+		eapply "${DISTDIR}/cacule-5-grate-dev.patch" || die
 	fi
 }
