@@ -17,11 +17,13 @@ HOMEPAGE="https://github.com/clamor95/linux"
 inherit  eapi7-ver
 IUSE="config cacule"
 COMMIT="2f7734c53bdb5f00b30cf28f5513aaa42e2dfac4"
+CACULE_URI="https://raw.githubusercontent.com/hamadmarri/cacule-cpu-scheduler/master/patches/CacULE"
 EXTRAS_URI="https://raw.githubusercontent.com/hedmo/stuff/main"
 SRC_URI="
 https://github.com/clamor95/linux/archive/${COMMIT}.tar.gz -> linux-${KV_FULL}.tar.gz
 	config? ( ${EXTRAS_URI}/dot_files/.config-transformers -> .config )
-	cacule? ( ${EXTRAS_URI}/patches/cacule-5-grate-dev.patch )
+	cacule? ( ${CACULE_URI}/v5.12/cacule-5.12.patch )
+	cacule? ( ${CACULE_URI}/32bit/cacule-32bit-converter.patch )
 "
 
 KEYWORDS="~arm"
@@ -43,6 +45,7 @@ default
 	fi
 
 	if use cacule; then
-		eapply "${DISTDIR}/cacule-5-grate-dev.patch" || die
+		eapply "${DISTDIR}/cacule-5.12.patch" || die
+		eapply "${DISTDIR}/cacule-32bit-converter.patch" || die
 	fi
 }
