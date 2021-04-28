@@ -34,7 +34,7 @@ UNIPATCH_LIST_DEFAULT=""
 	fi
 
 	if use experimental; then
-		unpack "${DISTDIR}/select_task_interactive_aware.patch.zip"
+		unpack "select_task_interactive_aware.patch.zip"
 	fi
 	kernel-2_src_unpack
 }
