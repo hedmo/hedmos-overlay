@@ -46,7 +46,7 @@ src_prepare() {
 	fi
 
 	if use experimental ; then
-		eapply "${DISTDIR}/select_task_interactive_aware.patch"
+		eapply "${WORKDIR}/select_task_interactive_aware.patch"
 	fi
 
 	kernel-2_src_prepare
