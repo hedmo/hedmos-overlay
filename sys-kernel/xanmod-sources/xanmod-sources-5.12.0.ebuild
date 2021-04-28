@@ -32,6 +32,10 @@ UNIPATCH_LIST_DEFAULT=""
 	else
 		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz "
 	fi
+
+	if use experimental; then
+		unpack "${DISTDIR}/select_task_interactive_aware.patch.zip"
+	fi
 	kernel-2_src_unpack
 }
 
