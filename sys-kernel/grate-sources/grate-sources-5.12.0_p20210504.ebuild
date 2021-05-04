@@ -19,7 +19,7 @@ IUSE="config cacule"
 COMMIT="ea24140f07884eb699ffd78f922e81b0262015ef"
 EXTRAS_URI="https://raw.githubusercontent.com/hedmo/stuff/main"
 SRC_URI="
-https://github.com/clamor95/linux/archive/${COMMIT}.tar.gz -> linux-${KV_FULL}.tar.gz
+https://github.com/grate-driver/linux/archive/${COMMIT}.tar.gz -> linux-${KV_FULL}.tar.gz
 	config? ( ${EXTRAS_URI}/dot_files/.config-transformers -> .config )
 	cacule? ( ${EXTRAS_URI}/patches/cacule-5-grate-dev.patch )
 "
