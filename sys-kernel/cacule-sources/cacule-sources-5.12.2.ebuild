@@ -16,7 +16,7 @@ LICENSE+=" CDDL"
 KEYWORDS="~amd64"
 IUSE="xanmod experimental"
 XANMOD_VERSION="1"
-CACULE_URI="https://github.com/hamadmarri/cacule-cpu-scheduler/blob/master/patches/CacULE"
+CACULE_URI="https://raw.githubusercontent.com/hamadmarri/cacule-cpu-scheduler/master/patches/CacULE"
 
 XANMOD_URI="https://github.com/xanmod/linux/releases/download/"
 SRC_URI="
@@ -52,7 +52,6 @@ src_prepare() {
 	if use xanmod ; then
 	rm "${S}"/.config || die
 	fi
-	
 }
 
 pkg_postinst() {
