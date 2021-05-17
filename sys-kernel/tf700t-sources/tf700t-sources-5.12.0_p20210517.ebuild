@@ -16,13 +16,12 @@ HOMEPAGE="https://github.com/clamor95/linux"
 
 inherit  eapi7-ver
 IUSE="config cacule"
-COMMIT="fe891e55516458ac2841536df57d9239e2b8e0e8"
+COMMIT="17602b1602db51081b7726827a1e818e09601017"
 EXTRAS_URI="https://raw.githubusercontent.com/hedmo/stuff/main"
 SRC_URI="
 https://github.com/clamor95/linux/archive/${COMMIT}.tar.gz -> linux-${KV_FULL}.tar.gz
 	config? ( ${EXTRAS_URI}/dot_files/.config-transformers -> .config )
-	cacule? ( ${EXTRAS_URI}/patches/CacULE-5.12.patch
-	${EXTRAS_URI}/patches/cacule-32bit-converter.patch )
+	cacule? ( ${EXTRAS_URI}/patches/cacule-5-grate-dev.patch )
 "
 
 KEYWORDS="~arm"
@@ -38,13 +37,12 @@ src_unpack() {
 src_prepare() {
 default
 
-	#if one wants to use my .config 
+	#if one wants to use my .config
 	if use config; then
-	cp "${DISTDIR}"/.config "${WORKDIR}"/linux-${KV_FULL}/ || die 
+	cp "${DISTDIR}"/.config "${WORKDIR}"/linux-${KV_FULL}/ || die
 	fi
 
 	if use cacule; then
-		eapply "${DISTDIR}/CacULE-5.12.patch" || die
-		eapply "${DISTDIR}/cacule-32bit-converter.patch" || die
+		eapply "${DISTDIR}/cacule-5-grate-dev.patch" || die
 	fi
 }
