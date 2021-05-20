@@ -21,7 +21,7 @@ EXTRAS_URI="https://raw.githubusercontent.com/hedmo/stuff/main"
 SRC_URI="
 https://github.com/grate-driver/linux/archive/${COMMIT}.tar.gz -> linux-${KV_FULL}.tar.gz
 	config? ( ${EXTRAS_URI}/dot_files/.config-transformers -> .config )
-	cacule? ( ${EXTRAS_URI}/patches/cacule-5-grate-dev.patch )
+	cacule? ( ${EXTRAS_URI}/patches/clamor-cacule-5.13.patch )
 "
 
 KEYWORDS="~arm"
@@ -43,6 +43,6 @@ default
 	fi
 
 	if use cacule; then
-		eapply "${DISTDIR}/cacule-5-grate-dev.patch" || die
+		eapply "${DISTDIR}/clamor-cacule-5.13.patch" || die
 	fi
 }
