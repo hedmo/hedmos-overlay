@@ -16,7 +16,7 @@ HOMEPAGE="https://github.com/clamor95/linux"
 
 inherit  eapi7-ver
 IUSE="config cacule"
-COMMIT="d31e237f0087982e8b199d2788b69c6fd5e747c6"
+COMMIT="2c03e0c0942cbe1f2550dafbc62b2d482ccbf6ac"
 EXTRAS_URI="https://raw.githubusercontent.com/hedmo/stuff/main"
 SRC_URI="
 https://github.com/clamor95/linux/archive/${COMMIT}.tar.gz -> linux-${KV_FULL}.tar.gz
