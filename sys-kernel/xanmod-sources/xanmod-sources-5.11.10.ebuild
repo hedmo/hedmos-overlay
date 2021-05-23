@@ -37,7 +37,7 @@ UNIPATCH_LIST_DEFAULT=""
 src_prepare() {
 
 	if use cacule; then
-		eapply "${FILESDIR}/localversion.patch"
+		eapply "${FILESDIR}/localversion1.patch"
 	fi
 
 	if use experimental ; then
