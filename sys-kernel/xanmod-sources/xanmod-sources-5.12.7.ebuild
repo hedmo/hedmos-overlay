@@ -21,6 +21,7 @@ SRC_URI="
 	${KERNEL_BASE_URI}/linux-${KV_MAJOR}.${KV_MINOR}.tar.xz
 	cacule? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}-cacule/patch-${OKV}-xanmod${XANMOD_VERSION}-cacule.xz  )
 	!cacule? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz  )
+	experimental? ( https://github.com/hamadmarri/cacule-cpu-scheduler/files/6383440/select_task_interactive_aware.patch.zip )
 	${GENPATCHES_URI}
 "
 
@@ -30,6 +31,10 @@ UNIPATCH_LIST_DEFAULT=""
 		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}-cacule.xz "
 	else
 		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz "
+	fi
+
+	if use experimental; then
+		unpack "select_task_interactive_aware.patch.zip"
 	fi
 	kernel-2_src_unpack
 }
@@ -41,7 +46,7 @@ src_prepare() {
 	fi
 
 	if use experimental ; then
-		eapply "${FILESDIR}/no_reset_on_migration.patch"
+		eapply "${WORKDIR}/select_task_interactive_aware.patch"
 	fi
 
 	kernel-2_src_prepare
