@@ -3,7 +3,8 @@
 
 EAPI=6
 
-PYTHON_COMPAT=( python3_{6,7,8} )
+PYTHON_COMPAT=( python3_{8..9} )
+
 inherit distutils-r1
 
 DESCRIPTION="Implementation of the PEP 3156 Event-Loop with Qt."
