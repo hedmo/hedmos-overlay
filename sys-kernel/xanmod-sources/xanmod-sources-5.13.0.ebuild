@@ -51,8 +51,6 @@ src_prepare() {
 
 	kernel-2_src_prepare
 
-	rm "${S}"/.config || die
-
 }
 
 pkg_postinst() {
