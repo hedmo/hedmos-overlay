@@ -29,6 +29,7 @@ RDEPEND="
 	>=dev-qt/qtopengl-5.9:5
 	>=dev-qt/qtprintsupport-5.9:5
 	>=dev-qt/qtscript-5.9:5
+	>=dev-qt/qtserialport-5.9:5
 	>=dev-qt/qtsvg-5.9:5
 	>=dev-qt/qtwidgets-5.9:5
 	>=dev-qt/qtxml-5.9:5
@@ -38,6 +39,7 @@ RDEPEND="
 	media-libs/libjpeg-turbo
 	>=media-libs/libmypaint-1.3.0:=
 	media-libs/libpng:=
+	media-libs/opencv
 	>=sci-libs/superlu-4.1:=
 	sys-libs/zlib
 	virtual/cblas
