@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>hedmoo@yahoo.com</email>
+		<name>Andreas Westman Dorcsak</name>
+	</maintainer>
+	<use>
+		<flag name="systemd">enable systemd support.</flag>
+		<flag name="test">enable test support.</flag>
+</use>
+	<upstream>
+		<remote-id type="github">/dos1/kded_rotation</remote-id>
+	</upstream>
+</pkgmetadata>

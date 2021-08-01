@@ -1,0 +1,12 @@
+#!/sbin/openrc-run
+
+command=/usr/libexec/iio-sensor-proxy
+command_background=yes
+pidfile=/run/iio-sensor-proxy.pid
+output_log=/var/log/iio-sensor-proxy-stdout.log
+error_log=/var/log/iio-sensor-proxy-stderr.log
+export G_MESSAGES_DEBUG=all
+
+depend() {
+   need dbus localmount
+}
