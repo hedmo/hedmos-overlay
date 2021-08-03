@@ -19,16 +19,19 @@ XANMOD_VERSION="1"
 XANMOD_URI="https://github.com/xanmod/linux/releases/download/"
 SRC_URI="
 	${KERNEL_BASE_URI}/linux-${KV_MAJOR}.${KV_MINOR}.tar.xz
-	${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz
-	cacule? ( https://raw.githubusercontent.com/hamadmarri/cacule-cpu-scheduler/master/patches/CacULE/v5.10/cacule-5.10.patch )
+	cacule? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}-cacule/patch-${OKV}-xanmod${XANMOD_VERSION}-cacule.xz  )
+	!cacule? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz  )
 	experimental? ( https://github.com/hamadmarri/cacule-cpu-scheduler/files/6383440/select_task_interactive_aware.patch.zip )
 	${GENPATCHES_URI}
 "
 
 src_unpack() {
 UNIPATCH_LIST_DEFAULT=""
-
-	UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz "
+	if use cacule; then
+		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}-cacule.xz "
+	else
+		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz "
+	fi
 
 	if use experimental; then
 		unpack "select_task_interactive_aware.patch.zip"
@@ -39,7 +42,7 @@ UNIPATCH_LIST_DEFAULT=""
 src_prepare() {
 
 	if use cacule; then
-		eapply "${DISTDIR}/cacule-5.10.patch"
+		eapply "${FILESDIR}/localversion1.patch"
 	fi
 
 	if use experimental ; then
