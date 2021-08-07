@@ -19,7 +19,7 @@ S="${WORKDIR}/kded_rotation-${COMMIT}"
 
 LICENSE="GPL-2" # TODO: CHECK
 SLOT="5"
-KEYWORDS="~amd64 ~arm64 ~ppc64 ~x86"
+KEYWORDS="~amd64 ~arm "
 IUSE=""
 
 DEPEND="
@@ -53,7 +53,9 @@ DEPEND="
 	>=kde-frameworks/kxmlgui-${KFMIN}:5
 	  x11-libs/libX11
 "
-RDEPEND="${DEPEND}"
+RDEPEND="${DEPEND}
+	x11-misc/iio-sensor-proxy
+"
 
 PATCHES=(
 	"${FILESDIR}/more_touch.patch"
