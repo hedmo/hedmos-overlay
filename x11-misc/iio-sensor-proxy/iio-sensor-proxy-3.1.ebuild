@@ -12,7 +12,7 @@ SRC_URI="https://gitlab.freedesktop.org/hadess/${PN}/-/archive/${PV}/${P}.tar.gz
 LICENSE="Unlicense"
 # Unknown. There is no info about the license ATM.
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~arm"
 IUSE="systemd test"
 
 RDEPEND="
