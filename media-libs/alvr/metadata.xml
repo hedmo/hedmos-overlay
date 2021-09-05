@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>hedmoo@yahoo.com</email>
+		<name>Andreas Westman Dorcsak</name>
+	</maintainer>
+	<use>
+        <flag name="x264">Use x264 for h264 software encoding</flag>
+		<flag name="x265">Use x265 for h265 software encoding</flag>
+</use>
+	<upstream>
+		<remote-id type="github">/alvr-org/ALVR</remote-id>
+	</upstream>
+</pkgmetadata>
