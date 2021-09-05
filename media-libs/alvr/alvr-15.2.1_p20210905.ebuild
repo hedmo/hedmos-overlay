@@ -62,6 +62,7 @@ byteorder-1.4.3
 bytes-1.0.1
 cairo-rs-0.9.1
 cairo-sys-rs-0.10.0
+cargo-xtask-0.1.0
 calloop-0.6.5
 cc-1.0.67
 cesu8-1.1.0
