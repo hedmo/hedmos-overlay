@@ -14,6 +14,7 @@ inherit git-r3
 else
 		SRC_URI="https://github.com/maliit/keyboard/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 		KEYWORDS="~amd64 ~arm"
+S="${WORKDIR}"/keyboard-${PV}
 fi
 
 LICENSE="GPL-2"
@@ -25,7 +26,6 @@ DEPEND="x11-misc/maliit-framework
 		dev-qt/qtmultimedia
 		app-text/hunspell
 		app-i18n/libchewing
-		app-i18n/libpinyin
 		app-i18n/anthy
 		dev-db/sqlite
 "
