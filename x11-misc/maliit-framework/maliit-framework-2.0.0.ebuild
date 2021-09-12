@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit cmake-utils
+inherit cmake
 DESCRIPTION="A flexible and cross platform input method framework"
 HOMEPAGE="https://github.com/maliit/framework"
 
