@@ -36,7 +36,7 @@ BDEPEND="app-doc/doxygen
 "
 
 src_prepare() {
-	cmake-utils_src_prepare
+	cmake_src_prepare
 }
 
 src_configure() {
@@ -47,7 +47,7 @@ src_configure() {
 		-Denable-tests=$(usex test ON OFF)
 	)
 
-	cmake-utils_src_configure
+	cmake_src_configure
 }
 
 pkg_postinst() {
