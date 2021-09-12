@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>hedmoo@yahoo.com</email>
+		<name>Andreas Westman Dorcsak</name>
+	</maintainer>
+	<use>
+		<flag name="dbus">enable dbus support.</flag>
+		<flag name="doc">enable doc support.</flag>
+		<flag name="gtk">enable gtk support.</flag>
+		<flag name="test">enable test support.</flag>
+</use>
+	<upstream>
+		<remote-id type="github">/maliit/keyboard</remote-id>
+	</upstream>
+</pkgmetadata>
