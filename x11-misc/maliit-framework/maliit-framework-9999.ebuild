@@ -50,5 +50,5 @@ src_configure() {
 		-DDOC_INSTALL_DIR="share/doc/${P}"
 	)
 
-	cmake-utils_src_configure
+	cmake_src_configure
 }
