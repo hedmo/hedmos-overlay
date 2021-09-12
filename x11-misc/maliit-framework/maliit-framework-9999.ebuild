@@ -13,6 +13,7 @@ inherit git-r3
 else
 		SRC_URI="https://github.com/maliit/framework/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 		KEYWORDS="~amd64 ~arm"
+S="${WORKDIR}"/framework-${PV}
 fi
 
 LICENSE="LGPL-2.1"
