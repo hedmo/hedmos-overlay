@@ -32,7 +32,7 @@ IUSE=""
 
 DEPEND="
 	=media-tv/kodi-19*
-	=media-plugins/kodi-inputstream-adaptive-2*
+	=media-plugins/kodi-inputstream-adaptive-19*
 	media-plugins/kodi-addon-signals
 	media-plugins/kodi-inputstreamhelper
 	dev-python/codecov
