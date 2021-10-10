@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit multilib 
+inherit multilib
 
 DESCRIPTION="steam launcher plugin for Kodi"
 HOMEPAGE="https://github.com/teeedubb/teeedubb-xbmc-repo.git"
@@ -32,7 +32,7 @@ IUSE=""
 DEPEND=""
 RDEPEND="
 	=media-tv/kodi-19*
-	=media-plugins/kodi-inputstream-adaptive-2*
+	=media-plugins/kodi-inputstream-adaptive-19*
 	media-plugins/kodi-addon-signals
 	media-plugins/kodi-inputstreamhelper
 	>=dev-python/pycparser-2.18
