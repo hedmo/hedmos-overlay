@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>hedmoo@yahoo.com</email>
+		<name>Andreas Westman Dorcsak</name>
+	</maintainer>
+	<use>
+		<flag name="examples">enable examples.</flag>
+		<flag name="doc">enable docs.</flag>
+		<flag name="gtk">enable gtk support.</flag>
+		<flag name="python">enable python support.</flag>
+		<flag name="sqlite">enable sqlite support.</flag>
+		<flag name="test">enable test.</flag>
+</use>
+	<upstream>
+		<remote-id type="gitlab">/openrazer/openrazer</remote-id>
+	</upstream>
+</pkgmetadata>
