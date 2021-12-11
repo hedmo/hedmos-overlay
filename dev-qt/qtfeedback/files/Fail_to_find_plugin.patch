@@ -1,0 +1,38 @@
+ ```
+diff --git a/src/plugins/feedback/immersion/immersion.pro b/src/plugins/feedback/immersion/immersion.pro
+index eac187e..147b3d1 100644
+--- a/src/plugins/feedback/immersion/immersion.pro
++++ b/src/plugins/feedback/immersion/immersion.pro
+@@ -2,6 +2,7 @@ TARGET = qtfeedback_immersion
+ QT = core feedback
+
+ PLUGIN_TYPE = feedback
++PLUGIN_CLASS_NAME = QFeedbackImmersion
+ load(qt_plugin)
+
+ HEADERS += qfeedback.h
+diff --git a/src/plugins/feedback/meegotouch/meegotouch.pro b/src/plugins/feedback/meegotouch/meegotouch.pro
+index 4e9ce25..d1d271a 100644
+--- a/src/plugins/feedback/meegotouch/meegotouch.pro
++++ b/src/plugins/feedback/meegotouch/meegotouch.pro
+@@ -2,6 +2,7 @@ TARGET = qtfeedback_meegotouch
+ QT = core feedback
+
+ PLUGIN_TYPE = feedback
++PLUGIN_CLASS_NAME = QFeedbackMeegotouch
+ load(qt_plugin)
+
+ HEADERS += qfeedback.h
+diff --git a/src/plugins/feedback/mmk/mmk.pro b/src/plugins/feedback/mmk/mmk.pro
+index ed08b40..fd6b723 100644
+--- a/src/plugins/feedback/mmk/mmk.pro
++++ b/src/plugins/feedback/mmk/mmk.pro
+@@ -2,6 +2,7 @@ TARGET = qtfeedback_mmk
+ QT = core feedback multimedia
+
+ PLUGIN_TYPE = feedback
++PLUGIN_CLASS_NAME = QFeedbackMultimedia
+ load(qt_plugin)
+
+ HEADERS += qfeedback.h
+```
