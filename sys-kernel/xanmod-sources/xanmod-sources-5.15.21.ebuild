@@ -1,52 +1,44 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
 K_WANT_GENPATCHES="base extras"
-K_GENPATCHES_VER="1"
+K_GENPATCHES_VER="2"
 K_SECURITY_UNSUPPORTED="1"
 K_NOSETEXTRAVERSION="1"
 ETYPE="sources"
 inherit kernel-2
 detect_version
 
-DESCRIPTION="Full XanMod sources with cacule option and including the Gentoo patchset "
+DESCRIPTION="Full XanMod sources with tt option and including the Gentoo patchset "
 HOMEPAGE="https://xanmod.org"
 LICENSE+=" CDDL"
 KEYWORDS="~amd64"
-IUSE="cacule experimental"
+IUSE="tt"
 XANMOD_VERSION="1"
 XANMOD_URI="https://github.com/xanmod/linux/releases/download/"
 SRC_URI="
 	${KERNEL_BASE_URI}/linux-${KV_MAJOR}.${KV_MINOR}.tar.xz
-	cacule? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}-cacule/patch-${OKV}-xanmod${XANMOD_VERSION}-cacule.xz  )
-	!cacule? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz  )
-	experimental? ( https://github.com/hamadmarri/cacule-cpu-scheduler/files/6383440/select_task_interactive_aware.patch.zip )
+	tt? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}-tt/patch-${OKV}-xanmod${XANMOD_VERSION}-tt.xz  )
+	!tt? ( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz  )
 	${GENPATCHES_URI}
 "
 
 src_unpack() {
 UNIPATCH_LIST_DEFAULT=""
-	if use cacule; then
-		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}-cacule.xz "
+	if use tt; then
+		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}-tt.xz "
 	else
 		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz "
 	fi
 
-	if use experimental; then
-		unpack "select_task_interactive_aware.patch.zip"
-	fi
 	kernel-2_src_unpack
 }
 
 src_prepare() {
 
-	if use cacule; then
+	if use tt; then
 		eapply "${FILESDIR}/localversion.patch"
-	fi
-
-	if use experimental ; then
-		eapply "${WORKDIR}/select_task_interactive_aware.patch"
 	fi
 
 	kernel-2_src_prepare
