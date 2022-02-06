@@ -27,11 +27,7 @@ SRC_URI="
 
 src_unpack() {
 UNIPATCH_LIST_DEFAULT=""
-	if use tt; then
-		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}-tt.xz "
-	else
 		UNIPATCH_LIST="${DISTDIR}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz "
-	fi
 
 	kernel-2_src_unpack
 }
