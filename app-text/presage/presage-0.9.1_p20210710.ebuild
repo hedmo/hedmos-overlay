@@ -1,4 +1,4 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,7 +21,7 @@ else
 COMMIT="a060594faaf23c31c6686c6b838a71dbfa7e7892"
 SRC_URI="https://github.com/sailfish-keyboard/presage/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
 S="${WORKDIR}"/${PN}-${COMMIT}
-#KEYWORDS="~amd64 ~arm ~x86"
+KEYWORDS="~amd64 "
 fi
 
 IUSE="examples doc gtk python +sqlite test"
