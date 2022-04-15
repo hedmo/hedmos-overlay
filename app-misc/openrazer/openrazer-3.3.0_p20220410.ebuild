@@ -1,4 +1,4 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -15,7 +15,7 @@ if [[ ${PV} == 9999 ]]; then
 inherit git-r3
 else
 
-COMMIT="9ea49c8d02af72fe065d2f805337da28b567fa48"
+COMMIT="77d517baae48ff5fb0a2672373e2286af38f02cc"
 SRC_URI="https://github.com/${PN}/${PN}/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS=" ~amd64"
 fi
