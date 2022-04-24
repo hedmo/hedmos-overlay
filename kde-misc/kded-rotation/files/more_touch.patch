@@ -5,7 +5,7 @@
  
    # Filter for touch devices
 -  IS_TOUCH=$(echo $props | grep -i 'Touchscreen\|ELAN\|Pen\|Eraser\|wacom\|maXTouch\|eGalaxTouch\|IPTS')
-+  IS_TOUCH=$(echo $props | grep -i 'Touchscreen\|ELAN\|Pen\|Eraser\|wacom\|maXTouch\|eGalaxTouch\|IPTS\|SIS0457:00 0457:1133')
++  IS_TOUCH=$(echo $props | grep -i 'Touchscreen\|ELAN\|Pen\|Eraser\|wacom\|maXTouch\|eGalaxTouch\|IPTS\|SIS0457:00 0457:1133\|USBest Technology SiS HID Touch Controller')
  
    # Apply Input Matrix for touch devices
    if [ -n "$IS_TOUCH" ];
