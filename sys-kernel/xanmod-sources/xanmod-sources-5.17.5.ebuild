@@ -16,11 +16,11 @@ LICENSE+=" CDDL"
 KEYWORDS="~amd64"
 IUSE="tt"
 XANMOD_VERSION="1"
-TT_URI="https://raw.githubusercontent.com/ptr1337/kernel-patches/master/5.17/sched"
+TT_URI="https://raw.githubusercontent.com/hedmo/stuff/9423c1897bd740a8df083e7358413a1fe1b20e98/patches/"
 XANMOD_URI="https://github.com/xanmod/linux/releases/download/"
 SRC_URI="
 	${KERNEL_BASE_URI}/linux-${KV_MAJOR}.${KV_MINOR}.tar.xz
-	tt? ( ${TT_URI}/0001-tt.patch  )
+	tt? ( ${TT_URI}/5.17.0001-tt.patch  )
 	( ${XANMOD_URI}/${OKV}-xanmod${XANMOD_VERSION}/patch-${OKV}-xanmod${XANMOD_VERSION}.xz  )
 	${GENPATCHES_URI}
 "
@@ -36,7 +36,7 @@ src_unpack() {
 src_prepare() {
 
 	if use tt; then
-		eapply "${DISTDIR}/0001-tt.patch"
+		eapply "${DISTDIR}/5.17.0001-tt.patch"
 	fi
 
 	kernel-2_src_prepare
