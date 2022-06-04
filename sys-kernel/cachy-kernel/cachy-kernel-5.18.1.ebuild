@@ -49,7 +49,7 @@ cd "${WORKDIR}" || die
 	
 	# We want to rename the unpacked directory to a nice normalised string
 	# bug #762766
-	mv linux-linux-cachyos-tt${PV} ${MY_P} || die "Unable to move source tree to ${MY_P}."
+	mv linux-linux-cachyos-tt-${PV} ${MY_P} || die "Unable to move source tree to ${MY_P}."
 
 }
 
