@@ -5,7 +5,7 @@ EAPI=7
 
 inherit kernel-build toolchain-funcs
 
-MY_P=linux-linux-cachyos-tt-${PV}
+MY_P=linux-cachyos-tt-${PV}
 GENPATCHES_P=genpatches-${PV%.*}-$(( ${PV##*.} + 2 ))
 GENTOO_CONFIG_VER=g1
 
