@@ -44,6 +44,9 @@ QA_FLAGS_IGNORED="
 
 src_unpack() {
 
+cd "${WORKDIR}" || die
+	unpack linux-${PV}-cachy.tar.gz
+	
 	# We want to rename the unpacked directory to a nice normalised string
 	# bug #762766
 	mv linux-linux-cachyos-tt${PV} ${MY_P} || die "Unable to move source tree to ${MY_P}."
