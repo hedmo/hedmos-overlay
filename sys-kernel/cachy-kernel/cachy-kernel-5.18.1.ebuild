@@ -5,7 +5,7 @@ EAPI=7
 
 inherit kernel-build toolchain-funcs
 
-MY_P=linux-cachyos-tt-${PV}
+MY_P=linux-${PV}-cachy
 GENPATCHES_P=genpatches-${PV%.*}-$(( ${PV##*.} + 2 ))
 GENTOO_CONFIG_VER=g1
 
@@ -44,15 +44,11 @@ QA_FLAGS_IGNORED="
 
 src_unpack() {
 
-	cd "${WORKDIR}" || die
-	unpack ${MY_P}.tar.gz
-
 	# We want to rename the unpacked directory to a nice normalised string
 	# bug #762766
-	mv linux-${MY_P} linux-${KV_FULL} || die "Unable to move source tree to ${KV_FULL}."
+	mv linux-linux-cachyos-tt${PV} ${MY_P} || die "Unable to move source tree to ${MY_P}."
 
 }
-
 
 src_prepare() {
 	# Remove linux-stable patches (see 0000_README)
