@@ -45,7 +45,7 @@ QA_FLAGS_IGNORED="
 src_unpack() {
 
 	cd "${WORKDIR}" || die
-	unpack linux-${PV}-cachy.tar.gz
+	unpack ${MY_P}.tar.gz
 
 	# We want to rename the unpacked directory to a nice normalised string
 	# bug #762766
