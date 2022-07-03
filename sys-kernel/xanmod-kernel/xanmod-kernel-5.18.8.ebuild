@@ -52,6 +52,7 @@ QA_FLAGS_IGNORED="
 	usr/src/linux-.*/scripts/gcc-plugins/.*.so
 	usr/src/linux-.*/vmlinux
 "
+UNIPATCH_EXCLUDE="${UNIPATCH_EXCLUDE} 1950_cifs-fix-minor-compile-warning.patch"
 
 src_prepare() {
 	# Remove linux-stable patches (see 0000_README)
