@@ -37,7 +37,7 @@ src_unpack() {
 src_prepare() {
 
 	if use tt; then
-		eapply "${DISTDIR}/5.17.0001-tt.patch"
+		eapply "${DISTDIR}/0001-tt-5.18.patch"
 	fi
 
 	kernel-2_src_prepare
