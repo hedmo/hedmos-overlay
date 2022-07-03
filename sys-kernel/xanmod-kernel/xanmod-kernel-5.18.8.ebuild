@@ -56,7 +56,7 @@ QA_FLAGS_IGNORED="
 src_prepare() {
 	# Remove linux-stable patches (see 0000_README)
 	find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-9][0-9]*.patch" | xargs rm || die
-	UNIPATCH_EXCLUDE="${UNIPATCH_EXCLUDE} 1950_cifs-fix-minor-compile-warning.patch"
+	find "${WORKDIR}" -maxdepth 1 -name "1950_cifs-fix-minor-compile-warning.patch" | xargs rm || die
 
 	if use tt; then
 		eapply "${DISTDIR}/0001-tt-5.18.patch"
