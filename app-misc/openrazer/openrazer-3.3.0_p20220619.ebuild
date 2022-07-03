@@ -3,7 +3,7 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{7,8,9} )
+PYTHON_COMPAT=( python3_{8,9,10} )
 
 inherit distutils-r1 python-r1 udev desktop linux-mod
 
@@ -15,7 +15,7 @@ if [[ ${PV} == 9999 ]]; then
 inherit git-r3
 else
 
-COMMIT="52fa6e39bd18bae7155a80940a8c7993e1a4bc5f"
+COMMIT="ef99b35f1276aa0f979b51e505a8ffea1cb7a092"
 SRC_URI="https://github.com/${PN}/${PN}/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS=" ~amd64"
 fi
