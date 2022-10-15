@@ -12,13 +12,13 @@ if [[ ${PV} == 9999 ]]; then
 	EGIT_REPO_URI="https://github.com/z3ntu/${PN}.git"
 	inherit git-r3
 else
-	SRC_URI="https://github.com/z3ntu/${PN}/releases/download/v${PN}/${P}.tar.gz"
+	SRC_URI="https://github.com/z3ntu/${PN}/archive/refs/tags/v${PV}.tar.gz"
 	KEYWORDS=" ~amd64 "
 fi
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="openrazer matrix"
+IUSE="matrix"
 
 DEPEND="
 	dev-qt/qtdbus:5
@@ -27,7 +27,7 @@ DEPEND="
 	dev-qt/qtxml:5"
 RDEPEND="${DEPEND}
 	dev-qt/linguist-tools:5
-	openrazer? ( app-misc/openrazer )
+	sys-apps/openrazer [daemon]
 	"
 BDEPEND="
 	virtual/pkgconfig
