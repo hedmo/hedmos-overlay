@@ -3,55 +3,43 @@
 
 EAPI=7
 
-inherit meson
+inherit  meson
 
-DESCRIPTION="Razer devices configurator"
-HOMEPAGE="https://github.com/z3ntu/RazerGenie"
-
+DESCRIPTION="A work-in-progress replacement for OpenRazer"
+HOMEPAGE="https://github.com/z3ntu/razer_test"
 if [[ ${PV} == 9999 ]]; then
 	EGIT_REPO_URI="https://github.com/z3ntu/${PN}.git"
 	inherit git-r3
 else
-	COMMIT="751cd6ca2b7e9608d7a1ca7119d8a81f261f2b4a"
+	COMMIT="bb609cf0036d95c1afff855f2a5bce8cf4a41c11"
 	SRC_URI="https://github.com/z3ntu/${PN}/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
-	KEYWORDS=" ~amd64  "
+	KEYWORDS=" ~amd64 "
 	S="${WORKDIR}"/${PN}-${COMMIT}
 fi
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="openrazer razer-test matrix"
+IUSE="bringup tests"
 
 DEPEND="
 	dev-qt/qtdbus:5
 	dev-qt/qtnetwork:5
-	dev-qt/qtwidgets:5
-	dev-qt/qtxml:5"
-RDEPEND="${DEPEND}
-	razer-test? (
-	( !sys-apps/openrazer )
-	)
-	dev-libs/libopenrazer
-	app-misc/razer_test
 	dev-qt/linguist-tools:5
-	openrazer? ( sys-apps/openrazer
-	)
+	dev-qt/qtwidgets:5
+	dev-qt/qtxml:5
+	"
+RDEPEND="${DEPEND}
+	dev-libs/hidapi
 	"
 BDEPEND="
 	virtual/pkgconfig
+	dev-libs/hidapi
 	"
 
 src_configure() {
 	local emesonargs=(
-		"$(meson_use matrix include_matrix_discovery)"
-	)
-	meson_src_configure
-}
-
-
-src_configure() {
-	local emesonargs=(
-		"$(meson_use matrix include_matrix_discovery)"
+		"$(meson_use bringup build_bringup_util)"
+		"$(meson_use tests build_tests)"
 	)
 	meson_src_configure
 }
