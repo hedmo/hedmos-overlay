@@ -6,8 +6,7 @@
 		<name>Andreas Westman Dorcsak</name>
 	</maintainer>
 	<use>
-		<flag name="openrazer">build openrazer.</flag>
-		<flag name="matrix">enable matrix support.</flag>
+		<flag name="demo">enable demo support.</flag>
 </use>
 	<upstream>
 		<remote-id type="gitlab">/z3ntu/RazerGenie</remote-id>
