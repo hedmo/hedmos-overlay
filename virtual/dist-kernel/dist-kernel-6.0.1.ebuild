@@ -20,4 +20,6 @@ RDEPEND="
 		~sys-kernel/xanmod-kernel-bin-${PV}
 		~sys-kernel/cachy-kernel-${PV}
 		~sys-kernel/cachy-kernel-bin-${PV}
+		~sys-kernel/hedmos-kernel-${PV}
+		~sys-kernel/hedmos-kernel-bin-${PV}
 		)"

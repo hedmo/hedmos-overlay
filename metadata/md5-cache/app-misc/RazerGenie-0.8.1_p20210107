@@ -1,0 +1,15 @@
+BDEPEND=virtual/pkgconfig >=dev-util/meson-0.62.2 >=dev-util/ninja-1.8.2 dev-util/meson-format-array
+DEFINED_PHASES=compile configure install test
+DEPEND=dev-qt/qtdbus:5 dev-qt/qtnetwork:5 dev-qt/qtwidgets:5 dev-qt/qtxml:5
+DESCRIPTION=Razer devices configurator
+EAPI=7
+HOMEPAGE=https://github.com/z3ntu/RazerGenie
+INHERIT=meson
+IUSE=openrazer razer-test matrix
+KEYWORDS=~amd64
+LICENSE=GPL-3
+RDEPEND=dev-qt/qtdbus:5 dev-qt/qtnetwork:5 dev-qt/qtwidgets:5 dev-qt/qtxml:5 razer-test? ( ( !sys-apps/openrazer ) ) dev-libs/libopenrazer app-misc/razer_test dev-qt/linguist-tools:5 openrazer? ( sys-apps/openrazer )
+SLOT=0
+SRC_URI=https://github.com/z3ntu/RazerGenie/archive/751cd6ca2b7e9608d7a1ca7119d8a81f261f2b4a.tar.gz -> RazerGenie-0.8.1_p20210107.tar.gz
+_eclasses_=multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	58ec4e54962bf45d065fb95030701514	eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	toolchain-funcs	441f754fd75cd4fd1fa06fbc17da6144	multilib	5ca4e49abed8e3a2f7b56920eadee157	python-utils-r1	b9fc5e97e886514e5132f50465185401	meson	1994a5aef5d4f5798b92f64d6f9a6003
+_md5_=4109cf0dd7a5f4218677323d3dbf97fa

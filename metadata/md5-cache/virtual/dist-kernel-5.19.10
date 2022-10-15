@@ -1,0 +1,7 @@
+DEFINED_PHASES=-
+DESCRIPTION=Virtual to depend on any Distribution Kernel
+EAPI=8
+KEYWORDS=~amd64
+RDEPEND=|| ( ~sys-kernel/gentoo-kernel-5.19.10 ~sys-kernel/gentoo-kernel-bin-5.19.10 ~sys-kernel/vanilla-kernel-5.19.10 ~sys-kernel/xanmod-kernel-5.19.10 ~sys-kernel/xanmod-kernel-bin-5.19.10 ~sys-kernel/cachy-kernel-5.19.10 ~sys-kernel/cachy-kernel-bin-5.19.10 )
+SLOT=0/5.19.10
+_md5_=88094d56430bfb6d3a13bd167d48b4d5

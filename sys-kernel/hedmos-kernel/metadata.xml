@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<use>
+		<flag name="hardened">Use selection of hardening options recommended by Kernel Self Protection Project</flag>
+		<flag name="initramfs">Build initramfs along with the kernel.</flag>
+		<flag name="anbox">enable tt Scheduler features.</flag>
+		<flag name="futex">enable tt Scheduler features.</flag>
+	</use>
+</pkgmetadata>
