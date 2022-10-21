@@ -20,7 +20,7 @@ fi
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="openrazer razer-test matrix"
+IUSE="+openrazer razer-test matrix"
 
 DEPEND="
 	dev-qt/qtdbus:5
