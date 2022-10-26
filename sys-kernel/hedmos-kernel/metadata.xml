@@ -4,7 +4,8 @@
 	<use>
 		<flag name="hardened">Use selection of hardening options recommended by Kernel Self Protection Project</flag>
 		<flag name="initramfs">Build initramfs along with the kernel.</flag>
-		<flag name="anbox">enable tt Scheduler features.</flag>
-		<flag name="futex">enable tt Scheduler features.</flag>
+		<flag name="anbox">binder-turn-into-module.patch.</flag>
+		<flag name="futex">enable futex system call.</flag>
+		<flag name="tt">enable tt Scheduler features.</flag>
 	</use>
 </pkgmetadata>
