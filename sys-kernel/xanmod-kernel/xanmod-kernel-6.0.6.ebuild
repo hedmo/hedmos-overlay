@@ -1,35 +1,29 @@
 # Copyright 2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 inherit kernel-build toolchain-funcs
 
+#MY_P=linux-${PV}-xanmod1
 MY_P=linux-${PV%.*}
-# https://dev.gentoo.org/~mpagano/genpatches/index.html
-GENPATCHES_P=genpatches-${PV%.*}-$(( ${PV##*.} + 3 ))
-CONFIG_VER=5.17.7
-# Commit hash from https://src.fedoraproject.org/rpms/kernel
-CONFIG_HASH=f20aa9d1023a1912c5ef522d47b7deab27fae207
-# Tag from https://github.com/mgorny/gentoo-kernel-config
-GENTOO_CONFIG_VER=g1
+GENPATCHES_P=genpatches-${PV%.*}-$(( ${PV##*.} + 0 ))
+GENTOO_CONFIG_VER=g2
 
 DESCRIPTION="Linux kernel built with XanMod and Gentoo patches"
 HOMEPAGE="https://www.kernel.org/ https://xanmod.org/"
 TT_URI="https://raw.githubusercontent.com/hedmo/stuff/main/patches"
-SRC_URI+="
+SRC_URI="
 	https://cdn.kernel.org/pub/linux/kernel/v$(ver_cut 1).x/${MY_P}.tar.xz
 	https://github.com/xanmod/linux/releases/download/${PV}-xanmod1/patch-${PV}-xanmod1.xz
 	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.base.tar.xz
 	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.extras.tar.xz
 	https://github.com/mgorny/gentoo-kernel-config/archive/${GENTOO_CONFIG_VER}.tar.gz
 		-> gentoo-kernel-config-${GENTOO_CONFIG_VER}.tar.gz
-	amd64? (
-		https://src.fedoraproject.org/rpms/kernel/raw/${CONFIG_HASH}/f/kernel-x86_64-fedora.config
-			-> kernel-x86_64-fedora.config.${CONFIG_VER}
-	)
+
 		tt? (
-		${TT_URI}/0001-tt-5.18.patch
+		${TT_URI}/tt-6.0-5fe13bb22c.patch
+		${TT_URI}/xanmod-fair-revert.patch
 	)
 "
 S=${WORKDIR}/${MY_P}
@@ -55,24 +49,25 @@ QA_FLAGS_IGNORED="
 
 src_prepare() {
 	# Remove linux-stable patches (see 0000_README)
-	find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-9][0-9]*.patch" | xargs rm || die
-	find "${WORKDIR}" -maxdepth 1 -name "1950_cifs-fix-minor-compile-warning.patch" | xargs rm || die
+		find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-9][0-9]*.patch" -exec rm {} + || die
+
+
+
+	# meh, genpatches have no directory
+	#patching main patches before TT
+		eapply "${WORKDIR}"/patch-${PV}-xanmod1
+		eapply "${WORKDIR}"/*.patch
 
 	if use tt; then
-		eapply "${DISTDIR}/0001-tt-5.18.patch"
+		eapply "${DISTDIR}/xanmod-fair-revert.patch"
+		eapply "${DISTDIR}/tt-6.0-5fe13bb22c.patch"
 	fi
-
-	local PATCHES=(
-		# meh, genpatches have no directory
-		"${WORKDIR}"/*.patch
-		"${WORKDIR}"/patch-${PV}-xanmod1
-	)
 	default
 
 	# prepare the default config
 	case ${ARCH} in
 		amd64)
-			cp "${DISTDIR}/kernel-x86_64-fedora.config.${CONFIG_VER}" .config || die
+			cp "${S}/CONFIGS/xanmod/gcc/config_x86-64-v1" .config || die
 			;;
 		*)
 			die "Unsupported arch ${ARCH}"
