@@ -53,7 +53,6 @@ src_prepare() {
 		find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-9][0-9]*.patch" | xargs rm || die
 	fi
 
-
 	# meh, genpatches have no directory
 	#patching main patches before TT
 		eapply "${WORKDIR}"/patch-${PV}-xanmod1

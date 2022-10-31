@@ -57,7 +57,6 @@ src_prepare() {
 	# Remove linux-stable patches (see 0000_README)
 	find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-9][0-9]*.patch" | xargs rm || die
 
-
 	if use tt; then
 		eapply "${DISTDIR}/0001-tt-5.19.patch"
 	fi
