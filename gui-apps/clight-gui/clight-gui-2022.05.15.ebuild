@@ -38,9 +38,9 @@ RDEPEND="
 	>=app-misc/clight-4.4
 "
 src_prepare(){
-   cd "${S}/src"
-   ls .
-       cmake_src_prepare
+	cd "${S}/src"
+	ls .
+	cmake_src_prepare
 }
 
 pkg_postinst() {
