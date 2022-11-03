@@ -6,6 +6,6 @@
 		<name>Andreas Westman Dorcsak</name>
 	</maintainer>
 	<upstream>
-		<remote-id type="github">/nullobsi/clight-gui</remote-id>
+		<remote-id type="github">nullobsi/clight-gui</remote-id>
 	</upstream>
 </pkgmetadata>
