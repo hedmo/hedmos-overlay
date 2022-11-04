@@ -12,7 +12,7 @@ if [[ ${PV} == 9999 ]]; then
 else
 	COMMIT="95c71889c59a7371948e6feabc0aaf19a4f49fcf"
 	SRC_URI="https://github.com/FedeDP/${MY_PN}/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
-	S="${WORKDIR}/${P^}-${COMMIT}"
+	S="${WORKDIR}/${P^}"
 	KEYWORDS="~amd64 ~x86"
 fi
 
