@@ -13,7 +13,7 @@ GENTOO_CONFIG_VER=g3
 
 DESCRIPTION="Linux kernel based on gentoo with powersave (TT) pach and more"
 HOMEPAGE="https://www.kernel.org/ https://xanmod.org/"
-HEDMOS_URI="https://raw.githubusercontent.com/hedmo/stuff/main/patches"
+HEDMOS_URI="github.com/hedmo/stuff/raw/main/patches/"
 SRC_URI="
 	https://cdn.kernel.org/pub/linux/kernel/v$(ver_cut 1).x/${MY_P}.tar.xz
 	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.base.tar.xz
@@ -22,13 +22,14 @@ SRC_URI="
 		-> gentoo-kernel-config-${GENTOO_CONFIG_VER}.tar.gz
 	https://raw.githubusercontent.com/projg2/fedora-kernel-config-for-gentoo/${CONFIG_VER}/kernel-x86_64-fedora.config
 			-> kernel-x86_64-fedora.config.${CONFIG_VER}
-	https://github.com/hedmo/stuff/raw/main/patches/hedmos-patches.tar.gz
+	https://${HEDMOS_URI}/hedmos-patches.tar.gz
+	p1801? ( https://${HEDMOS_URI}/andy-patches-6.0.x.tar.gz  )
 "
 S=${WORKDIR}/${MY_P}
 
 LICENSE="GPL-2"
 KEYWORDS="-* ~amd64"
-IUSE="debug hardened +tt +anbox +futex"
+IUSE="debug hardened +tt +anbox +futex p1801"
 
 RDEPEND="
 	!sys-kernel/hedmos-kernel-bin:${SLOT}
@@ -60,8 +61,11 @@ src_prepare() {
 	if use anbox; then
 		eapply "${WORKDIR}/hedmos-patches/android_anbox/"*.patch
 	fi
-	if use futex ; then
+	if use futex; then
 		eapply "${WORKDIR}/hedmos-patches/futex/"*.patch
+	fi
+	if use p18801; then
+		eapply "${WORKDIR}/andy-patches/"*.patch
 	fi
 	default
 

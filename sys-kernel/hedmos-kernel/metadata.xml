@@ -7,5 +7,6 @@
 		<flag name="anbox">binder-turn-into-module.patch.</flag>
 		<flag name="futex">enable futex system call.</flag>
 		<flag name="tt">enable tt Scheduler features.</flag>
+		<flag name="p1801">adding patchset for Asus transformers P1801-T (PAD).</flag>
 	</use>
 </pkgmetadata>
