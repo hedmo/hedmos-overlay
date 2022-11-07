@@ -12,7 +12,7 @@ if [[ ${PV} == 9999 ]]; then
 else
 	SRC_URI="https://github.com/FedeDP/${MY_PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 	S="${WORKDIR}/${P^}"
-	KEYWORDS="~amd64 ~x86"
+	KEYWORDS="~amd64 ~x86 ~arm"
 fi
 
 inherit cmake ${VCS_ECLASS}
