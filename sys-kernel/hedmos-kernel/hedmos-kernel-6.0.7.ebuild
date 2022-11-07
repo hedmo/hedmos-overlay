@@ -64,7 +64,7 @@ src_prepare() {
 	if use futex; then
 		eapply "${WORKDIR}/hedmos-patches/futex/"*.patch
 	fi
-	if use p18801; then
+	if use p1801; then
 		eapply "${WORKDIR}/andy-patches/"*.patch
 	fi
 	default
