@@ -20,10 +20,17 @@ SRC_URI="
 	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.extras.tar.xz
 	https://github.com/mgorny/gentoo-kernel-config/archive/${GENTOO_CONFIG_VER}.tar.gz
 		-> gentoo-kernel-config-${GENTOO_CONFIG_VER}.tar.gz
-	https://raw.githubusercontent.com/projg2/fedora-kernel-config-for-gentoo/${CONFIG_VER}/kernel-x86_64-fedora.config
-			-> kernel-x86_64-fedora.config.${CONFIG_VER}
 	https://${HEDMOS_URI}/hedmos-patches.tar.gz
-	p1801? ( https://${HEDMOS_URI}/p1801-patches-6.0.x.tar.gz  )
+	p1801? (
+	https://${HEDMOS_URI}/p1801-patches-6.0.x.tar.gz
+	)
+	amd64? (
+		https://raw.githubusercontent.com/projg2/fedora-kernel-config-for-gentoo/${CONFIG_VER}/kernel-x86_64-fedora.config
+			-> kernel-x86_64-fedora.config.${CONFIG_VER}
+	)
+	arm? (
+		https://raw.githubusercontent.com/clamor-s/linux/master/arch/arm/configs/transformer_defconfig
+	)
 "
 S=${WORKDIR}/${MY_P}
 
@@ -75,10 +82,10 @@ src_prepare() {
 	# prepare the default config
 	case ${ARCH} in
 		amd64)
-			cp "${DISTDIR}/kernel-x86_64-fedora.config.${CONFIG_VER}" .config || die
+			cp "${DISTDIR}/kernel-x86_64-fedora.config.${CONFIG_VER}" arch/arm/configs/transformer_defconfig || die
 			;;
 		arm)
-			return
+			cp "${DISTDIR}/transformer_defconfig" .config || die
 			;;
 		*)
 			die "Unsupported arch ${ARCH}"
