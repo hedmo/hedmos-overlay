@@ -29,7 +29,7 @@ SRC_URI="
 S=${WORKDIR}/${MY_P}
 
 LICENSE="GPL-2"
-KEYWORDS="-* ~amd64"
+KEYWORDS="-* ~amd64 ~arm"
 IUSE="debug hardened tt"
 
 RDEPEND="
@@ -66,6 +66,9 @@ src_prepare() {
 	case ${ARCH} in
 		amd64)
 			cp "${S}/CONFIGS/xanmod/gcc/config_x86-64-v1" .config || die
+			;;
+		arm)
+			return
 			;;
 		*)
 			die "Unsupported arch ${ARCH}"
