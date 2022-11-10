@@ -28,8 +28,11 @@ SRC_URI="
 S=${WORKDIR}/${MY_P}
 
 LICENSE="GPL-2"
-KEYWORDS="-* ~amd64"
+KEYWORDS="~arm ~amd64"
 IUSE="debug hardened +tt +anbox +futex p1801"
+REQUIRED_USE="
+	arm? ( savedconfig )
+"
 
 RDEPEND="
 	!sys-kernel/hedmos-kernel-bin:${SLOT}
@@ -73,6 +76,9 @@ src_prepare() {
 	case ${ARCH} in
 		amd64)
 			cp "${DISTDIR}/kernel-x86_64-fedora.config.${CONFIG_VER}" .config || die
+			;;
+		arm)
+			return
 			;;
 		*)
 			die "Unsupported arch ${ARCH}"
