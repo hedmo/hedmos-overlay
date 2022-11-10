@@ -23,7 +23,7 @@ SRC_URI="
 	https://raw.githubusercontent.com/projg2/fedora-kernel-config-for-gentoo/${CONFIG_VER}/kernel-x86_64-fedora.config
 			-> kernel-x86_64-fedora.config.${CONFIG_VER}
 	https://${HEDMOS_URI}/hedmos-patches.tar.gz
-	p1801? ( https://${HEDMOS_URI}/andy-patches-6.0.x.tar.gz  )
+	p1801? ( https://${HEDMOS_URI}/p1801-patches-6.0.x.tar.gz  )
 "
 S=${WORKDIR}/${MY_P}
 
@@ -68,7 +68,7 @@ src_prepare() {
 		eapply "${WORKDIR}/hedmos-patches/futex/"*.patch
 	fi
 	if use p1801; then
-		eapply "${WORKDIR}/andy-patches-6.0.0/"*.patch
+		eapply "${WORKDIR}/p1801-patches-6.0.x/"*.patch
 	fi
 	default
 
