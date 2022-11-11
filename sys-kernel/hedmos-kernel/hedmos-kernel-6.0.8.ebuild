@@ -31,7 +31,14 @@ SRC_URI="
 	https://cdn.kernel.org/pub/linux/kernel/v$(ver_cut 1).x/patch-$(ver_cut 1).0.xz
 	)
 "
-S=${WORKDIR}/${MY_P}
+	case ${ARCH} in
+		amd64)
+			S=${WORKDIR}/${MY_P}
+			;;
+		arm)
+		S=${WORKDIR}/linux-${COMMIT}
+			;;
+	esac
 
 LICENSE="GPL-2"
 KEYWORDS="~arm ~amd64"
@@ -62,9 +69,6 @@ src_prepare() {
 			;;
 		arm)
 		find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-5][0-5]*.patch" -exec rm {} + || die
-			;;
-		*)
-			die "Unsupported arch ${ARCH}"
 			;;
 	esac
 
