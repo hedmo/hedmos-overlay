@@ -13,23 +13,32 @@ GENTOO_CONFIG_VER=g3
 
 DESCRIPTION="Linux kernel based on gentoo with powersave (TT) pach and more"
 HOMEPAGE="https://www.kernel.org/ https://xanmod.org/"
-HEDMOS_URI="https://raw.githubusercontent.com/hedmo/stuff/main/patches"
+HEDMOS_URI="raw.githubusercontent.com/hedmo/stuff/main/patches"
+COMMIT="510939f83c4c8ce4cb4d3e1e0aae62676eba2c8c"
 SRC_URI="
-	https://cdn.kernel.org/pub/linux/kernel/v$(ver_cut 1).x/${MY_P}.tar.xz
 	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.base.tar.xz
 	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.extras.tar.xz
 	https://github.com/mgorny/gentoo-kernel-config/archive/${GENTOO_CONFIG_VER}.tar.gz
 		-> gentoo-kernel-config-${GENTOO_CONFIG_VER}.tar.gz
-	https://raw.githubusercontent.com/projg2/fedora-kernel-config-for-gentoo/${CONFIG_VER}/kernel-x86_64-fedora.config
+	https://${HEDMOS_URI}/hedmos-patches.tar.gz
+	amd64? (
+	https://cdn.kernel.org/pub/linux/kernel/v$(ver_cut 1).x/${MY_P}.tar.xz
+	https://src.fedoraproject.org/rpms/kernel/raw/rawhide/f/kernel-x86_64-fedora.config
 			-> kernel-x86_64-fedora.config.${CONFIG_VER}
-	https://github.com/hedmo/stuff/raw/main/patches/hedmos-patches.tar.gz
+	)
+	arm? (	https://github.com/clamor-s/linux/archive/${COMMIT}.tar.gz
+		-> ${MY_P}.tar.gz
+	https://cdn.kernel.org/pub/linux/kernel/v$(ver_cut 1).x/patch-$(ver_cut 1).0.xz
+	)
 "
 S=${WORKDIR}/${MY_P}
 
 LICENSE="GPL-2"
-KEYWORDS="-* ~amd64"
-IUSE="debug hardened +tt +anbox +futex"
-
+KEYWORDS="~arm ~amd64"
+IUSE="debug hardened tt +anbox +futex"
+REQUIRED_USE="
+		arm? ( savedconfig !tt )
+"
 RDEPEND="
 	!sys-kernel/hedmos-kernel-bin:${SLOT}
 "
@@ -46,13 +55,22 @@ QA_FLAGS_IGNORED="
 "
 
 src_prepare() {
-#	# Remove linux-stable patches (see 0000_README)
-#		find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-9][0-9]*.patch" -exec rm {} + || die
+	# Remove linux-stable patches lower then Clamors rebase.
+	case ${ARCH} in
+		amd64)
+			eapply "${WORKDIR}/hedmos-patches/graysky/"*.patch
+			;;
+		arm)
+		find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-5][0-5]*.patch" -exec rm {} + || die
+			;;
+		*)
+			die "Unsupported arch ${ARCH}"
+			;;
+	esac
 
 	# meh, genpatches have no directory
 	#patching main patches before TT
 		eapply "${WORKDIR}"/*.patch
-		eapply "${WORKDIR}/hedmos-patches/graysky/"*.patch
 
 	if use tt; then
 		eapply "${WORKDIR}/hedmos-patches/TT/"*.patch
@@ -69,6 +87,9 @@ src_prepare() {
 	case ${ARCH} in
 		amd64)
 			cp "${DISTDIR}/kernel-x86_64-fedora.config.${CONFIG_VER}" .config || die
+			;;
+		arm)
+			return
 			;;
 		*)
 			die "Unsupported arch ${ARCH}"
