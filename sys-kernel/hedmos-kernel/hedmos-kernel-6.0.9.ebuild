@@ -42,7 +42,7 @@ SRC_URI="
 
 LICENSE="GPL-2"
 KEYWORDS="~arm ~amd64"
-IUSE="debug hardened tt +anbox +futex"
+IUSE="+anbox ddci debug +futex hardened tt"
 REQUIRED_USE="
 		arm? ( savedconfig !tt )
 "
@@ -76,6 +76,9 @@ src_prepare() {
 	#patching main patches before TT
 		eapply "${WORKDIR}"/*.patch
 
+	if use ddci; then
+		eapply "${WORKDIR}/hedmos-patches/ddci/"*.patch
+	fi
 	if use tt; then
 		eapply "${WORKDIR}/hedmos-patches/TT/"*.patch
 	fi
