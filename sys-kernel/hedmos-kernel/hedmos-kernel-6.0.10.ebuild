@@ -7,7 +7,7 @@ inherit kernel-build toolchain-funcs
 
 #MY_P=linux-${PV}-xanmod1
 MY_P=linux-${PV%.*}
-GENPATCHES_P=genpatches-${PV%.*}-$(( ${PV##*.} - 1 ))
+GENPATCHES_P=genpatches-${PV%.*}-$(( ${PV##*.} - 0 ))
 CONFIG_VER=5.19.13-gentoo
 GENTOO_CONFIG_VER=g3
 
@@ -16,8 +16,8 @@ HOMEPAGE="https://www.kernel.org/ https://xanmod.org/"
 HEDMOS_URI="raw.githubusercontent.com/hedmo/stuff/main/patches"
 COMMIT="510939f83c4c8ce4cb4d3e1e0aae62676eba2c8c"
 SRC_URI="
-	https://dev.gentoo.org/~alicef/dist/genpatches/${GENPATCHES_P}.base.tar.xz
-	https://dev.gentoo.org/~alicef/dist/genpatches/${GENPATCHES_P}.extras.tar.xz
+	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.base.tar.xz
+	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.extras.tar.xz
 	https://github.com/mgorny/gentoo-kernel-config/archive/${GENTOO_CONFIG_VER}.tar.gz
 		-> gentoo-kernel-config-${GENTOO_CONFIG_VER}.tar.gz
 	https://${HEDMOS_URI}/hedmos-patches.tar.gz
