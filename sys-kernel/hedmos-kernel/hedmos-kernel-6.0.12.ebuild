@@ -69,7 +69,7 @@ src_prepare() {
 			;;
 		arm)
 		find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-5][0-5]*.patch" -exec rm {} + || die
-		ind "${WORKDIR}" -maxdepth 1 -name "2010_netfilter-ctnetlink-compilation-fix.patch" -exec rm {} + || die
+		find "${WORKDIR}" -maxdepth 1 -name "2010_netfilter-ctnetlink-compilation-fix.patch" -exec rm {} + || die
 			;;
 	esac
 
