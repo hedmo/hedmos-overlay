@@ -28,7 +28,7 @@ SRC_URI="
 	)
 	arm? (	https://github.com/clamor-s/linux/archive/${COMMIT}.tar.gz
 		-> ${MY_P}.tar.gz
-	https://cdn.kernel.org/pub/linux/kernel/v$(ver_cut 1).x/patch-$(ver_cut 1).0.xz
+	https://cdn.kernel.org/pub/linux/kernel/v$(ver_cut 1).x/patch-${PV}.xz
 	)
 "
 	case ${ARCH} in
@@ -69,7 +69,7 @@ src_prepare() {
 			;;
 		arm)
 		find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-5][0-5]*.patch" -exec rm {} + || die
-		find "${WORKDIR}" -maxdepth 1 -name "2010_netfilter-ctnetlink-compilation-fix.patch" -exec rm {} + || die
+#		find "${WORKDIR}" -maxdepth 1 -name "2010_netfilter-ctnetlink-compilation-fix.patch" -exec rm {} + || die
 			;;
 	esac
 
