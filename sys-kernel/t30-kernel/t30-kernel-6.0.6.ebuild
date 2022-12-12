@@ -13,29 +13,19 @@ DESCRIPTION="Clamors fork of :grate-driver/linux with gentoo patches"
 HOMEPAGE="https://github.com/grate-driver/linux"
 COMMIT="510939f83c4c8ce4cb4d3e1e0aae62676eba2c8c"
 SRC_URI+="
-	https://github.com/clamor-s/linux/archive/${COMMIT}.tar.gz
-		-> ${MY_P}.tar.gz
-	https://cdn.kernel.org/pub/linux/kernel/v$(ver_cut 1).x/patch-$(ver_cut 1).0.xz
 	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.base.tar.xz
 	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.extras.tar.xz
-	https://github.com/mgorny/gentoo-kernel-config/archive/${GENTOO_CONFIG_VER}.tar.gz
-		-> gentoo-kernel-config-${GENTOO_CONFIG_VER}.tar.gz
-	amd64? (
-	https://src.fedoraproject.org/rpms/kernel/raw/rawhide/f/kernel-x86_64-fedora.config
-			-> kernel-x86_64-fedora.config.${CONFIG_VER}
-	)
-	arm? (
+		https://github.com/clamor-s/linux/archive/${COMMIT}.tar.gz
+		-> ${MY_P}.tar.gz
 	https://raw.githubusercontent.com/clamor-s/linux/510939f83c4c8ce4cb4d3e1e0aae62676eba2c8c/arch/arm/configs/transformer_defconfig			-> kernel-arm-transformers.config.${CONFIG_VER}
-	)
 "
 S=${WORKDIR}/linux-${COMMIT}
 SLOT="${PV}"
 
 LICENSE="GPL-2"
-KEYWORDS="~arm ~amd64"
+KEYWORDS="~arm"
 IUSE="debug hardened"
 REQUIRED_USE="
-	arm? ( savedconfig )
 "
 RDEPEND="
 	!sys-kernel/t30-kernel-bin:${SLOT}
@@ -63,9 +53,6 @@ src_prepare() {
 
 	# prepare the default config
 	case ${ARCH} in
-		amd64)
-			cp "${DISTDIR}/kernel-x86_64-fedora.config.${CONFIG_VER}" .config || die
-			;;
 		arm)
 			cp "${DISTDIR}/kernel-arm-transformers.config.${CONFIG_VER}" .config || die
 			;;
