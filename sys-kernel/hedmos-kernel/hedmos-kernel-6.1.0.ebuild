@@ -25,6 +25,7 @@ SRC_URI="
 			-> kernel-x86_64-fedora.config.${CONFIG_VER}
 	https://raw.githubusercontent.com/hamadmarri/TT-CPU-Scheduler/master/patches/6.1/tt-6.1.patch
 "
+S=${WORKDIR}/${MY_P}
 
 LICENSE="GPL-2"
 KEYWORDS="~amd64"
