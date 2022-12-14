@@ -5,35 +5,30 @@ EAPI=8
 
 inherit kernel-build toolchain-funcs
 
-#MY_P=linux-${PV}-xanmod1
-MY_P=linux-${PV%.*}
+MY_P=linux-${PV}
 GENPATCHES_P=genpatches-${PV%.*}-$(( ${PV##*.} + 1 ))
-GENTOO_CONFIG_VER=g2
+GENTOO_CONFIG_VER=g3
 
-DESCRIPTION="Linux kernel built with XanMod and Gentoo patches"
-HOMEPAGE="https://www.kernel.org/ https://xanmod.org/"
-TT_URI="https://raw.githubusercontent.com/hedmo/stuff/main/patches"
-SRC_URI="
-	https://cdn.kernel.org/pub/linux/kernel/v$(ver_cut 1).x/${MY_P}.tar.xz
-	https://github.com/xanmod/linux/releases/download/${PV}-xanmod1/patch-${PV}-xanmod1.xz
+DESCRIPTION="Clamors fork of :grate-driver/linux with gentoo patches"
+HOMEPAGE="https://github.com/grate-driver/linux"
+COMMIT="375a9a0dbc489507f3565bf63b111a7708d7e6b3"
+SRC_URI+="
 	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.base.tar.xz
 	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.extras.tar.xz
-	https://github.com/mgorny/gentoo-kernel-config/archive/${GENTOO_CONFIG_VER}.tar.gz
-		-> gentoo-kernel-config-${GENTOO_CONFIG_VER}.tar.gz
-
-		tt? (
-		${TT_URI}/tt-6.0-5fe13bb22c.patch
-		${TT_URI}/xanmod-fair-revert.patch
-	)
+		https://github.com/clamor-s/linux/archive/${COMMIT}.tar.gz
+		-> ${MY_P}.tar.gz
+	https://raw.githubusercontent.com/clamor-s/linux/510939f83c4c8ce4cb4d3e1e0aae62676eba2c8c/arch/arm/configs/transformer_defconfig			-> kernel-arm-transformers.config.${CONFIG_VER}
 "
-S=${WORKDIR}/${MY_P}
+S=${WORKDIR}/linux-${COMMIT}
+SLOT="${PV}"
 
 LICENSE="GPL-2"
-KEYWORDS="-* ~amd64"
-IUSE="debug hardened tt"
-
+KEYWORDS="~arm"
+IUSE="debug hardened"
+REQUIRED_USE="
+"
 RDEPEND="
-	!sys-kernel/xanmod-kernel-bin:${SLOT}
+	!sys-kernel/t30-kernel-bin:${SLOT}
 "
 BDEPEND="
 	debug? ( dev-util/pahole )
@@ -46,36 +41,27 @@ QA_FLAGS_IGNORED="
 	usr/src/linux-.*/scripts/gcc-plugins/.*.so
 	usr/src/linux-.*/vmlinux
 "
-
 src_prepare() {
-	# Remove linux-stable patches (see 0000_README)
-	if [[ -e 1[0-4][0-9][0-9]*.patch ]]; then
-		find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-9][0-9]*.patch" | xargs rm || die
-	fi
+	# Remove linux-stable patches lower then Clamors rebase.
+		#find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-5][0-5]*.patch" -exec rm {} + || die
+		local PATCHES=(
+		# meh, genpatches have no directory
+		"${WORKDIR}"/*.patch
+	)
 
-	# meh, genpatches have no directory
-	#patching main patches before TT
-		eapply "${WORKDIR}"/patch-${PV}-xanmod1
-		eapply "${WORKDIR}"/*.patch
-
-	if use tt; then
-		eapply "${DISTDIR}/xanmod-fair-revert.patch"
-		eapply "${DISTDIR}/tt-6.0-5fe13bb22c.patch"
-	fi
 	default
 
 	# prepare the default config
 	case ${ARCH} in
-		amd64)
-			cp "${S}/CONFIGS/xanmod/gcc/config_x86-64-v1" .config || die
+		arm)
+			cp "${DISTDIR}/kernel-arm-transformers.config.${CONFIG_VER}" .config || die
 			;;
 		*)
 			die "Unsupported arch ${ARCH}"
 			;;
 	esac
 
-	rm "${S}/localversion" || die
-	local myversion="-xanmod1-dist"
+	local myversion="-t30-dist"
 	use hardened && myversion+="-hardened"
 	echo "CONFIG_LOCALVERSION=\"${myversion}\"" > "${T}"/version.config || die
 	local dist_conf_path="${WORKDIR}/gentoo-kernel-config-${GENTOO_CONFIG_VER}"
