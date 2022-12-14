@@ -58,7 +58,7 @@ src_prepare() {
 		eapply "${WORKDIR}/hedmos-patches/ddci/"*.patch
 	fi
 	if use tt; then
-		eapply "${WORKDIR}/tt-6.1.patch"
+		eapply "${DISTDIR}/tt-6.1.patch"
 	fi
 	if use anbox; then
 		eapply "${WORKDIR}/hedmos-patches/android_anbox/"*.patch
