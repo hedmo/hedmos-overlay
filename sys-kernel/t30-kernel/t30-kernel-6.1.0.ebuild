@@ -15,9 +15,12 @@ COMMIT="375a9a0dbc489507f3565bf63b111a7708d7e6b3"
 SRC_URI+="
 	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.base.tar.xz
 	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.extras.tar.xz
-		https://github.com/clamor-s/linux/archive/${COMMIT}.tar.gz
+	https://github.com/mgorny/gentoo-kernel-config/archive/${GENTOO_CONFIG_VER}.tar.gz
+		-> gentoo-kernel-config-${GENTOO_CONFIG_VER}.tar.gz
+
+	https://github.com/clamor-s/linux/archive/${COMMIT}.tar.gz
 		-> ${MY_P}.tar.gz
-	https://raw.githubusercontent.com/clamor-s/linux/510939f83c4c8ce4cb4d3e1e0aae62676eba2c8c/arch/arm/configs/transformer_defconfig			-> kernel-arm-transformers.config.${CONFIG_VER}
+	https://raw.githubusercontent.com/clamor-s/linux/510939f83c4c8ce4cb4d3e1e0aae62676eba2c8c/arch/arm/configs/transformer_defconfig
 "
 S=${WORKDIR}/linux-${COMMIT}
 SLOT="${PV}"
@@ -54,7 +57,7 @@ src_prepare() {
 	# prepare the default config
 	case ${ARCH} in
 		arm)
-			cp "${DISTDIR}/kernel-arm-transformers.config.${CONFIG_VER}" .config || die
+			cp "${DISTDIR}/"transformer_defconfig .config || die
 			;;
 		*)
 			die "Unsupported arch ${ARCH}"
