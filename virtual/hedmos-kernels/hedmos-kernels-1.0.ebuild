@@ -3,10 +3,10 @@
 
 EAPI=8
 
-DESCRIPTION="Virtual for Wine that supports multiple variants and slotting"
+DESCRIPTION="my virtual to have all my kernel in one ebuild"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64 arm x86"
 IUSE="hedmo t30 xanmod"
 REQUIRED_USE=""
 
