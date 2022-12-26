@@ -15,9 +15,9 @@ else
 	COMMIT=""
 	SRC_URI="https://github.com/z3ntu/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS=" ~amd64  "
-#	S="${WORKDIR}"/${PN}-v${PV}
+	S="${WORKDIR}"/${PN}-v${PV}
 fi
-https://github.com/z3ntu/RazerGenie/archive/refs/tags/v1.0.0.tar.gz
+
 LICENSE="GPL-3"
 SLOT="0"
 IUSE="+openrazer razer-test matrix"
