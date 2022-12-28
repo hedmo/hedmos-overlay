@@ -15,5 +15,5 @@ RDEPEND="
 	hedmo? ( sys-kernel/hedmos-kernel )
 	t30? ( sys-kernel/t30-kernel )
 	xanmod? ( sys-kernel/xanmod-kernel )
-	stable? ( =<sys-kernel/hedmos-kernel-6.1.0 )
+	stable? ( <=sys-kernel/hedmos-kernel-6.1.0 )
 "
