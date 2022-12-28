@@ -15,7 +15,7 @@ else
 	COMMIT=""
 	SRC_URI="https://github.com/z3ntu/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS=" ~amd64  "
-	S="${WORKDIR}"/${PN}-v${PV}
+	S="${WORKDIR}"/${PN}-${PV}
 fi
 
 LICENSE="GPL-3"
