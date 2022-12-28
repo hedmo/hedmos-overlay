@@ -7,7 +7,7 @@ DESCRIPTION="my virtual to have all my kernel in one ebuild"
 
 SLOT="0"
 KEYWORDS="amd64 arm x86"
-IUSE="hedmo t30 xanmod"
+IUSE="hedmo t30 xanmod stable"
 REQUIRED_USE=""
 
 
@@ -15,4 +15,5 @@ RDEPEND="
 	hedmo? ( sys-kernel/hedmos-kernel )
 	t30? ( sys-kernel/t30-kernel )
 	xanmod? ( sys-kernel/xanmod-kernel )
+	stable? ( =<sys-kernel/hedmos-kernel-6.1.0 )
 "
