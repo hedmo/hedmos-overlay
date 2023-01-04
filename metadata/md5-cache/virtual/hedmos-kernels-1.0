@@ -1,0 +1,8 @@
+DEFINED_PHASES=-
+DESCRIPTION=my virtual to have all my kernel in one ebuild
+EAPI=8
+IUSE=hedmo t30 xanmod stable
+KEYWORDS=amd64 arm x86
+RDEPEND=hedmo? ( sys-kernel/hedmos-kernel ) t30? ( sys-kernel/t30-kernel ) xanmod? ( sys-kernel/xanmod-kernel ) stable? ( <=sys-kernel/hedmos-kernel-6.0.99 )
+SLOT=0
+_md5_=0b497cbbb5f23ea3bafc43eec0a0dcc3
