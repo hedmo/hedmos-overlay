@@ -15,8 +15,8 @@ DESCRIPTION="Linux kernel based on gentoo with powersave (TT) pach and more"
 HOMEPAGE="https://github.com/hedmo/hedmos-overlay.git"
 HEDMOS_URI="raw.githubusercontent.com/hedmo/stuff/main/patches"
 SRC_URI="
-	https://dev.gentoo.org/~alicef/dist/genpatches/${GENPATCHES_P}.base.tar.xz
-	https://dev.gentoo.org/~alicef/dist/genpatches/${GENPATCHES_P}.extras.tar.xz
+	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.base.tar.xz
+	https://dev.gentoo.org/~mpagano/dist/genpatches/${GENPATCHES_P}.extras.tar.xz
 	https://github.com/mgorny/gentoo-kernel-config/archive/${GENTOO_CONFIG_VER}.tar.gz
 		-> gentoo-kernel-config-${GENTOO_CONFIG_VER}.tar.gz
 	https://${HEDMOS_URI}/hedmos-patches.tar.gz
