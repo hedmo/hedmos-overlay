@@ -7,7 +7,7 @@ inherit kernel-build toolchain-funcs
 
 #MY_P=linux-${PV}-xanmod1
 MY_P=linux-${PV%.*}
-GENPATCHES_P=genpatches-${PV%.*}-$(( ${PV##*.} +1 ))
+GENPATCHES_P=genpatches-${PV%.*}-$(( ${PV##*.} +2 ))
 CONFIG_VER=5.19.13-gentoo
 GENTOO_CONFIG_VER=g3
 
