@@ -47,6 +47,9 @@ QA_FLAGS_IGNORED="
 src_prepare() {
 	# Remove linux-stable patches lower then Clamors rebase.
 		#find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-5][0-5]*.patch" -exec rm {} + || die
+	# Remove linux-stable patches (see 0000_README)
+		find "${WORKDIR}" -maxdepth 1 -name "1[0-4][0-9][0-9]*.patch" | xargs rm || die
+
 		local PATCHES=(
 		# meh, genpatches have no directory
 		"${WORKDIR}"/*.patch
