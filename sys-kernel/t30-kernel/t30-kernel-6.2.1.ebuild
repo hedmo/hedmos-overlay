@@ -22,7 +22,7 @@ SRC_URI+="
 		-> ${MY_P}.tar.gz
 	https://raw.githubusercontent.com/clamor-s/linux/510939f83c4c8ce4cb4d3e1e0aae62676eba2c8c/arch/arm/configs/transformer_defconfig
 "
-S=${WORKDIR}/linux-${COMMIT}
+S=${WORKDIR}/linux-clamor-${COMMIT}
 SLOT="${PV}"
 
 LICENSE="GPL-2"
