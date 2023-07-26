@@ -46,7 +46,6 @@ DOCS=( README.md )
 src_configure() {
 	local emesonargs=(
 		--buildtype release
-		-Dinclude_matrix_discovery="true"
 	)
 	meson_src_configure
 }
