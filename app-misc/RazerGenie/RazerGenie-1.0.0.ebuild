@@ -41,17 +41,12 @@ BDEPEND="
 	virtual/pkgconfig
 	"
 
-src_configure() {
-	local emesonargs=(
-		"$(meson_use matrix include_matrix_discovery)"
-	)
-	meson_src_configure
-}
-
+DOCS=( README.md )
 
 src_configure() {
 	local emesonargs=(
-		"$(meson_use matrix include_matrix_discovery)"
+		--buildtype release
+		-Dinclude_matrix_discovery="true"
 	)
 	meson_src_configure
 }
