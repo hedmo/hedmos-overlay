@@ -13,9 +13,9 @@ if [[ ${PV} == 9999 ]]; then
 else
 	SRC_URI="https://github.com/z3ntu/${PN}/releases/download/v${PV}/${P}.tar.xz"
 	KEYWORDS=" ~amd64 "
-	S="${WORKDIR}"/${PN}-${COMMIT}
+	S="${WORKDIR}"/${PN}-${PV}
 fi
-https://github.com/z3ntu/libopenrazer/releases/download/v0.1.0/libopenrazer-0.1.0.tar.xz
+
 LICENSE="GPL-3"
 SLOT="0"
 IUSE="demo"
