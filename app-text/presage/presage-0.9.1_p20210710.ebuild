@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit eutils autotools flag-o-matic
+inherit autotools flag-o-matic
 DESCRIPTION="The intelligent predictive text entry system"
 HOMEPAGE="http://presage.sourceforge.io"
 
