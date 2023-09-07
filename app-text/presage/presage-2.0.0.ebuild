@@ -18,8 +18,8 @@ inherit git-r3
 	EGIT_COMMIT="tags/${PV}"
 else
 COMMIT="a060594faaf23c31c6686c6b838a71dbfa7e7892"
-SRC_URI="https://github.com/sailfish-keyboard/presage/archive/${COMMIT}.tar.gz -> ${P}.tar.gz"
-S="${WORKDIR}"/${PN}-${COMMIT}
+SRC_URI="https://github.com/sailfish-keyboard/presage/archive/refs/tags/${PV}.tar.gz"
+#S="${WORKDIR}"/${PN}-${COMMIT}
 KEYWORDS="~amd64 "
 fi
 
