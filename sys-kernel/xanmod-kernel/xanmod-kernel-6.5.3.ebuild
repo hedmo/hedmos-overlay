@@ -7,7 +7,7 @@ inherit kernel-build toolchain-funcs
 
 #MY_P=linux-${PV}-xanmod1
 MY_P=linux-${PV%.*}
-GENPATCHES_P=genpatches-${PV%.*}-$(( ${PV##*.} + 2 ))
+GENPATCHES_P=genpatches-${PV%.*}-$(( ${PV##*.} + 1 ))
 GENTOO_CONFIG_VER=g2
 
 DESCRIPTION="Linux kernel built with XanMod and Gentoo patches"
