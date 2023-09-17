@@ -23,7 +23,7 @@ SRC_URI="
 		-> gentoo-kernel-config-${GENTOO_CONFIG_VER}.tar.gz
 
 		tt? (
-		${TT_URI}/0001-tt.patch
+		${TT_URI}/0001-tt.patch -> 6.5.x-tt.patch
 		${HEDMOS_URI}/xanmod-fair-revert.patch
 	)
 "
@@ -59,7 +59,7 @@ src_prepare() {
 
 	if use tt; then
 		eapply "${DISTDIR}/xanmod-fair-revert.patch"
-		eapply "${DISTDIR}/0001-tt.patch"
+		eapply "${DISTDIR}/6.5.x-tt.patch"
 	fi
 	default
 
