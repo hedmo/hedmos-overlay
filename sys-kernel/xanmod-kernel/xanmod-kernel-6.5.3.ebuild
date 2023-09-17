@@ -24,7 +24,7 @@ SRC_URI="
 
 		tt? (
 		${TT_URI}/0001-tt.patch -> 6.5.x-tt.patch
-		${HEDMOS_URI}/xanmod-fair-revert.patch
+		${HEDMOS_URI}/xanmod-6.5-fair-revert.patch
 	)
 "
 S=${WORKDIR}/${MY_P}
@@ -58,7 +58,7 @@ src_prepare() {
 		eapply "${WORKDIR}"/*.patch
 
 	if use tt; then
-		eapply "${DISTDIR}/xanmod-fair-revert.patch"
+		eapply "${DISTDIR}/xanmod-6.5-fair-revert.patch"
 		eapply "${DISTDIR}/6.5.x-tt.patch"
 	fi
 	default
