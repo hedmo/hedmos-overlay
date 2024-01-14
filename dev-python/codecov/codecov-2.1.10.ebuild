@@ -29,4 +29,4 @@ BDEPEND="${REDEPEND}
 python_test() {
 	nosetests --verbose || die
 	py.test -v -v || die
-} 
+}
