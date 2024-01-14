@@ -3,13 +3,14 @@
 
 EAPI="7"
 
-PYTHON_COMPAT=( python3_{8..9} )
+PYTHON_COMPAT=( python3_{8,9,10,11} )
 
 inherit distutils-r1
 
 DESCRIPTION="Hosted coverage reports for GitHub, Bitbucket and Gitlab"
-HOMEPAGE="https://github.com/codecov/codecov-python https://pypi.org/project/codecov/"
-SRC_URI="mirror://pypi/${P:0:1}/${PN}/${P}.tar.gz"
+HOMEPAGE="https://github.com/codecov/codecov-python "
+SRC_URI="https://github.com/codecov/codecov-python/archive/refs/tags/v${PV}.tar.gz -> ${P}.gh.tar.gz"
+S="${WORKDIR}/codecov-python-${PV}"
 
 LICENSE="Apache-2.0"
 SLOT="0"
