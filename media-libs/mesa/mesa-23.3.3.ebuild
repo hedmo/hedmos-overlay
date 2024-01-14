@@ -25,7 +25,7 @@ else
 	SRC_URI="
 	https://archive.mesa3d.org/${MY_P}.tar.xz
 	"
-	KEYWORDS=" ~amd64 "
+#	KEYWORDS=" ~amd64 "
 fi
 
 LICENSE="MIT"
