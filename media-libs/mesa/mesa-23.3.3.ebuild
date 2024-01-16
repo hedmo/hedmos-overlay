@@ -25,7 +25,7 @@ else
 	SRC_URI="
 	https://archive.mesa3d.org/${MY_P}.tar.xz
 	"
-#	KEYWORDS=" ~amd64 "
+	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~loong ~mips ~ppc ~ppc64 ~riscv ~s390 ~sparc ~x86 ~amd64-linux ~x86-linux ~x64-solaris "
 fi
 
 LICENSE="MIT"
@@ -160,7 +160,7 @@ unset LLVM_MIN_SLOT {LLVM,PER_SLOT}_DEPSTR
 
 DEPEND="${RDEPEND}
 	video_cards_d3d12? ( dev-util/directx-headers[${MULTILIB_USEDEP}] )
-	valgrind? ( dev-util/valgrind )
+	valgrind? ( dev-debug/valgrind )
 	wayland? ( >=dev-libs/wayland-protocols-1.24 )
 	X? (
 		x11-libs/libXrandr[${MULTILIB_USEDEP}]
