@@ -31,7 +31,7 @@ RDEPEND="${DEPEND}
 	razer-test? (
 	( !sys-apps/openrazer )
 	)
-	dev-libs/libopenrazer
+	>=dev-libs/libopenrazer-0.2.0
 	app-misc/razer_test
 	dev-qt/linguist-tools:5
 	openrazer? ( sys-apps/openrazer
