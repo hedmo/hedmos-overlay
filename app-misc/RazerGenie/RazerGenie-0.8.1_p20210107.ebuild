@@ -47,11 +47,3 @@ src_configure() {
 	)
 	meson_src_configure
 }
-
-
-src_configure() {
-	local emesonargs=(
-		"$(meson_use matrix include_matrix_discovery)"
-	)
-	meson_src_configure
-}
