@@ -1,34 +1,26 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{9..12} )
+PYTHON_COMPAT=( python3_{10..12} )
 
-inherit llvm meson-multilib python-any-r1 linux-info
+inherit flag-o-matic llvm meson-multilib python-any-r1 linux-info
 
 MY_P="${P/_/-}"
 
 DESCRIPTION="OpenGL-like graphic library for Linux"
 HOMEPAGE="https://www.mesa3d.org/ https://mesa.freedesktop.org/"
-	NAK_URI="
-	https://github.com/dtolnay/syn/archive/refs/tags/2.0.15.tar.gz
-	https://github.com/dtolnay/proc-macro2/archive/refs/tags/1.0.56.tar.gz
-	https://github.com/dtolnay/quote/archive/refs/tags/1.0.25.tar.gz
-	https://github.com/dtolnay/unicode-ident/archive/refs/tags/1.0.6.tar.gz
-	"
-	MESA_COMMIT="e6b723ccce0e0f9e5eed47b1ab2a52eef3aef0f4"
+
 if [[ ${PV} == 9999 ]]; then
 	EGIT_REPO_URI="https://gitlab.freedesktop.org/mesa/mesa.git"
 	inherit git-r3
 else
-	SRC_URI="
-	https://archive.mesa3d.org/${MY_P}.tar.xz
-	"
-	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~loong ~mips ~ppc ~ppc64 ~riscv ~s390 ~sparc ~x86 ~amd64-linux ~x86-linux ~x64-solaris "
+	SRC_URI="https://archive.mesa3d.org/${MY_P}.tar.xz"
+	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~loong ~mips ~ppc ~ppc64 ~riscv ~s390 ~sparc ~x86 ~amd64-linux ~x86-linux ~x64-solaris"
 fi
 
-LICENSE="MIT"
+LICENSE="MIT SGI-B-2.0"
 SLOT="0"
 RESTRICT="!test? ( test )"
 
@@ -94,15 +86,6 @@ RDEPEND="
 		>=media-libs/libva-1.7.3:=[${MULTILIB_USEDEP}]
 	)
 	vdpau? ( >=x11-libs/libvdpau-1.1:=[${MULTILIB_USEDEP}] )
-	vulkan? (
-		video_cards_intel? (
-			amd64? (
-				dev-libs/libclc[spirv(-)]
-				>=dev-util/spirv-tools-1.3.231.0
-				>=dev-util/bindgen-0.68.1
-			)
-		)
-	)
 	selinux? ( sys-libs/libselinux[${MULTILIB_USEDEP}] )
 	wayland? ( >=dev-libs/wayland-1.18.0[${MULTILIB_USEDEP}] )
 	${LIBDRM_DEPSTRING}[video_cards_freedreno?,video_cards_intel?,video_cards_nouveau?,video_cards_vc4?,video_cards_vivante?,video_cards_vmware?,${MULTILIB_USEDEP}]
@@ -113,6 +96,7 @@ RDEPEND="
 		>=x11-libs/libXxf86vm-1.1.3[${MULTILIB_USEDEP}]
 		>=x11-libs/libxcb-1.13:=[${MULTILIB_USEDEP}]
 		x11-libs/libXfixes[${MULTILIB_USEDEP}]
+		x11-libs/xcb-util-keysyms[${MULTILIB_USEDEP}]
 	)
 	zink? ( media-libs/vulkan-loader:=[${MULTILIB_USEDEP}] )
 	zstd? ( app-arch/zstd:=[${MULTILIB_USEDEP}] )
@@ -132,16 +116,15 @@ RDEPEND="${RDEPEND}
 #
 # How to use it:
 # 1. Specify LLVM_MAX_SLOT (inclusive), e.g. 17.
-# 2. Specify LLVM_MIN_SLOT (inclusive), e.g. 16.
+# 2. Specify LLVM_MIN_SLOT (inclusive), e.g. 15.
 LLVM_MAX_SLOT="17"
-LLVM_MIN_SLOT="16"
+LLVM_MIN_SLOT="15"
 LLVM_USE_DEPS="llvm_targets_AMDGPU(+),${MULTILIB_USEDEP}"
 PER_SLOT_DEPSTR="
 	(
 		!opencl? ( sys-devel/llvm:@SLOT@[${LLVM_USE_DEPS}] )
 		opencl? ( sys-devel/clang:@SLOT@[${LLVM_USE_DEPS}] )
 		opencl? ( dev-util/spirv-llvm-translator:@SLOT@ )
-		vulkan? ( video_cards_intel? ( amd64? ( dev-util/spirv-llvm-translator:@SLOT@ ) ) )
 	)
 "
 LLVM_DEPSTR="
@@ -159,30 +142,33 @@ RDEPEND="${RDEPEND}
 unset LLVM_MIN_SLOT {LLVM,PER_SLOT}_DEPSTR
 
 DEPEND="${RDEPEND}
-	video_cards_d3d12? ( dev-util/directx-headers[${MULTILIB_USEDEP}] )
+	video_cards_d3d12? ( >=dev-util/directx-headers-1.610.0[${MULTILIB_USEDEP}] )
 	valgrind? ( dev-debug/valgrind )
-	wayland? ( >=dev-libs/wayland-protocols-1.24 )
+	wayland? ( >=dev-libs/wayland-protocols-1.30 )
 	X? (
 		x11-libs/libXrandr[${MULTILIB_USEDEP}]
 		x11-base/xorg-proto
 	)
 "
 BDEPEND="
-	>=dev-build/meson-1.0.0
 	${PYTHON_DEPS}
 	opencl? (
 		>=virtual/rust-1.62.0
 		>=dev-util/bindgen-0.58.0
 	)
-	sys-devel/bison
-	sys-devel/flex
+	app-alternatives/yacc
+	app-alternatives/lex
 	virtual/pkgconfig
 	$(python_gen_any_dep ">=dev-python/mako-0.8.0[\${PYTHON_USEDEP}]")
 	vulkan? (
 		dev-util/glslang
-		video_cards_intel? (
-			amd64? (
-				$(python_gen_any_dep "dev-python/ply[\${PYTHON_USEDEP}]")
+		llvm? (
+			video_cards_intel? (
+				amd64? (
+					$(python_gen_any_dep "dev-python/ply[\${PYTHON_USEDEP}]")
+					~dev-util/intel_clc-${PV}
+					dev-libs/libclc[spirv(-)]
+				)
 			)
 		)
 	)
@@ -199,32 +185,23 @@ x86? (
 	usr/lib/libGLX_mesa.so.0.0.0
 )"
 
-PATCHES=(
-	"${FILESDIR}"/${PV}-symbols-check-Add-_GLOBAL_OFFSET_TABLE_.patch
-	"${FILESDIR}"/${PV}-big-endian.patch
-	)
 llvm_check_deps() {
-
 	if use opencl; then
 		has_version "sys-devel/clang:${LLVM_SLOT}[${LLVM_USE_DEPS}]" || return 1
-	fi
-	if use opencl || { use vulkan && use video_cards_intel && use amd64; }; then
 		has_version "dev-util/spirv-llvm-translator:${LLVM_SLOT}" || return 1
 	fi
 	has_version "sys-devel/llvm:${LLVM_SLOT}[${LLVM_USE_DEPS}]"
 }
 
-
 pkg_pretend() {
-
 	if use vulkan; then
 		if ! use video_cards_d3d12 &&
 		   ! use video_cards_freedreno &&
 		   ! use video_cards_intel &&
-		   ! use video_cards_nouveau &&
+		    ! use video_cards_nouveau &&
 		   ! use video_cards_radeonsi &&
 		   ! use video_cards_v3d; then
-			ewarn "Ignoring USE=vulkan     since VIDEO_CARDS does not contain d3d12, freedreno, intel, nouveau, radeonsi, or v3d"
+			ewarn "Ignoring USE=vulkan     since VIDEO_CARDS does not contain d3d12, freedreno, intel, nouveau,radeonsi, or v3d"
 		fi
 	fi
 
@@ -266,7 +243,7 @@ pkg_pretend() {
 
 python_check_deps() {
 	python_has_version -b ">=dev-python/mako-0.8.0[${PYTHON_USEDEP}]" || return 1
-	if use vulkan && use video_cards_intel && use amd64; then
+	if use llvm && use vulkan && use video_cards_intel && use amd64; then
 		python_has_version -b "dev-python/ply[${PYTHON_USEDEP}]" || return 1
 	fi
 }
@@ -298,8 +275,13 @@ pkg_setup() {
 	python-any-r1_pkg_setup
 }
 
-multilib_src_configure() {
+src_prepare() {
+	default
+	sed -i -e "/^PLATFORM_SYMBOLS/a '__gentoo_check_ldflags__'," \
+		bin/symbols-check.py || die # bug #830728
+}
 
+multilib_src_configure() {
 	local emesonargs=()
 
 	local platforms
@@ -382,7 +364,7 @@ multilib_src_configure() {
 	fi
 
 	if use llvm && use opencl; then
-		PKG_CONFIG_PATH="$(get_llvm_prefix)/$(get_libdir)/pkgconfig"
+		PKG_CONFIG_PATH="$(get_llvm_prefix "${LLVM_MAX_SLOT}")/$(get_libdir)/pkgconfig"
 		# See https://gitlab.freedesktop.org/mesa/mesa/-/blob/main/docs/rusticl.rst
 		emesonargs+=(
 			$(meson_native_true gallium-rusticl)
@@ -394,8 +376,8 @@ multilib_src_configure() {
 		vulkan_enable video_cards_lavapipe swrast
 		vulkan_enable video_cards_freedreno freedreno
 		vulkan_enable video_cards_intel intel intel_hasvk
-		vulkan_enable video_cards_d3d12 microsoft-experimental
 		vulkan_enable video_cards_nouveau nouveau-experimental
+		vulkan_enable video_cards_d3d12 microsoft-experimental
 		vulkan_enable video_cards_radeonsi amd
 		vulkan_enable video_cards_v3d broadcom
 	fi
@@ -410,10 +392,14 @@ multilib_src_configure() {
 	use vulkan-overlay && vulkan_layers+=",overlay"
 	emesonargs+=(-Dvulkan-layers=${vulkan_layers#,})
 
-	if use vulkan && use video_cards_intel; then
-		PKG_CONFIG_PATH="$(get_llvm_prefix)/$(get_libdir)/pkgconfig"
-		emesonargs+=($(meson_feature llvm intel-clc))
+	if use llvm && use vulkan && use video_cards_intel && use amd64; then
+		emesonargs+=(-Dintel-clc=system)
+	else
+		emesonargs+=(-Dintel-clc=disabled)
 	fi
+
+	# Workaround for bug #914905, can drop w/ > 23.3
+	append-ldflags $(test-flags-CCLD -Wl,--undefined-version)
 
 	emesonargs+=(
 		$(meson_use test build-tests)
