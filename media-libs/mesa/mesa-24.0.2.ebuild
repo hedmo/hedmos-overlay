@@ -405,7 +405,7 @@ multilib_src_configure() {
 		vulkan_enable video_cards_radeonsi amd
 		vulkan_enable video_cards_v3d broadcom
 		if use video_cards_nouveau; then
-			vulkan_enable video_cards_nouveau nouveau
+			vulkan_enable video_cards_nouveau nouveau-experimental
 			if ! multilib_is_native_abi; then
 				einfo "Applying Gentoo hack for nvk - 1/2"
 				echo -e "[binaries]\nrust = ['rustc', '--target=$(rust_abi $CBUILD)']" > "${T}/rust_fix.ini"
