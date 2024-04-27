@@ -10,16 +10,19 @@ PYTHON_COMPAT=( python3_{10..12} )
 inherit llvm-r1 meson-multilib python-any-r1 linux-info rust-toolchain
 
 MY_P="${P/_/-}"
+
+paste_PV=1.0.14
 syn_PV=2.0.39
 proc_macro2_PV=1.0.70
 quote_PV=1.0.33
 unicode_ident_PV=1.0.12
 
 NAK_URI="
-   https://github.com/dtolnay/syn/archive/refs/tags/${syn_PV}.tar.gz -> syn-${syn_PV}.tar.gz
-   https://github.com/dtolnay/proc-macro2/archive/refs/tags/${proc_macro2_PV}.tar.gz -> proc-macro2-${proc_macro2_PV}.tar.gz
-   https://github.com/dtolnay/quote/archive/refs/tags/${quote_PV}.tar.gz -> quote-${quote_PV}.tar.gz
-   https://github.com/dtolnay/unicode-ident/archive/refs/tags/${unicode_ident_PV}.tar.gz -> unicode-ident-${unicode_ident_PV}.tar.gz
+		https://github.com/dtolnay/paste/archive/refs/tags/${paste_PV}.tar.gz -> paste-${paste_PV}.tar.gz
+	https://github.com/dtolnay/syn/archive/refs/tags/${syn_PV}.tar.gz -> syn-${syn_PV}.tar.gz
+	https://github.com/dtolnay/proc-macro2/archive/refs/tags/${proc_macro2_PV}.tar.gz -> proc-macro2-${proc_macro2_PV}.tar.gz
+	https://github.com/dtolnay/quote/archive/refs/tags/${quote_PV}.tar.gz -> quote-${quote_PV}.tar.gz
+	https://github.com/dtolnay/unicode-ident/archive/refs/tags/${unicode_ident_PV}.tar.gz -> unicode-ident-${unicode_ident_PV}.tar.gz
 "
 
 DESCRIPTION="OpenGL-like graphic library for Linux"
@@ -36,10 +39,11 @@ else
 	"
 	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~loong ~mips ~ppc ~ppc64 ~riscv ~s390 ~sparc ~x86 ~amd64-linux ~x86-linux ~x64-solaris"
 fi
+S="${WORKDIR}/${MY_P}"
+EGIT_CHECKOUT_DIR=${S}
 
 LICENSE="MIT SGI-B-2.0"
 SLOT="0"
-RESTRICT="!test? ( test )"
 
 RADEON_CARDS="r300 r600 radeon radeonsi"
 VIDEO_CARDS="${RADEON_CARDS} d3d12 freedreno intel lavapipe lima nouveau panfrost v3d vc4 virgl vivante vmware"
@@ -52,7 +56,7 @@ IUSE="${IUSE_VIDEO_CARDS}
 	lm-sensors opencl +opengl osmesa +proprietary-codecs selinux
 	test unwind vaapi valgrind vdpau vulkan
 	vulkan-overlay wayland +X xa zink +zstd"
-
+RESTRICT="!test? ( test )"
 REQUIRED_USE="
 	d3d9? (
 		|| (
@@ -79,7 +83,7 @@ LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.119"
 RDEPEND="
 	>=dev-libs/expat-2.1.0-r3[${MULTILIB_USEDEP}]
 	>=media-libs/libglvnd-1.3.2[X?,${MULTILIB_USEDEP}]
-	>=sys-libs/zlib-1.2.8[${MULTILIB_USEDEP}]
+	>=sys-libs/zlib-1.2.9[${MULTILIB_USEDEP}]
 	unwind? ( sys-libs/libunwind[${MULTILIB_USEDEP}] )
 	llvm? (
 		$(llvm_gen_dep "
@@ -89,9 +93,6 @@ RDEPEND="
 				sys-devel/clang:\${LLVM_SLOT}[llvm_targets_AMDGPU(+),${MULTILIB_USEDEP}]
 			)
 		")
-		video_cards_radeonsi? (
-			virtual/libelf:0=[${MULTILIB_USEDEP}]
-		)
 		video_cards_r600? (
 			virtual/libelf:0=[${MULTILIB_USEDEP}]
 		)
@@ -109,7 +110,8 @@ RDEPEND="
 	vaapi? (
 		>=media-libs/libva-1.7.3:=[${MULTILIB_USEDEP}]
 	)
-	vdpau? ( >=x11-libs/libvdpau-1.1:=[${MULTILIB_USEDEP}] )
+	vdpau? ( >=x11-libs/libvdpau-1.5:=[${MULTILIB_USEDEP}] )
+	video_cards_radeonsi? ( virtual/libelf:0=[${MULTILIB_USEDEP}] )
 	selinux? ( sys-libs/libselinux[${MULTILIB_USEDEP}] )
 	wayland? ( >=dev-libs/wayland-1.18.0[${MULTILIB_USEDEP}] )
 	${LIBDRM_DEPSTRING}[video_cards_freedreno?,video_cards_intel?,video_cards_nouveau?,video_cards_vc4?,video_cards_vivante?,video_cards_vmware?,${MULTILIB_USEDEP}]
@@ -143,6 +145,8 @@ DEPEND="${RDEPEND}
 		x11-base/xorg-proto
 	)
 "
+# meson-1.4.0 contains a regression, so it fails to compile nouveau/NVK
+# see https://gitlab.freedesktop.org/mesa/mesa/-/issues/10855
 BDEPEND="
 	${PYTHON_DEPS}
 	opencl? (
@@ -154,23 +158,22 @@ BDEPEND="
 	app-alternatives/lex
 	virtual/pkgconfig
 	$(python_gen_any_dep ">=dev-python/mako-0.8.0[\${PYTHON_USEDEP}]")
+	video_cards_intel? (
+		~dev-util/intel_clc-${PV}
+		dev-libs/libclc[spirv(-)]
+		$(python_gen_any_dep "dev-python/ply[\${PYTHON_USEDEP}]")
+	)
 	vulkan? (
 		dev-util/glslang
-		llvm? (
-			video_cards_intel? (
-				amd64? (
-					$(python_gen_any_dep "dev-python/ply[\${PYTHON_USEDEP}]")
-					~dev-util/intel_clc-${PV}
-					dev-libs/libclc[spirv(-)]
-				)
-			)
+		video_cards_nouveau? (
+			>=dev-util/bindgen-0.68.1
+			>=dev-util/cbindgen-0.26.0
+			>=virtual/rust-1.74.1
+			<dev-build/meson-1.4.0
 		)
 	)
 	wayland? ( dev-util/wayland-scanner )
 "
-
-S="${WORKDIR}/${MY_P}"
-EGIT_CHECKOUT_DIR=${S}
 
 QA_WX_LOAD="
 x86? (
@@ -180,16 +183,8 @@ x86? (
 )"
 
 src_unpack() {
-	# Unpack even on live ebuilds
-	if [[ ${PV} == 9999 ]]; then
-		git-r3_src_unpack
-		unpack syn-${syn_PV}.tar.gz
-		unpack proc-macro2-${proc_macro2_PV}.tar.gz
-		unpack quote-${quote_PV}.tar.gz
-		unpack unicode-ident-${unicode_ident_PV}.tar.gz
-	else
-		unpack ${A}
-	fi
+	[[ ${PV} == 9999 ]] && git-r3_src_unpack
+	unpack ${A}
 }
 
 pkg_pretend() {
@@ -198,8 +193,7 @@ pkg_pretend() {
 		   ! use video_cards_freedreno &&
 		   ! use video_cards_intel &&
 		   ! use video_cards_radeonsi &&
-		   ! use video_cards_v3d &&
-	   	   ! use video_cards_nouveau; then
+		   ! use video_cards_v3d; then
 			ewarn "Ignoring USE=vulkan     since VIDEO_CARDS does not contain d3d12, freedreno, intel, radeonsi, or v3d"
 		fi
 	fi
@@ -278,31 +272,18 @@ src_prepare() {
 		bin/symbols-check.py || die # bug #830728
 
 	if use video_cards_nouveau; then
-		# NVK Subproject Handeling
-		# Move meson.build files
-		cp "${S}/subprojects/packagefiles/proc-macro2/meson.build" \
-			"${WORKDIR}/proc-macro2-${proc_macro2_PV}" || die
-		cp "${S}/subprojects/packagefiles/syn/meson.build" \
-			"${WORKDIR}/syn-${syn_PV}" || die
-		cp "${S}/subprojects/packagefiles/quote/meson.build" \
-			"${WORKDIR}/quote-${quote_PV}" || die
-		cp "${S}/subprojects/packagefiles/unicode-ident/meson.build" \
-			"${WORKDIR}/unicode-ident-${unicode_ident_PV}" || die
-
-		# Move to subproject folder
-		mv "${WORKDIR}/proc-macro2-${proc_macro2_PV}" \
-			"${S}/subprojects/proc-macro2-${proc_macro2_PV}" || die
-		mv "${WORKDIR}/syn-${syn_PV}" \
-			"${S}/subprojects/syn-${syn_PV}" || die
-		mv "${WORKDIR}/quote-${quote_PV}" \
-			"${S}/subprojects/quote-${quote_PV}" || die
-		mv "${WORKDIR}/unicode-ident-${unicode_ident_PV}" \
-			"${S}/subprojects/unicode-ident-${unicode_ident_PV}" || die
-
-  		# HACK: Remove crate .rlib files before build
-  		# (This prevents build errors after a Rust update: https://github.com/mesonbuild/meson/issues/10706)
-  		[ -d build/subprojects ] && find build/subprojects -iname "*.rlib" -delete
-  		[ -d build/src/nouveau/compiler ] && find build/src/nouveau/compiler -iname "*.rlib" -delete
+		# NVK Subproject Handling
+		pushd "${WORKDIR}" || die
+			for subpkg in proc-macro2-${proc_macro2_PV} paste-${paste_PV} syn-${syn_PV} quote-${quote_PV} unicode-ident-${unicode_ident_PV}; do
+				# copy subproject folder
+				subpkg_folder=mesa-${PV}/subprojects
+				cp -r ${subpkg} ${subpkg_folder} || die
+				# copy meson.build
+				cp ${subpkg_folder}/packagefiles/${subpkg%-*}/meson.build ${subpkg_folder}/${subpkg} || die
+				# ovewrite subpkg version when needed
+				sed -i -e "s/directory = \S\+/directory = ${subpkg}/" ${subpkg_folder}/${subpkg%-*}.wrap || die
+			done
+		popd || die
 	fi
 }
 
@@ -426,12 +407,6 @@ multilib_src_configure() {
 	use vulkan-overlay && vulkan_layers+=",overlay"
 	emesonargs+=(-Dvulkan-layers=${vulkan_layers#,})
 
-	if use llvm && use vulkan && use video_cards_intel && use amd64; then
-		emesonargs+=(-Dintel-clc=system)
-	else
-		emesonargs+=(-Dintel-clc=disabled)
-	fi
-
 	if use opengl || use gles1 || use gles2; then
 		emesonargs+=(
 			-Degl=enabled
@@ -465,6 +440,7 @@ multilib_src_configure() {
 		$(meson_use osmesa)
 		$(meson_use selinux)
 		$(meson_feature unwind libunwind)
+		$(meson_native_use_feature video_cards_intel intel-rt)
 		$(meson_feature zstd)
 		$(meson_use cpu_flags_x86_sse2 sse2)
 		-Dintel-clc=$(usex video_cards_intel system auto)
@@ -476,11 +452,11 @@ multilib_src_configure() {
 		-Db_ndebug=$(usex debug false true)
 	)
 	meson_src_configure
+
 	if ! multilib_is_native_abi && use video_cards_nouveau; then
 		einfo "Applying Gentoo hack for nvk - 2/2"
 		sed -i -E '{N; s/(rule rust_COMPILER_FOR_BUILD\n command = rustc) --target=[a-zA-Z0-9=:-]+ (.*) -C link-arg=-m[[:digit:]]+/\1 \2/g}' build.ninja
 	fi
-
 }
 
 multilib_src_test() {
