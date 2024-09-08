@@ -3,9 +3,9 @@
 
 EAPI=8
 
-QT5_PV="5"
+
 MY_PN="${PN^}"
-COMMIT="079bd990b78b200216198d58a4df9a5757606726"
+COMMIT="29e7216bfcc68135350a695ce446134bcb0463a6"
 if [[ ${PV} == 9999 ]]; then
 	EGIT_REPO_URI="https://github.com/nullobsi/${MY_PN}"
 	EGIT_BRANCH="master"
@@ -23,22 +23,22 @@ HOMEPAGE="https://github.com/nullobsi/clight-gui.git"
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE=""
-
-PATCHES=(
-	#"${FILESDIR}/clight-gentoo-skip-manpage-compression.patch"
-)
+IUSE="qt6"
 
 DEPEND="
-	=dev-qt/qtcharts-${QT5_PV}*
-	=dev-qt/qtxml-${QT5_PV}*
+	dev-qt/qtcharts
+	dev-qt/qtxml
 "
 
 RDEPEND="
 	${DEPEND}
 	>=app-misc/clight-4.4
 "
+
 src_prepare(){
+if use qt6; then
+	eapply "${FILESDIR}/qt6.patch"
+fi
 	cd "${S}/src"
 	ls .
 	cmake_src_prepare

@@ -1,0 +1,11 @@
+--- /src/CMakeLists.txt	2023-02-21 02:26:41.000000000 +0100
++++ /src/CMakeLists.txt	2024-09-04 19:49:13.087300300 +0200
+@@ -16,7 +16,7 @@
+ set(CMAKE_AUTORCC ON)
+ set(CMAKE_AUTOUIC ON)
+ 
+-set(QT_VERSION 5)
++set(QT_VERSION 6)
+ set(REQUIRED_LIBS Core Gui Widgets DBus Charts Xml)
+ set(REQUIRED_LIBS_QUALIFIED Qt${QT_VERSION}::Core Qt${QT_VERSION}::Gui Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::DBus Qt${QT_VERSION}::Charts Qt${QT_VERSION}::Xml)
+ 
