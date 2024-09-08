@@ -1,0 +1,19 @@
+#!/sbin/openrc-run
+
+depend() {
+	need dbus localmount
+}
+
+start () {
+	ebegin "Starting iio-sensor-proxy"
+	start-stop-daemon --start --exec /usr/libexec/iio-sensor-proxy \
+	    --background --pidfile /run/iio-sensor-proxy.pid --make-pidfile
+	eend $?
+}
+
+stop () {
+	ebegin "Stopping iio-sensor-proxy"
+	start-stop-daemon --stop --exec /usr/libexec/iio-sensor-proxy \
+	    --pidfile /run/iio-sensor-proxy.pid
+	eend $?
+}
