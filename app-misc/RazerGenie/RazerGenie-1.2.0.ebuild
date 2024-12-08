@@ -28,24 +28,15 @@ DEPEND="
 	dev-qt/qtwidgets:5
 	dev-qt/qtxml:5"
 RDEPEND="${DEPEND}
-	razer-test? (
-	( !sys-apps/openrazer )
-	)
-	>=dev-libs/libopenrazer-0.2.0
+	razer-test? ( !sys-apps/openrazer )
+	>=dev-libs/libopenrazer-0.3.0
 	app-misc/razer_test
+	x11-themes/hicolor-icon-theme
 	dev-qt/linguist-tools:5
-	openrazer? ( sys-apps/openrazer
-	)
+	openrazer? ( sys-apps/openrazer )
 	"
 BDEPEND="
 	virtual/pkgconfig
 	"
 
-DOCS=( README.md )
 
-src_configure() {
-	local emesonargs=(
-		--buildtype release
-	)
-	meson_src_configure
-}

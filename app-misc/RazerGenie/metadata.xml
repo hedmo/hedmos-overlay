@@ -6,7 +6,6 @@
 		<name>Andreas Westman Dorcsak</name>
 	</maintainer>
 	<use>
-		<flag name="razer-test">build openrazer written in c.</flag>
 		<flag name="openrazer">build openrazer.</flag>
 		<flag name="matrix">enable matrix support.</flag>
 </use>
