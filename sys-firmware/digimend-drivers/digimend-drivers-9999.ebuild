@@ -28,6 +28,10 @@ RDEPEND="${DEPEND}"
 
 DOCS=( README.md )
 
+PATCHES=(
+	"${FILESDIR}/6.12.patch"
+)
+
 pkg_setup() {
 	linux-mod_pkg_setup
 }
