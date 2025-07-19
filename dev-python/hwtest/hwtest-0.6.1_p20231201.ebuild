@@ -3,12 +3,12 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{9..11} )
+PYTHON_COMPAT=( python3_{10..13} )
 inherit distutils-r1
 
 DESCRIPTION="Test utility for hardware components in postmarketOS phones"
 HOMEPAGE="https://gitlab.com/MartijnBraam/hwtest"
-COMMIT="256ad7dc4fd5cb3bc18d7db4da66aaf5b52ec461"
+COMMIT="c81cd208128a5625b210772ae9948e60132d3b2d"
 SRC_URI="https://gitlab.com/MartijnBraam/hwtest/-/archive/"${COMMIT}"/hwtest-"${COMMIT}".tar.gz -> "${P}".tar.gz"
 S=""${WORKDIR}"/"${PN}"-"${COMMIT}""
 
