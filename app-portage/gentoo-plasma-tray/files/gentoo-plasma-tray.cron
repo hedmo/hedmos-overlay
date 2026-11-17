@@ -1,0 +1,2 @@
+# Weekly Saturday 05:00 interactive update check & prompt for OpenRC systems
+0 5 * * 6 root /usr/sbin/gentoo-cron-ask

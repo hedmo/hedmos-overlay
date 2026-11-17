@@ -1,0 +1,150 @@
+#!/usr/bin/env python3
+import os
+import shutil
+import subprocess
+from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QWidget
+from PyQt6.QtGui import QIcon, QAction
+from PyQt6.QtCore import QTimer
+
+STATUS_FILE = "/run/gentoo-tray-status"
+LOG_FILE = "/var/log/gentoo-tray-update.log"
+WORKER = "/usr/sbin/gentoo-tray-worker"
+ASK_SCRIPT = "/usr/bin/gentoo-ask-update"
+
+ICONS = {
+    "idle": "vcs-normal",
+    "running": "system-software-update",
+    "updates": "update-high",
+    "error": "dialog-error",
+}
+
+
+class GentooTray(QSystemTrayIcon):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.last_state = ("", "")
+        self.setIcon(QIcon.fromTheme("vcs-normal"))
+        self.setToolTip("Gentoo Updater: Ready")
+
+        self.menu = QMenu(parent)
+
+        self.status_action = QAction("Status: Ready", self.menu)
+        self.status_action.setEnabled(False)
+        self.menu.addAction(self.status_action)
+        self.menu.addSeparator()
+
+        ask_action = QAction("Interactive Check && Ask (kdialog)", self.menu)
+        ask_action.triggered.connect(lambda checked=False: self.run_ask())
+        self.menu.addAction(ask_action)
+
+        self.menu.addSeparator()
+
+        check_all = QAction("Check Updates (@world + Live -9999)", self.menu)
+        check_all.triggered.connect(lambda checked=False: self.run_worker("check", "yes"))
+        self.menu.addAction(check_all)
+
+        check_world = QAction("Check Updates (@world Only)", self.menu)
+        check_world.triggered.connect(lambda checked=False: self.run_worker("check", "no"))
+        self.menu.addAction(check_world)
+
+        self.menu.addSeparator()
+
+        update_all = QAction("Update Now (@world + Live -9999)", self.menu)
+        update_all.triggered.connect(lambda checked=False: self.run_worker("update", "yes"))
+        self.menu.addAction(update_all)
+
+        update_world = QAction("Update Now (@world Only)", self.menu)
+        update_world.triggered.connect(lambda checked=False: self.run_worker("update", "no"))
+        self.menu.addAction(update_world)
+
+        self.menu.addSeparator()
+
+        log_action = QAction("View Update Log", self.menu)
+        log_action.triggered.connect(lambda checked=False: self.open_log())
+        self.menu.addAction(log_action)
+
+        quit_action = QAction("Quit Tray", self.menu)
+        quit_action.triggered.connect(QApplication.quit)
+        self.menu.addAction(quit_action)
+
+        self.setContextMenu(self.menu)
+        self.activated.connect(self.on_click)
+
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.poll_status)
+        self.timer.start(3000)
+        self.poll_status()
+        self.show()
+
+    def run_ask(self):
+        subprocess.Popen(
+            [ASK_SCRIPT],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+
+    def run_worker(self, mode, include_live="yes"):
+        label = "@world + live" if include_live == "yes" else "@world only"
+        self.showMessage(
+            "Gentoo System Updater",
+            f"Starting '{mode}' ({label})...",
+            QSystemTrayIcon.MessageIcon.Information,
+            3000,
+        )
+        subprocess.Popen(
+            ["sudo", "-n", WORKER, mode, include_live],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+
+    def open_log(self):
+        cmd = f"touch {LOG_FILE} 2>/dev/null || true; tail -n 100 -f {LOG_FILE}"
+        if shutil.which("yakuake"):
+            script = (
+                "QDBUS=$(command -v qdbus6 || command -v qdbus); "
+                "pgrep -x yakuake >/dev/null || (yakuake & sleep 1.5); "
+                "$QDBUS org.kde.yakuake /yakuake/sessions addSession >/dev/null; "
+                f"$QDBUS org.kde.yakuake /yakuake/sessions runCommand '{cmd}' >/dev/null; "
+                "$QDBUS org.kde.yakuake /yakuake/window toggleWindowState >/dev/null"
+            )
+            subprocess.Popen(["bash", "-c", script])
+        else:
+            subprocess.Popen(["konsole", "-e", "bash", "-c", cmd])
+
+    def on_click(self, reason):
+        if reason == QSystemTrayIcon.ActivationReason.Trigger:
+            self.open_log()
+
+    def poll_status(self):
+        if not os.path.exists(STATUS_FILE):
+            return
+        try:
+            with open(STATUS_FILE, "r") as f:
+                raw = f.read().strip()
+            state, msg = raw.split("|", 1)
+        except Exception:
+            return
+
+        if (state, msg) != self.last_state:
+            self.last_state = (state, msg)
+            self.setIcon(QIcon.fromTheme(ICONS.get(state, "vcs-normal")))
+            self.setToolTip(f"Gentoo: {msg}")
+            self.status_action.setText(msg)
+
+            if state in ("updates", "error", "idle") and msg:
+                urgency = (
+                    QSystemTrayIcon.MessageIcon.Critical
+                    if state == "error"
+                    else QSystemTrayIcon.MessageIcon.Information
+                )
+                self.showMessage("Gentoo System Updater", msg, urgency, 8000)
+
+
+if __name__ == "__main__":
+    app = QApplication([])
+    app.setQuitOnLastWindowClosed(False)
+    dummy_parent = QWidget()
+    tray = GentooTray(dummy_parent)
+    app.exec()

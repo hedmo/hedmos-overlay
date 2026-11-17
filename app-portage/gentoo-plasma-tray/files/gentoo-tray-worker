@@ -1,0 +1,86 @@
+#!/bin/bash
+STATUS_FILE="/run/gentoo-tray-status"
+LOG_FILE="/var/log/gentoo-tray-update.log"
+MODE="${1:-update}"
+INCLUDE_LIVE="${2:-yes}"
+
+export PYTHONUNBUFFERED=1
+
+set_status() {
+    echo "$1|$2" > "$STATUS_FILE"
+    chmod 644 "$STATUS_FILE"
+}
+
+log_step() {
+    echo ""
+    echo "============================================================"
+    echo "[$(date '+%H:%M:%S')] $1"
+    echo "============================================================"
+}
+
+: > "$LOG_FILE"
+chmod 644 "$LOG_FILE"
+exec >> "$LOG_FILE" 2>&1
+
+log_step "1. Syncing Gentoo & Overlay Repositories"
+set_status "running" "Syncing repositories..."
+if ! emaint sync -a; then
+    set_status "error" "Repository sync failed! Click to view log."
+    exit 1
+fi
+echo "All repositories synced cleanly."
+
+if [ "$MODE" = "check" ]; then
+    log_step "2. Checking @world Updates"
+    set_status "running" "Calculating @world updates..."
+    WORLD_OUT=$(emerge -puDN --with-bdeps=y --color=n @world 2>&1)
+    echo "$WORLD_OUT" | grep -E "^\[ebuild|^\[blocks|conflicts with" || echo "No @world updates available."
+    UPDATES=$(echo "$WORLD_OUT" | grep -E "^\[ebuild" | wc -l)
+
+    LIVE_UPDATES=0
+    if [ "$INCLUDE_LIVE" = "yes" ] && command -v smart-live-rebuild >/dev/null 2>&1; then
+        log_step "3. Checking Live (-9999) Git Updates"
+        set_status "running" "Checking upstream Git commits..."
+        LIVE_OUT=$(smart-live-rebuild -p 2>&1 | tee -a "$LOG_FILE")
+        LIVE_UPDATES=$(echo "$LIVE_OUT" | sed -r 's/\x1B\[[0-9;]*[mK]//g' | grep -cE '^[a-z0-9_-]+/[a-zA-Z0-9_+-]+:')
+        LIVE_UPDATES=${LIVE_UPDATES:-0}
+    fi
+
+    TOTAL=$((UPDATES + LIVE_UPDATES))
+    log_step "Summary: $TOTAL Update(s) Available ($UPDATES @world, $LIVE_UPDATES live)"
+    if [ "$TOTAL" -gt 0 ]; then
+        set_status "updates" "$TOTAL update(s) available ($UPDATES world, $LIVE_UPDATES live)."
+    else
+        set_status "idle" "System is completely up to date."
+    fi
+    exit 0
+fi
+
+log_step "2. Updating @world Packages"
+set_status "running" "Updating @world packages..."
+if ! emerge -uDN --with-bdeps=y --keep-going --quiet-build=y --color=y @world; then
+    set_status "error" "@world update hit an error. Click to view log."
+    exit 1
+fi
+
+if [ "$INCLUDE_LIVE" = "yes" ] && command -v smart-live-rebuild >/dev/null 2>&1; then
+    log_step "3. Rebuilding Live (-9999) Packages"
+    set_status "running" "Building updated live -9999 packages..."
+    if ! smart-live-rebuild -- --keep-going --quiet-build=y --color=y; then
+        set_status "error" "Live -9999 rebuild hit an error. Click to view log."
+        exit 1
+    fi
+fi
+
+log_step "4. Checking @preserved-rebuild & Configs"
+set_status "running" "Running @preserved-rebuild..."
+emerge --quiet-build=y --color=y @preserved-rebuild || true
+
+CONFIGS=$(find /etc -name '._cfg*' 2>/dev/null | wc -l)
+if [ "$CONFIGS" -gt 0 ]; then
+    log_step "Finished! $CONFIGS config file(s) need dispatch-conf."
+    set_status "updates" "Update complete! $CONFIGS config file(s) need dispatch-conf."
+else
+    log_step "Finished! System is completely up to date."
+    set_status "idle" "System updated cleanly!"
+fi

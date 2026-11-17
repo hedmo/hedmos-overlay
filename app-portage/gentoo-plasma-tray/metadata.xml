@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://gentoo.org">
+<pkgmetadata>
+	<use>
+		<flag name="live">Enable live (-9999) ebuild tracking via <pkg>app-portage/smart-live-rebuild</pkg></flag>
+		<flag name="yakuake">Open update logs in <pkg>kde-apps/yakuake</pkg> instead of <pkg>kde-apps/konsole</pkg></flag>
+	</use>
+</pkgmetadata>

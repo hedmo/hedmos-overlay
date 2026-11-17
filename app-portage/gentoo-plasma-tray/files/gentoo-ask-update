@@ -1,0 +1,26 @@
+#!/bin/bash
+STATUS_FILE="/run/gentoo-tray-status"
+WORKER="/usr/sbin/gentoo-tray-worker"
+
+if command -v smart-live-rebuild >/dev/null 2>&1; then
+    kdialog --title "Gentoo System Updater" \
+        --yesno "Update check is ready.\n\nDo you want to check live (-9999) Git packages too?\n(Click 'No' to check standard @world packages only)"
+    if [ $? -eq 0 ]; then
+        INCLUDE_LIVE="yes"
+    else
+        INCLUDE_LIVE="no"
+    fi
+else
+    INCLUDE_LIVE="no"
+fi
+
+sudo -n "$WORKER" check "$INCLUDE_LIVE"
+
+IFS='|' read -r STATE MSG < "$STATUS_FILE"
+
+if [ "$STATE" = "updates" ]; then
+    if kdialog --title "Gentoo System Updater" \
+        --yesno "$MSG\n\nStart compiling updates now?"; then
+        sudo -n "$WORKER" update "$INCLUDE_LIVE" &
+    fi
+fi

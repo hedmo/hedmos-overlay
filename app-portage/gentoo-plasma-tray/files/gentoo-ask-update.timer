@@ -1,0 +1,9 @@
+[Unit]
+Description=Weekly Gentoo Update Check & Confirmation Prompt (Saturday 05:00)
+
+[Timer]
+OnCalendar=Sat *-*-* 05:00:00
+Persistent=false
+
+[Install]
+WantedBy=timers.target

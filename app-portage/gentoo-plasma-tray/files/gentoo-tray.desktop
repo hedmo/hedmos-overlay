@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Gentoo System Tray Updater
+Comment=Monitor and run Gentoo @world and live -9999 updates
+Exec=/usr/bin/gentoo-tray
+Icon=system-software-update
+X-KDE-autostart-phase=2

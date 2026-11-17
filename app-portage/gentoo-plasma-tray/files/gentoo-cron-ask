@@ -1,0 +1,11 @@
+#!/bin/bash
+# Find active KDE Plasma desktop user and launch interactive kdialog check
+PLASMA_PID=$(pgrep -x plasmashell | head -n 1)
+[ -z "$PLASMA_PID" ] && exit 0
+
+TARGET_USER=$(ps -o user= -p "$PLASMA_PID" | tr -d ' ')
+[ -z "$TARGET_USER" ] && exit 0
+
+ENV_VARS=$(tr '\0' '\n' < "/proc/${PLASMA_PID}/environ" | grep -E '^(DISPLAY|WAYLAND_DISPLAY|XDG_RUNTIME_DIR|DBUS_SESSION_BUS_ADDRESS)=')
+
+su - "$TARGET_USER" -c "export $ENV_VARS; /usr/bin/gentoo-ask-update"
