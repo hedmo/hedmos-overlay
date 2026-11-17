@@ -4,7 +4,7 @@ import shutil
 import subprocess
 from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QWidget
 from PyQt6.QtGui import QIcon, QAction
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import QTimer, QSettings
 
 STATUS_FILE = "/run/gentoo-tray-status"
 LOG_FILE = "/var/log/gentoo-tray-update.log"
@@ -22,7 +22,10 @@ ICONS = {
 class GentooTray(QSystemTrayIcon):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.last_state = ("", "")
+        self.settings = QSettings("gentoo-plasma-tray", "tray")
+        self.hide_when_idle = self.settings.value("hide_when_idle", False, type=bool)
+        self.last_state = ("idle", "")
+
         self.setIcon(QIcon.fromTheme("vcs-normal"))
         self.setToolTip("Gentoo Updater: Ready")
 
@@ -63,6 +66,12 @@ class GentooTray(QSystemTrayIcon):
         log_action.triggered.connect(lambda checked=False: self.open_log())
         self.menu.addAction(log_action)
 
+        self.auto_hide_action = QAction("Auto-Hide Icon When Up to Date", self.menu)
+        self.auto_hide_action.setCheckable(True)
+        self.auto_hide_action.setChecked(self.hide_when_idle)
+        self.auto_hide_action.triggered.connect(self.toggle_auto_hide)
+        self.menu.addAction(self.auto_hide_action)
+
         quit_action = QAction("Quit Tray", self.menu)
         quit_action.triggered.connect(QApplication.quit)
         self.menu.addAction(quit_action)
@@ -74,7 +83,18 @@ class GentooTray(QSystemTrayIcon):
         self.timer.timeout.connect(self.poll_status)
         self.timer.start(3000)
         self.poll_status()
-        self.show()
+        self.update_visibility(self.last_state[0])
+
+    def toggle_auto_hide(self, checked):
+        self.hide_when_idle = checked
+        self.settings.setValue("hide_when_idle", checked)
+        self.update_visibility(self.last_state[0])
+
+    def update_visibility(self, state):
+        if self.hide_when_idle and state == "idle":
+            self.hide()
+        else:
+            self.show()
 
     def run_ask(self):
         subprocess.Popen(
@@ -86,6 +106,7 @@ class GentooTray(QSystemTrayIcon):
 
     def run_worker(self, mode, include_live="yes"):
         label = "@world + live" if include_live == "yes" else "@world only"
+        self.show()
         self.showMessage(
             "Gentoo System Updater",
             f"Starting '{mode}' ({label})...",
@@ -132,6 +153,7 @@ class GentooTray(QSystemTrayIcon):
             self.setIcon(QIcon.fromTheme(ICONS.get(state, "vcs-normal")))
             self.setToolTip(f"Gentoo: {msg}")
             self.status_action.setText(msg)
+            self.update_visibility(state)
 
             if state in ("updates", "error", "idle") and msg:
                 urgency = (
@@ -144,6 +166,9 @@ class GentooTray(QSystemTrayIcon):
 
 if __name__ == "__main__":
     app = QApplication([])
+    app.setApplicationName("gentoo-tray")
+    app.setApplicationDisplayName("Gentoo System Tray Updater")
+    app.setDesktopFileName("gentoo-tray")
     app.setQuitOnLastWindowClosed(False)
     dummy_parent = QWidget()
     tray = GentooTray(dummy_parent)
