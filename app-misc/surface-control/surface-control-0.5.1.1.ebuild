@@ -82,7 +82,7 @@ declare -A GIT_CRATES=(
 
 inherit cargo systemd
 
-DESCRIPTION="Control various aspects of Microsoft Surface devices on Linux from the Command-Line"
+DESCRIPTION="Command-line tool to control Microsoft Surface devices on Linux"
 HOMEPAGE="https://github.com/linux-surface/linux-surface"
 
 UV=$(ver_rs 3 '-')
@@ -96,7 +96,7 @@ LICENSE="MIT"
 # Dependent crate licenses
 LICENSE+=" MIT Unicode-3.0"
 SLOT="0"
-KEYWORDS="~amd64 ~x86 ~arm64"
+KEYWORDS="~amd64 ~arm64"
 
 src_install() {
 	cargo_src_install
