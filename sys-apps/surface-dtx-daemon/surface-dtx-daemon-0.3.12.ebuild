@@ -110,11 +110,11 @@ LICENSE="MIT"
 LICENSE+=" MIT Unicode-3.0"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="video_cards_nouveau video_cards_nvidia"
+IUSE="plasma video_cards_nouveau video_cards_nvidia"
 REQUIRED_USE="?? ( video_cards_nouveau video_cards_nvidia )"
 
 RDEPEND="
-	sys-apps/acl
+	plasma? ( sys-apps/acl )
 	x11-libs/libnotify
 	video_cards_nvidia? ( x11-drivers/nvidia-drivers )
 "
