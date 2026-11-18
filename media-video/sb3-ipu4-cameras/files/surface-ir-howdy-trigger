@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ACTION="${1:-${PAM_TYPE:-start}}"
+case "$ACTION" in
+    auth|start)
+        /usr/bin/systemctl restart --no-block surface-ir-howdy.service
+        for _ in $(seq 1 60); do
+            if [[ -f /run/surface-ir.ready ]]; then
+                break
+            fi
+            sleep 0.05
+        done
+        ;;
+    open_session|setcred|close_session|stop)
+        /usr/bin/systemctl stop --no-block surface-ir-howdy.service
+        ;;
+esac
+exit 0

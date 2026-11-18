@@ -1,0 +1,99 @@
+#!/usr/bin/env python3
+import fcntl
+import glob
+import os
+import subprocess
+import sys
+import time
+import numpy as np
+
+F_SETPIPE_SZ = 1031
+FRAME_BYTES = 614400
+
+if os.path.exists("/run/surface-ir.ready"):
+    os.unlink("/run/surface-ir.ready")
+
+def has_reader(ignore_pids):
+    for fd_link in glob.glob("/proc/[0-9]*/fd/*"):
+        try:
+            pid = fd_link.split("/")[2]
+            if pid in ignore_pids:
+                continue
+            if os.readlink(fd_link) == "/dev/video66":
+                return True
+        except (IndexError, OSError):
+            pass
+    return False
+
+def boost_ov7251():
+    for name_file in glob.glob("/sys/class/video4linux/v4l-subdev*/name"):
+        try:
+            with open(name_file, "r") as f:
+                if "ov7251" in f.read():
+                    dev = "/dev/" + os.path.basename(os.path.dirname(name_file))
+                    subprocess.run(
+                        ["/usr/bin/v4l2-ctl", "-d", dev, "--set-ctrl=exposure=1600,analogue_gain=512"],
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                    )
+        except OSError:
+            pass
+
+r_fd, w_fd = os.pipe()
+try:
+    fcntl.fcntl(w_fd, F_SETPIPE_SZ, 1048576)
+except OSError:
+    pass
+
+gst = subprocess.Popen([
+    "/usr/bin/gst-launch-1.0", "-q",
+    "fdsrc", f"blocksize={FRAME_BYTES}", "!",
+    "rawvideoparse", "format=gray16-le", "width=640", "height=480", "framerate=30/1", "!",
+    "videoconvert", "!",
+    "video/x-raw,format=YUY2", "!",
+    "v4l2sink", "device=/dev/video66", "sync=false",
+], stdin=subprocess.PIPE)
+
+cam = subprocess.Popen([
+    "/usr/bin/cam", "-c", r"\_SB_.PCI0.I2C3.CAM3", "--capture", f"--file=/proc/self/fd/{w_fd}"
+], pass_fds=(w_fd,), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+os.close(w_fd)
+time.sleep(0.5)
+boost_ov7251()
+ignore_pids = {str(os.getpid()), str(gst.pid), str(cam.pid)}
+
+try:
+    with os.fdopen(r_fd, "rb", buffering=0) as f:
+        frame_idx = 0
+        saw_reader = False
+        while True:
+            buf = bytearray()
+            while len(buf) < FRAME_BYTES:
+                chunk = f.read(FRAME_BYTES - len(buf))
+                if not chunk:
+                    sys.exit(0)
+                buf.extend(chunk)
+            if frame_idx == 2:
+                boost_ov7251()
+            elif frame_idx == 6:
+                open("/run/surface-ir.ready", "w").close()
+            frame_idx += 1
+            arr = (np.frombuffer(buf, dtype=np.uint16) & 0x03FF).astype(np.float32)
+            lo, hi = np.percentile(arr, (1, 99))
+            if hi > lo:
+                arr = np.clip((arr - lo) * (65535.0 / (hi - lo)), 0, 65535)
+            else:
+                arr = arr * 64.0
+            gst.stdin.write(arr.astype(np.uint16).tobytes())
+            gst.stdin.flush()
+            if frame_idx > 8 and frame_idx % 5 == 0:
+                if has_reader(ignore_pids):
+                    saw_reader = True
+                elif saw_reader:
+                    break
+finally:
+    if os.path.exists("/run/surface-ir.ready"):
+        os.unlink("/run/surface-ir.ready")
+    cam.terminate()
+    gst.terminate()

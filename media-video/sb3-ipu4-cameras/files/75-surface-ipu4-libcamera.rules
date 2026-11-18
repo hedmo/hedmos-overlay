@@ -1,0 +1,11 @@
+# Grant desktop user (video group + logind uaccess) permission to IPU4P media/subdev nodes for libcamera SoftISP
+ACTION=="add|change", SUBSYSTEM=="media", DEVPATH=="*intel-ipu*", \
+  GROUP="video", MODE="0660", TAG+="uaccess"
+ACTION=="add|change", SUBSYSTEM=="video4linux", KERNEL=="v4l-subdev*", DEVPATH=="*intel-ipu*", \
+  GROUP="video", MODE="0660", TAG+="uaccess", ENV{PIPEWIRE_IGNORE}="1"
+ACTION=="add|change", SUBSYSTEM=="video4linux", DEVPATH=="*intel-ipu*", KERNEL=="video[0-9]*", \
+  GROUP="video", MODE="0660", TAG+="uaccess", \
+  ENV{ID_V4L_PRODUCT}="Intel-IPU4", ENV{ID_V4L_CAPABILITIES}=":", \
+  ENV{PIPEWIRE_IGNORE}="1", ENV{ID_MM_CANDIDATE}="0"
+
+SUBSYSTEM=="video4linux", ATTR{name}=="Surface-IR-Howdy", GROUP="video", MODE="0666", TAG+="uaccess", ENV{PIPEWIRE_IGNORE}="1", ENV{ID_MM_CANDIDATE}="0"

@@ -1,0 +1,13 @@
+[Unit]
+Description=Surface Book 3 IR Camera Feed for Howdy (/dev/video66)
+After=systemd-udevd.service systemd-modules-load.service
+
+[Service]
+Type=simple
+ExecStartPre=-/usr/bin/rm -f /run/surface-ir.ready
+ExecStart=/usr/libexec/surface-ir-howdy-feed
+ExecStopPost=-/usr/bin/rm -f /run/surface-ir.ready
+RuntimeMaxSec=20
+TimeoutStopSec=1
+KillSignal=SIGKILL
+Restart=no
