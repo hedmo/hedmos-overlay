@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://gentoo.org">
+<pkgmetadata>
+	<upstream>
+		<remote-id type="github">linux-surface/surface-dtx-daemon</remote-id>
+	</upstream>
+</pkgmetadata>

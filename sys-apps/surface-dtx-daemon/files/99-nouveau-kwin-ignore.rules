@@ -1,0 +1,2 @@
+# Prevent kwin_wayland from opening the SB3 dGPU (0000:02:00.0) at login
+SUBSYSTEM=="drm", KERNELS=="0000:02:00.0", TAG-="uaccess", OWNER="root", GROUP="root", MODE="0660"
