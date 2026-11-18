@@ -143,7 +143,7 @@ src_install() {
 	if use video_cards_nouveau; then
 		newexe "${FILESDIR}"/nouveau-detach.sh detach.sh
 		newexe "${FILESDIR}"/nouveau-attach.sh attach.sh
-		udev_dorules "${FILESDIR}"/99-nouveau-kwin-ignore.rules
+		udev_dorules "${FILESDIR}"/99-nouveau-plasma-ignore.rules
 	elif use video_cards_nvidia; then
 		newexe "${FILESDIR}"/nvidia-detach.sh detach.sh
 		newexe "${FILESDIR}"/nvidia-attach.sh attach.sh
