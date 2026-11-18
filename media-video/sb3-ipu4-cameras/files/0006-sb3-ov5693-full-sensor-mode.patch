@@ -1,0 +1,108 @@
+diff -ruN src/gstreamer/gstlibcameraprovider.cpp ../libcam_new/src/gstreamer/gstlibcameraprovider.cpp
+--- a/src/gstreamer/gstlibcameraprovider.cpp	2026-11-18 11:23:44.446855809 +0100
++++ b/src/gstreamer/gstlibcameraprovider.cpp	2026-11-18 11:23:44.446970623 +0100
+@@ -67,6 +67,23 @@
+ gst_libcamera_device_reconfigure_element(GstDevice *device,
+ 					 GstElement *element)
+ {
++	if (GST_IS_BIN(element)) {
++		GstIterator *it = gst_bin_iterate_recurse(GST_BIN(element));
++		GValue item = G_VALUE_INIT;
++		gboolean found = FALSE;
++		while (gst_iterator_next(it, &item) == GST_ITERATOR_OK) {
++			GstElement *child = GST_ELEMENT(g_value_get_object(&item));
++			if (GST_LIBCAMERA_IS_SRC(child)) {
++				g_object_set(child, "camera-name", GST_LIBCAMERA_DEVICE(device)->name, nullptr);
++				found = TRUE;
++			}
++			g_value_reset(&item);
++		}
++		gst_iterator_free(it);
++		if (found)
++			return TRUE;
++	}
++
+ 	if (!GST_LIBCAMERA_IS_SRC(element))
+ 		return FALSE;
+ 
+@@ -145,7 +162,7 @@
+ 			gst_caps_append(caps, sub_caps);
+ 	}
+ 
+-	g_autoptr(GstStructure) props = gst_structure_new_empty("camera-properties");
++	g_autoptr(GstStructure) props = gst_structure_new("camera-properties", "device.path", G_TYPE_STRING, name, nullptr);
+ 	for (const auto &[key, value] : camera->properties()) {
+ 		const ControlId *id = properties::properties.at(key);
+ 
+diff -ruN src/libcamera/camera_manager.cpp ../libcam_new/src/libcamera/camera_manager.cpp
+--- a/src/libcamera/camera_manager.cpp	2026-11-18 11:23:44.446121523 +0100
++++ b/src/libcamera/camera_manager.cpp	2026-11-18 11:23:44.446217299 +0100
+@@ -217,7 +217,12 @@
+ 			}
+ 		}
+ 
+-		cameras_.push_back(camera);
++		const char *defCam = std::getenv("LIBCAMERA_DEFAULT_CAMERA");
++		std::string backCam = (defCam && std::string(defCam) == "CAMR") ? "CAMF" : "CAMR";
++		if (camera->id().find(backCam) != std::string::npos)
++			cameras_.insert(cameras_.begin(), camera);
++		else
++			cameras_.push_back(camera);
+ 	}
+ 
+ 	LOG(Camera, Info)
+@@ -402,7 +407,7 @@
+ 	MutexLocker locker(d->mutex_);
+ 
+ 	for (const std::shared_ptr<Camera> &camera : d->cameras_) {
+-		if (camera->id() == id)
++		if (camera->id() == id || (id.rfind("_SB_.", 0) == 0 && camera->id().size() > 1 && camera->id().substr(1) == id))
+ 			return camera;
+ 	}
+ 
+diff -ruN src/libcamera/pipeline/simple/simple.cpp ../libcam_new/src/libcamera/pipeline/simple/simple.cpp
+--- a/src/libcamera/pipeline/simple/simple.cpp	2026-11-18 11:23:44.446471006 +0100
++++ b/src/libcamera/pipeline/simple/simple.cpp	2026-11-18 11:23:44.446675775 +0100
+@@ -434,7 +434,7 @@
+ 
+ private:
+ 	static constexpr unsigned int kMaxQueuedRequestsDevice = 4;
+-	static constexpr unsigned int kNumInternalBuffers = 4;
++	static constexpr unsigned int kNumInternalBuffers = 8;
+ 
+ 	struct EntityData {
+ 		std::unique_ptr<V4L2VideoDevice> video;
+@@ -902,8 +902,10 @@
+ 		 * buffer for capture (unless the stream is being stopped), and
+ 		 * complete the request with all the user-facing buffers.
+ 		 */
+-		if (buffer->metadata().status != FrameMetadata::FrameCancelled)
++		if (buffer->metadata().status != FrameMetadata::FrameCancelled) {
+ 			video_->queueBuffer(buffer);
++			return;
++		}
+ 
+ 		if (conversionQueue_.empty())
+ 			return;
+@@ -1222,6 +1224,9 @@
+ 	pipeConfig_ = nullptr;
+ 
+ 	for (const SimpleCameraData::Configuration *pipeConfig : *configs) {
++		if (data_->sensor_->model() == "ov5693" && pipeConfig->captureSize.width < 2592)
++			continue;
++
+ 		const Size &captureSize = pipeConfig->captureSize;
+ 		const Size &maxOutputSize = pipeConfig->outputSizes.max;
+ 
+@@ -1295,6 +1300,11 @@
+ 				cfg.pixelFormat = pixelFormat;
+ 				status = Adjusted;
+ 			}
++
++			if (!raw && cfg.size.width > 1280 && pipeConfig_->outputSizes.contains(Size{ 1280, 960 })) {
++				cfg.size = Size{ 1280, 960 };
++				status = Adjusted;
++			}
+ 		}
+ 
+ 		/*
