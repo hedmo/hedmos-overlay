@@ -1,0 +1,26 @@
+From: Andreas Westman Dorcsak <hedmoo@yahoo.com.com>
+Date: Wed, 29 Apr 2026 20:15:00 +0100
+Subject: [PATCH] nouveau: gsp: add 2s SB3 stabilization delay
+
+---
+ drivers/gpu/drm/nouveau/nvkm/subdev/gsp/tu102.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/tu102.c b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/tu102.c
+index 19cb269e7a26..baeae795d7bf 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/tu102.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/tu102.c
+@@ -294,6 +294,11 @@ tu102_gsp_vga_workspace_addr(struct nvkm_gsp *gsp, u64 fb_size)
+ int
+ tu102_gsp_oneinit(struct nvkm_gsp *gsp)
+ {
++	/* SB3 Bridge Stabilization: Wait for PCIe & SAM to settle */
++	struct nvkm_subdev *subdev = &gsp->subdev;
++	nvkm_info(subdev, "SB3 GSP delay - waiting 2s for bridge stabilization...\n");
++	msleep(2000);
++
+ 	struct nvkm_device *device = gsp->subdev.device;
+ 	int ret;
+ 
+-- 
+2.54.0

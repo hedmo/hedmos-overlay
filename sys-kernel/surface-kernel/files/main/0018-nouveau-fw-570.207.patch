@@ -1,0 +1,26 @@
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/tu102.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/tu102.c
+@@ -443,1 +443,1 @@
+-	{  1, tu102_gsp_load, &tu102_gsp, &r570_rm_tu102, "570.144" },
++	{  1, tu102_gsp_load, &tu102_gsp, &r570_rm_tu102, "570.207" },
+@@ -460,3 +460,3 @@
+-NVKM_GSP_FIRMWARE_BOOTER(tu102, 570.144);
+-NVKM_GSP_FIRMWARE_BOOTER(tu104, 570.144);
+-NVKM_GSP_FIRMWARE_BOOTER(tu106, 570.144);
++NVKM_GSP_FIRMWARE_BOOTER(tu102, 570.207);
++NVKM_GSP_FIRMWARE_BOOTER(tu104, 570.207);
++NVKM_GSP_FIRMWARE_BOOTER(tu106, 570.207);
+
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/tu116.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/tu116.c
+@@ -44,1 +44,1 @@
+-	{  1, tu102_gsp_load, &tu116_gsp, &r570_rm_tu102, "570.144" },
++	{  1, tu102_gsp_load, &tu116_gsp, &r570_rm_tu102, "570.207" },
+@@ -60,2 +60,2 @@
+-NVKM_GSP_FIRMWARE_BOOTER(tu116, 570.144);
+-NVKM_GSP_FIRMWARE_BOOTER(tu117, 570.144);
++NVKM_GSP_FIRMWARE_BOOTER(tu116, 570.207);
++NVKM_GSP_FIRMWARE_BOOTER(tu117, 570.207);
+
+
+

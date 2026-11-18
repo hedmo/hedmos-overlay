@@ -1,0 +1,120 @@
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDEA849EC7B
+	for <linux-media@vger.kernel.org>; Mon,  7 Sep 2026 11:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788780636; cv=none; b=BHQ4KH86RN1xcqtmX+btbKxbXOu/eKaJlBuylBMpxMr+KI5BFVm2wsUPTyI/VduSSQfIG0HlNdtmTpNsli7QzGQlghV8pAk8uva2ENmcNv8jxmA3qPXBQGQmxbsHus/OsE1hTEQcdFQx+Vm3TmH72IDMtoboU21Ma25jt3bScXA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788780636; c=relaxed/simple;
+	bh=L5y9Yh3JQpXupmPs4sX2COhF5f0O1/Ck8Ata4iejjYY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rRXbEx4U9NP8kcW5Rg9WwBfuzfBwC+vY2/wX/9H9U87wLoOVaW7NZmAlN8oFm8KISi0PTMS4VSKu85c465ao0Zhi/ujtQs4D2anmGRdZUu3FMnYs0nMfAPaQ/HTsimmHry8HpLRXOiZodjaky8LL+i85UzC3jBG87EP79qOczrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XQdZ8xIA; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XQdZ8xIA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788780634; x=1820316634;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=L5y9Yh3JQpXupmPs4sX2COhF5f0O1/Ck8Ata4iejjYY=;
+  b=XQdZ8xIAaW6aJ3NOJvRc0NNloNK3pUDZXZF2AdcPbOw5BcdSGQEzdic1
+   ClLuRpovMWLVfYZ9XyPTuD38Eg3ZD6Fa02GTG+hCi2TUz37V5lj1E2NUw
+   szjb8VMgc9o6hTW7IeXHA6XJYhsM/XpCC4kf6GUhT4KQTcL1pPoG/Da7m
+   Btml7QVwCHdAy3+/Txz8jlrzsdJEuDM/iEKzPBnpVplOE8h9tid7RraY4
+   hBT01gemOqyubBmMdBGSG5X0vN+u/Y6qMCJrTEHLM6RAuiUNwNQWjg5eG
+   EYhLij9LuC/qGvFFRy+opKNJlSZYiQQ9P6H2QgZIfFzf+IwmdpdHZ1BHA
+   Q==;
+X-CSE-ConnectionGUID: egAwxGraRVO8RGNOkG8+VQ==
+X-CSE-MsgGUID: Ul6p6aRRQQupqq+kMbYpEA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11898"; a="100538647"
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="100538647"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:17 -0700
+X-CSE-ConnectionGUID: 69HIFwgjS9yvmcG0tX+O+w==
+X-CSE-MsgGUID: oy4rK+gEQZqHtI3OpzCY+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="300569281"
+Received: from abityuts-desk1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.230])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:16 -0700
+Received: from punajuuri.localdomain (unknown [192.168.240.130])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 2C2BF122B88;
+	Mon, 07 Sep 2026 14:30:06 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
+	(envelope-from <sakari.ailus@linux.intel.com>)
+	id 1x3XY5-0000000ARqN-2mIC;
+	Mon, 07 Sep 2026 14:30:05 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: Antti Laakso <antti.laakso@linux.intel.com>,
+	sarang.sapre@intel.com,
+	daxing.li@intel.com,
+	ong.hock.yu@intel.com
+Subject: [PATCH v4 45/45] staging: media: ipu7: Update TODO file
+Date: Mon,  7 Sep 2026 14:30:04 +0300
+Message-ID: <20260907113004.2489993-46-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+References: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+Precedence: bulk
+X-Mailing-List: linux-media@vger.kernel.org
+List-Id: <linux-media.vger.kernel.org>
+List-Subscribe: <mailto:linux-media+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-media+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+Update the TODO file to reflect the plan to drop the ipu7 driver in favour
+of IPU7 and later support in ipu6 driver. The ipu7 driver may still exist
+for some time as users switch to the ipu6 driver.
+
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/staging/media/ipu7/TODO | 28 ++--------------------------
+ 1 file changed, 2 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/staging/media/ipu7/TODO b/drivers/staging/media/ipu7/TODO
+index dc27bb6463da..57cca4e4033f 100644
+--- a/drivers/staging/media/ipu7/TODO
++++ b/drivers/staging/media/ipu7/TODO
+@@ -1,26 +1,2 @@
+-This is a list of things that need to be done to get this driver out of the
+-staging directory.
+-
+-- ABI headers cleanup
+-  Cleanup the firmware ABI headers
+-
+-- Add metadata capture support
+-  The IPU7 hardware should support metadata capture, but it is not
+-  fully verified with IPU7 firmware ABI so far, need to add the metadata
+-  capture support.
+-
+-- Refine CSI2 PHY code
+-  Refine the ipu7-isys-csi2-phy.c, move the hardware specific variant
+-  into structure, clarify and explain the PHY registers to make it more
+-  readable.
+-
+-- Work with the common IPU module
+-  Sakari commented much of the driver code is the same than the IPU6 driver.
+-  IPU7 driver is expected to work with the common IPU module in future.
+-
+-- Register definition cleanup
+-  Add IPU7 prefix for IPU7 specific registers and related macros. Some
+-  ISYS IO sub-blocks register definitions are offset values from specific
+-  sub-block base, but it is not clear and well suited for driver to use,
+-  need to update the register definitions to make it more clear and
+-  readable.
++This driver will be removed soon in favour of supporting IPU7 and later
++in the ipu6 driver.
+-- 
+2.47.3
+
+

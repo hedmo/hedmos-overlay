@@ -1,0 +1,144 @@
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798C3476683
+	for <linux-media@vger.kernel.org>; Mon,  7 Sep 2026 11:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788780628; cv=none; b=TDYnxW0QEAYaNwoBboo9d4r0lAbo+IPuc80PU/cNZ7dK4i9xK1thxCjDtpYR/w2JeZ6+hGUjj7pstnO7FzREHO37HtxWXf2p4CSAxbR2ksZw0DvNc/mZlDd4sjQeEcRKl6oYL0XqQr8IROMNWZDG/clSpz28h2owacSAgvqXr8c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788780628; c=relaxed/simple;
+	bh=u70n/ME478nCarOasmtoOrlE6meYwzG/xQ9nbxQRn8k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=l7X9MJ+oixZpfpBUolCnol3B/y2LHZ+iq+gCbuXJQNqmGj8/Ikv790BF56SwmCY/MRDwSIrUBtyRIp2cETZdMxfTSLKasvaOX4aAb7DxLNPUqBnkd1prqZrCrvn8YRhPFuBR1zEFvh6vKTpzdN8yzTi4Vnfzs2ZoFzsl2K/cag4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZVsFM6Nq; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZVsFM6Nq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788780627; x=1820316627;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=u70n/ME478nCarOasmtoOrlE6meYwzG/xQ9nbxQRn8k=;
+  b=ZVsFM6NqVobtkRAZwtMFopta/2XDi/LMXQfStyK6U03c2hh4DinMgLlK
+   mkXzobkkGzhmNRVaNNWbD5LDrqY6Y23D5UjZtqahP9Ir/77Q5DXQ0vgkJ
+   VjPX9PSlZHtQf1sR87YSSETs8GTjyqoNnp9pTp+upGJK13/JQsHcD9zhI
+   z5GOw6Rbg6TePOqhDOtQ3uShMwWPavg+4Sfp6fYgLFcYQU8rQYRd21yyJ
+   KKlfiwbKZO1XoOyFvz457wWd/2+lTVvGIi6ePBxSGVj9IjoUTYT1pdSYj
+   v8L86LouuQ6nerh67DNrtzBPEUzsiuOXHwnRiYTJioQ1sETcpL4rFsLdu
+   w==;
+X-CSE-ConnectionGUID: SPJkeP8BQz67cdr2IwGL6Q==
+X-CSE-MsgGUID: 3eiqVGt5SBOWRrN9+b5FfQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11898"; a="100538627"
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="100538627"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:14 -0700
+X-CSE-ConnectionGUID: pyyAT1/wTmKce2hA5RrPAw==
+X-CSE-MsgGUID: PqyeUizRRPqleKs2AF0T0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="300569237"
+Received: from abityuts-desk1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.230])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:12 -0700
+Received: from punajuuri.localdomain (unknown [192.168.240.130])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 037F9122718;
+	Mon, 07 Sep 2026 14:30:06 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
+	(envelope-from <sakari.ailus@linux.intel.com>)
+	id 1x3XY5-0000000ARpJ-23gJ;
+	Mon, 07 Sep 2026 14:30:05 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: Antti Laakso <antti.laakso@linux.intel.com>,
+	sarang.sapre@intel.com,
+	daxing.li@intel.com,
+	ong.hock.yu@intel.com
+Subject: [PATCH v4 32/45] media: ipu6: Skip watermark configuration for ipu7
+Date: Mon,  7 Sep 2026 14:29:51 +0300
+Message-ID: <20260907113004.2489993-33-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+References: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+Precedence: bulk
+X-Mailing-List: linux-media@vger.kernel.org
+List-Id: <linux-media.vger.kernel.org>
+List-Subscribe: <mailto:linux-media+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-media+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+From: Antti Laakso <antti.laakso@linux.intel.com>
+
+The ipu7 don't have watermark nor LTR support, skip it.
+
+Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/pci/intel/ipu6/ipu6-isys-video.c |  4 +++-
+ drivers/media/pci/intel/ipu6/ipu6-isys.c       | 12 +++++++-----
+ 2 files changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-isys-video.c b/drivers/media/pci/intel/ipu6/ipu6-isys-video.c
+index 560524e6e624..9634b4f232bd 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-isys-video.c
++++ b/drivers/media/pci/intel/ipu6/ipu6-isys-video.c
+@@ -727,8 +727,10 @@ void ipu6_isys_update_stream_watermark(struct ipu6_isys_video *av, bool state)
+ {
+ 	struct isys_iwake_watermark *iwake_watermark =
+ 		&av->isys->iwake_watermark;
++	struct ipu6_device *isp = av->isys->adev->isp;
+ 
+-	if (!av->watermark.pixel_rate)
++	if (IS_IPU7(isp) ||
++	    !av->watermark.pixel_rate)
+ 		return;
+ 
+ 	if (state) {
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-isys.c b/drivers/media/pci/intel/ipu6/ipu6-isys.c
+index 622f74021f6d..5a3ba5007249 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-isys.c
++++ b/drivers/media/pci/intel/ipu6/ipu6-isys.c
+@@ -822,12 +822,12 @@ static int isys_runtime_pm_resume(struct device *dev)
+ 	isys->power = 1;
+ 	spin_unlock_irqrestore(&isys->power_lock, flags);
+ 
+-	if (IS_IPU7(isp))
++	if (IS_IPU7(isp)) {
+ 		ipu7_isys_setup_hw(isys);
+-	else
++	} else {
+ 		ipu6_isys_setup_hw(isys);
+-
+-	set_iwake_ltrdid(isys, 0, 0, LTR_ISYS_ON);
++		set_iwake_ltrdid(isys, 0, 0, LTR_ISYS_ON);
++	}
+ 
+ 	return 0;
+ }
+@@ -836,6 +836,7 @@ static int isys_runtime_pm_suspend(struct device *dev)
+ {
+ 	struct ipu6_bus_device *adev = to_ipu6_bus_device(dev);
+ 	struct ipu6_isys *isys = dev_get_drvdata(dev);
++	struct ipu6_device *isp = adev->isp;
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&isys->power_lock, flags);
+@@ -849,7 +850,8 @@ static int isys_runtime_pm_suspend(struct device *dev)
+ 	isys->phy_termcal_val = 0;
+ 	cpu_latency_qos_update_request(&isys->pm_qos, PM_QOS_DEFAULT_VALUE);
+ 
+-	set_iwake_ltrdid(isys, 0, 0, LTR_ISYS_OFF);
++	if (!IS_IPU7(isp))
++		set_iwake_ltrdid(isys, 0, 0, LTR_ISYS_OFF);
+ 
+ 	ipu6_mmu_hw_cleanup(adev->mmu);
+ 
+-- 
+2.47.3
+
+

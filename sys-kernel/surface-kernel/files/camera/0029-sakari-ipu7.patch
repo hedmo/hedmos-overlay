@@ -1,0 +1,269 @@
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBFB49CF56
+	for <linux-media@vger.kernel.org>; Mon,  7 Sep 2026 11:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788780631; cv=none; b=QkVWhY4GVU0wNIdQyeEoAoQ2w49T3IfQIIZs8ayhNO5RuHJaEBJhOKkYyoSvK++TAHEqDBqcRNziW4jVgVzNFJn0xakROUfVvv2+xTba6cN8gwB3+65gUQ5+8eIHubp/HFXgCVL+e7Op3oSZqZBWWPdFEAIicEctAzj4ouceu04=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788780631; c=relaxed/simple;
+	bh=RyGaSoyssbKLiyN3XrRLCmvwrsQP/7cyjDcQdWsAKiQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=h7TYuCfH2eUklSTP8C6ND/l2jvHcnCp3Em949HcmuvncBBcnw1H7IXkj8jtBnCqnz3k6ftLTZAz3T5RilPFXqEQYojilTfqcfD4Y7kEkEHdSfgr2xDAlRSVqFPGLFtDc57VRkXdzB2CaRNPKtx5tyEIc0YDvIVLHpJhwf7bYChE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zp+fMkK6; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zp+fMkK6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788780630; x=1820316630;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=RyGaSoyssbKLiyN3XrRLCmvwrsQP/7cyjDcQdWsAKiQ=;
+  b=Zp+fMkK6CoHurYqP8ZAo8fO8jMscNa3/3CRXGAIscgspaFvTpQwWzqXJ
+   EcpOu035AKqFW4Rqx4RuKg0iVcfK2aHxTDgveUeJTteDLLUoh+QXDsDP/
+   YyHGhbjS4474x0WeIkHY0NY3NKN648Q8yFybktbZbgf/bFAYH2hLvZVZ4
+   DmryOodKr9wPUL4qlQG8vupFj8rdboQLlmtiROyagmCFK1ZWUYWjBDVqq
+   WRWZcrXWDC1X0+y8mZ2/cMuKYF7VMVRqca+4o0OlKCYsRhGMJCwOw86em
+   +63+bRw7d9p9ve0eVwwei8sInc4CT+fRYkOF7Ts93FuA43Zu3UXBaxjE1
+   Q==;
+X-CSE-ConnectionGUID: w8k8YM6VQbuNpFT6Q9HwWA==
+X-CSE-MsgGUID: FKoiR614TsOo4u77DGe9dg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11898"; a="100538635"
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="100538635"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:14 -0700
+X-CSE-ConnectionGUID: +MY8VU3RRA+GfvC7evsEUQ==
+X-CSE-MsgGUID: /hO2V1zeQDC+bIY+aREIkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="300569247"
+Received: from abityuts-desk1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.230])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:12 -0700
+Received: from punajuuri.localdomain (unknown [192.168.240.130])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id EF91D1225C2;
+	Mon, 07 Sep 2026 14:30:05 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
+	(envelope-from <sakari.ailus@linux.intel.com>)
+	id 1x3XY5-0000000ARp4-1sLF;
+	Mon, 07 Sep 2026 14:30:05 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: Antti Laakso <antti.laakso@linux.intel.com>,
+	sarang.sapre@intel.com,
+	daxing.li@intel.com,
+	ong.hock.yu@intel.com
+Subject: [PATCH v4 29/45] media: ipu6: Add support for ipu7 csi2 receiver
+Date: Mon,  7 Sep 2026 14:29:48 +0300
+Message-ID: <20260907113004.2489993-30-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+References: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+Precedence: bulk
+X-Mailing-List: linux-media@vger.kernel.org
+List-Id: <linux-media.vger.kernel.org>
+List-Subscribe: <mailto:linux-media+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-media+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+From: Antti Laakso <antti.laakso@linux.intel.com>
+
+The csi2 receiver is different in ipu7, add support for it.
+
+Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/pci/intel/ipu6/ipu6-isys-csi2.c | 119 +++++++++++++++++-
+ 1 file changed, 114 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-isys-csi2.c b/drivers/media/pci/intel/ipu6/ipu6-isys-csi2.c
+index 7b63b08f5c54..160eace947f4 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-isys-csi2.c
++++ b/drivers/media/pci/intel/ipu6/ipu6-isys-csi2.c
+@@ -24,6 +24,7 @@
+ #include "ipu6-isys-csi2.h"
+ #include "ipu6-isys-subdev.h"
+ #include "ipu6-platform-isys-csi2-reg.h"
++#include "ipu7-isys-csi2-regs.h"
+ 
+ static const u32 csi2_supported_codes[] = {
+ 	MEDIA_BUS_FMT_RGB565_1X16,
+@@ -267,6 +268,10 @@ static int ipu6_isys_csi2_stream_enable(struct ipu6_isys_csi2 *csi2)
+ 	cfg.port = csi2->port;
+ 	cfg.nlanes = csi2->nlanes;
+ 
++	ret = ipu6_isys_csi2_calc_timing(csi2, &timing, CSI2_ACCINV);
++	if (ret)
++		return ret;
++
+ 	mask = isys->pdata->ipdata->csi2.irq_mask;
+ 	nports = isys->pdata->ipdata->csi2.nports;
+ 
+@@ -327,11 +332,106 @@ static int ipu6_isys_csi2_stream_enable(struct ipu6_isys_csi2 *csi2)
+ 	writel(1, csi2->base + CSI_REG_PPI2CSI_ENABLE);
+ 	writel(1, csi2->base + CSI_REG_CSI_FE_ENABLE);
+ 
+-	ret = ipu6_isys_csi2_calc_timing(csi2, &timing, CSI2_ACCINV);
++	return isys->phy_set_power(isys, &cfg, &timing, true);
++}
++
++static void ipu7_csi2_irq_enable(struct ipu6_isys_csi2 *csi2)
++{
++	struct ipu6_isys *isys = csi2->isys;
++	unsigned int offset, mask;
++
++	/* enable CSI2 legacy error irq */
++	offset = IPU7_IS_IO_CSI2_ERR_LEGACY_IRQ_CTL_BASE(csi2->port);
++	mask = IPU7_CSI_RX_ERROR_IRQ_MASK;
++	writel(mask, csi2->base + offset + IPU7_IRQ_CTL_CLEAR);
++	writel(mask, csi2->base + offset + IPU7_IRQ_CTL_MASK);
++	writel(mask, csi2->base + offset + IPU7_IRQ_CTL_ENABLE);
++
++	/* enable CSI2 legacy sync irq */
++	offset = IPU7_IS_IO_CSI2_SYNC_LEGACY_IRQ_CTL_BASE(csi2->port);
++	mask = IPU7_CSI_RX_SYNC_IRQ_MASK;
++	writel(mask, csi2->base + offset + IPU7_IRQ_CTL_CLEAR);
++	writel(mask, csi2->base + offset + IPU7_IRQ_CTL_MASK);
++	writel(mask, csi2->base + offset + IPU7_IRQ_CTL_ENABLE);
++
++	if (!IS_IPU7_MTL(isys->adev->isp)) {
++		mask = IPU7P5_CSI_RX_SYNC_FE_IRQ_MASK;
++		writel(mask, csi2->base + offset + IPU7_IRQ1_CTL_CLEAR);
++		writel(mask, csi2->base + offset + IPU7_IRQ1_CTL_MASK);
++		writel(mask, csi2->base + offset + IPU7_IRQ1_CTL_ENABLE);
++	}
++}
++
++static void ipu7_csi2_irq_disable(struct ipu6_isys_csi2 *csi2)
++{
++	struct ipu6_isys *isys = csi2->isys;
++	unsigned int offset, mask;
++
++	/* disable CSI2 legacy error irq */
++	offset = IPU7_IS_IO_CSI2_ERR_LEGACY_IRQ_CTL_BASE(csi2->port);
++	mask = IPU7_CSI_RX_ERROR_IRQ_MASK;
++	writel(mask, csi2->base + offset + IPU7_IRQ_CTL_CLEAR);
++	writel(0, csi2->base + offset + IPU7_IRQ_CTL_MASK);
++	writel(0, csi2->base + offset + IPU7_IRQ_CTL_ENABLE);
++
++	/* disable CSI2 legacy sync irq */
++	offset = IPU7_IS_IO_CSI2_SYNC_LEGACY_IRQ_CTL_BASE(csi2->port);
++	mask = IPU7_CSI_RX_SYNC_IRQ_MASK;
++	writel(mask, csi2->base + offset + IPU7_IRQ_CTL_CLEAR);
++	writel(0, csi2->base + offset + IPU7_IRQ_CTL_MASK);
++	writel(0, csi2->base + offset + IPU7_IRQ_CTL_ENABLE);
++
++	if (!IS_IPU7_MTL(isys->adev->isp)) {
++		writel(mask, csi2->base + offset + IPU7_IRQ1_CTL_CLEAR);
++		writel(0, csi2->base + offset + IPU7_IRQ1_CTL_MASK);
++		writel(0, csi2->base + offset + IPU7_IRQ1_CTL_ENABLE);
++	}
++}
++
++static void ipu7_isys_csi2_stream_disable(struct ipu6_isys_csi2 *csi2)
++{
++	struct ipu6_isys *isys = csi2->isys;
++	void __iomem *base = isys->pdata->base;
++	struct ipu6_isys_csi2_config cfg;
++
++	cfg.port = csi2->port;
++	cfg.nlanes = csi2->nlanes;
++
++	isys->phy_set_power(isys, &cfg, NULL, false);
++
++	writel(0x4,
++	       base + IPU7_IS_IO_GPREGS_BASE + IPU7_CLK_DIV_FACTOR_APB_CLK);
++	ipu7_csi2_irq_disable(csi2);
++}
++
++static int ipu7_isys_csi2_stream_enable(struct ipu6_isys_csi2 *csi2)
++{
++	struct ipu6_isys *isys = csi2->isys;
++	void __iomem *base = isys->pdata->base;
++	struct ipu6_isys_csi2_config cfg;
++	unsigned int offset = IPU7_IS_IO_GPREGS_BASE;
++	int ret;
++
++	writel(0x2, base + offset + IPU7_CLK_DIV_FACTOR_APB_CLK);
++	if (csi2->port == 0U && csi2->nlanes == 4U &&
++	    !IS_IPU7_MTL(isys->adev->isp))
++		writel(0x1, base + offset + IPU7_CSI_PORTAB_AGGREGATION);
++
++	/* input is coming from CSI receiver (sensor) */
++	offset = IPU7_IS_IO_CSI2_ADPL_PORT_BASE(csi2->port);
++	writel(CSI_SENSOR_INPUT, base + offset + IPU7_CSI2_ADPL_INPUT_MODE);
++	writel(1, base + offset + IPU7_CSI2_ADPL_CSI_RX_ERR_IRQ_CLEAR_EN);
++
++	cfg.port = csi2->port;
++	cfg.nlanes = csi2->nlanes;
++
++	ret = isys->phy_set_power(isys, &cfg, NULL, true);
+ 	if (ret)
+ 		return ret;
+ 
+-	return isys->phy_set_power(isys, &cfg, &timing, true);
++	ipu7_csi2_irq_enable(csi2);
++
++	return 0;
+ }
+ 
+ static int ipu6_isys_csi2_enable_streams(struct v4l2_subdev *sd,
+@@ -340,6 +440,7 @@ static int ipu6_isys_csi2_enable_streams(struct v4l2_subdev *sd,
+ {
+ 	struct ipu6_isys_subdev *asd = to_ipu6_isys_subdev(sd);
+ 	struct ipu6_isys_csi2 *csi2 = to_ipu6_isys_csi2(asd);
++	struct ipu6_device *isp = asd->isys->adev->isp;
+ 	struct v4l2_subdev *remote_sd;
+ 	struct media_pad *remote_pad;
+ 	u64 sink_streams;
+@@ -352,14 +453,18 @@ static int ipu6_isys_csi2_enable_streams(struct v4l2_subdev *sd,
+ 		v4l2_subdev_state_xlate_streams(state, pad, CSI2_PAD_SINK,
+ 						&streams_mask);
+ 
+-	ret = ipu6_isys_csi2_stream_enable(csi2);
++	ret = IS_IPU7(isp) ? ipu7_isys_csi2_stream_enable(csi2) :
++			     ipu6_isys_csi2_stream_enable(csi2);
+ 	if (ret)
+ 		return ret;
+ 
+ 	ret = v4l2_subdev_enable_streams(remote_sd, remote_pad->index,
+ 					 sink_streams);
+ 	if (ret) {
+-		ipu6_isys_csi2_stream_disable(csi2);
++		if IS_IPU7(isp)
++			ipu7_isys_csi2_stream_disable(csi2);
++		else
++			ipu6_isys_csi2_stream_disable(csi2);
+ 		return ret;
+ 	}
+ 
+@@ -372,6 +477,7 @@ static int ipu6_isys_csi2_disable_streams(struct v4l2_subdev *sd,
+ {
+ 	struct ipu6_isys_subdev *asd = to_ipu6_isys_subdev(sd);
+ 	struct ipu6_isys_csi2 *csi2 = to_ipu6_isys_csi2(asd);
++	struct ipu6_device *isp = asd->isys->adev->isp;
+ 	struct v4l2_subdev *remote_sd;
+ 	struct media_pad *remote_pad;
+ 	u64 sink_streams;
+@@ -383,7 +489,10 @@ static int ipu6_isys_csi2_disable_streams(struct v4l2_subdev *sd,
+ 	remote_pad = media_pad_remote_pad_first(&sd->entity.pads[CSI2_PAD_SINK]);
+ 	remote_sd = media_entity_to_v4l2_subdev(remote_pad->entity);
+ 
+-	ipu6_isys_csi2_stream_disable(csi2);
++	if IS_IPU7(isp)
++		ipu7_isys_csi2_stream_disable(csi2);
++	else
++		ipu6_isys_csi2_stream_disable(csi2);
+ 
+ 	v4l2_subdev_disable_streams(remote_sd, remote_pad->index, sink_streams);
+ 
+-- 
+2.47.3
+
+

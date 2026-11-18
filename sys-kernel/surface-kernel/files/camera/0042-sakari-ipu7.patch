@@ -1,0 +1,287 @@
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2014C4A0EFE
+	for <linux-media@vger.kernel.org>; Mon,  7 Sep 2026 11:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788780637; cv=none; b=UEinHiuEg54BeHKCxnSmn48nyRJSXUt+Ob+Sf5ZTYKcvezsy2PzknrPeNTzT1hT1j24PLnsmTo7Iw2ty5AlzA5ei/n/Cu47EJHL/d6ItgPJ3fK2M0Ea1qYaoLQ7pStlDGogIUxuTgBIZVZJFL4LK7pUqw+vwCsR96xag2LOFhpE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788780637; c=relaxed/simple;
+	bh=z9VekLd88WsA9Dy4f7e1T0uea136JQbRyaky8fyGRV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZLZLcjo5XPLeiKJ0scvGOtUZbi0ZIGPU6pkkCDlseDGHOY1ikessw7KQG5mQ6BErXwIrjawGhqm+JyMLUiuxXeW9nIO/0hZTO1D2xyVjVl2qCq0g6Jbis29cqfKh5IBeD/lSOMtf1HLgn+zzuy6yeZfIp8H+02vCXd9l8hmQQ54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SFSSrhyS; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SFSSrhyS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788780636; x=1820316636;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=z9VekLd88WsA9Dy4f7e1T0uea136JQbRyaky8fyGRV0=;
+  b=SFSSrhySLt2YNAMRioARiUGPQLVFZCoiyLFnSgXvR8LjzfWkmiPIKcUE
+   yjPBbxuC9CIOfXPGUYfKOGQ6b7Kk7q7VSFstDPlWAo1kjjSXRp6bmFxpJ
+   rgsMSUyzpQxSRvPUM/OpZeO9B6ctqpDQUC/6MsYJ0dxkFSOJf2zSpNhyD
+   L2fQJMbial8ouqZz9mUjWieIUuZzPBT5W69eSDrHo77n4qxFQ4l2MXkSn
+   YWbBxaaTOyqtwoFMWPls5Y/9IMaFAmXBpj+H+J7Fyv6rbuTyRYwqJWc0o
+   Duc7Tpap2sfuygvf/daV1N48kz1bUOHsH51jlgZZthgr6Yjehu1EJdhQX
+   g==;
+X-CSE-ConnectionGUID: EHVcieqHRk+eIpH0ylOmAA==
+X-CSE-MsgGUID: cH//iJh/TV6OUmFQN3LRLQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11898"; a="100538654"
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="100538654"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:17 -0700
+X-CSE-ConnectionGUID: 6Sba/IU2Rryeu2AxKR+oKQ==
+X-CSE-MsgGUID: EmhMFD3CS0iuw4UCaPoe+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="300569292"
+Received: from abityuts-desk1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.230])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:16 -0700
+Received: from punajuuri.localdomain (unknown [192.168.240.130])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 233B4122B6A;
+	Mon, 07 Sep 2026 14:30:06 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
+	(envelope-from <sakari.ailus@linux.intel.com>)
+	id 1x3XY5-0000000ARq7-2bIg;
+	Mon, 07 Sep 2026 14:30:05 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: Antti Laakso <antti.laakso@linux.intel.com>,
+	sarang.sapre@intel.com,
+	daxing.li@intel.com,
+	ong.hock.yu@intel.com
+Subject: [PATCH v4 42/45] media: ipu6: Add ipu7.5 buttress support
+Date: Mon,  7 Sep 2026 14:30:01 +0300
+Message-ID: <20260907113004.2489993-43-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+References: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+Precedence: bulk
+X-Mailing-List: linux-media@vger.kernel.org
+List-Id: <linux-media.vger.kernel.org>
+List-Subscribe: <mailto:linux-media+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-media+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+From: Antti Laakso <antti.laakso@linux.intel.com>
+
+The ipu7.5 buttress differs from ipu7 slightly,
+add support for ipu7.5.
+Also set hardware version, firmware and model names
+for ipu7.5.
+
+Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/pci/intel/ipu6/ipu6-buttress.c  | 53 +++++++++++++++++--
+ .../intel/ipu6/ipu6-platform-buttress-regs.h  |  7 +++
+ drivers/media/pci/intel/ipu6/ipu6.c           | 38 +++++++++++++
+ drivers/media/pci/intel/ipu6/ipu6.h           |  1 +
+ 4 files changed, 94 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-buttress.c b/drivers/media/pci/intel/ipu6/ipu6-buttress.c
+index 74db0a37561e..105de1744dff 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-buttress.c
++++ b/drivers/media/pci/intel/ipu6/ipu6-buttress.c
+@@ -3,6 +3,7 @@
+  * Copyright (C) 2013--2024 Intel Corporation
+  */
+ 
++#include <asm/cpu_device_id.h>
+ #include <linux/bitfield.h>
+ #include <linux/bits.h>
+ #include <linux/completion.h>
+@@ -900,11 +901,30 @@ static int ipu6_buttress_send_tsc_request(struct ipu6_device *isp)
+ 	return ret;
+ }
+ 
+-int ipu6_buttress_start_tsc_sync(struct ipu6_device *isp)
++static int __ipu7p5_start_tsc_sync(struct ipu6_device *isp)
+ {
+-	unsigned int i;
++	u32 val;
++
++	val = readl(isp->base + IPU7_BUTTRESS_REG_TSC_CTL);
++	val |= IPU7_BUTTRESS_SEL_PB_TIMESTAMP;
++	writel(val, isp->base + IPU7_BUTTRESS_REG_TSC_CTL);
++
++	for (unsigned int i = 0; i < BUTTRESS_TSC_SYNC_RESET_TRIAL_MAX; i++) {
++		val = readl(isp->base + IPU7_BUTTRESS_REG_PB_TIMESTAMP_VALID);
++		if (val == 1)
++			return 0;
++
++		usleep_range(40, 50);
++	}
++
++	dev_err(&isp->pdev->dev, "TSC sync failed (timeout)\n");
++
++	return -ETIMEDOUT;
++}
+ 
+-	for (i = 0; i < BUTTRESS_TSC_SYNC_RESET_TRIAL_MAX; i++) {
++static int __ipu6_start_tsc_sync(struct ipu6_device *isp)
++{
++	for (unsigned int i = 0; i < BUTTRESS_TSC_SYNC_RESET_TRIAL_MAX; i++) {
+ 		u32 val;
+ 		int ret;
+ 
+@@ -925,6 +945,14 @@ int ipu6_buttress_start_tsc_sync(struct ipu6_device *isp)
+ 
+ 	return -ETIMEDOUT;
+ }
++
++int ipu6_buttress_start_tsc_sync(struct ipu6_device *isp)
++{
++	if (IS_IPU7P5(isp))
++		return __ipu7p5_start_tsc_sync(isp);
++
++	return __ipu6_start_tsc_sync(isp);
++}
+ EXPORT_SYMBOL_NS_GPL(ipu6_buttress_start_tsc_sync, "INTEL_IPU6");
+ 
+ void ipu6_buttress_tsc_read(struct ipu6_device *isp, u64 *val)
+@@ -987,6 +1015,13 @@ u32 ipu7_buttress_get_isys_freq(struct ipu6_device *isp)
+ }
+ EXPORT_SYMBOL_NS_GPL(ipu7_buttress_get_isys_freq, "INTEL_IPU6");
+ 
++static const struct x86_cpu_id ipu7_misc_cfg_exclusion[] = {
++	X86_MATCH_VFM_STEPS(INTEL_PANTHERLAKE_L, 0x1, 0x1, 0),
++	{},
++};
++
++#define IPU7_WRXREQOP_OVRD_VAL_MASK  GENMASK(22, 19)
++
+ static void ipu7_buttress_setup(struct ipu6_device *isp)
+ {
+ 	struct ipu6_buttress *b = &isp->buttress;
+@@ -995,12 +1030,20 @@ static void ipu7_buttress_setup(struct ipu6_device *isp)
+ 	/* program PB BAR */
+ 	writel(0, isp->pb_base + IPU7_GLOBAL_INTERRUPT_MASK);
+ 	val = readl(isp->pb_base + IPU7_BAR2_MISC_CONFIG);
++
+ 	val |= 0x100U;
++	if (!IS_IPU7_MTL(isp) && !x86_match_cpu(ipu7_misc_cfg_exclusion))
++		val |= FIELD_PREP(IPU7_WRXREQOP_OVRD_VAL_MASK, 0xf) | BIT(18);
+ 
+ 	writel(val, isp->pb_base + IPU7_BAR2_MISC_CONFIG);
+ 
+-	writel(BIT(22), isp->pb_base + IPU7_TLBID_HASH_ENABLE_63_32);
+-	writel(BIT(1), isp->pb_base + IPU7_TLBID_HASH_ENABLE_127_96);
++	if (IS_IPU7P5(isp)) {
++		writel(BIT(14), isp->pb_base + IPU7_TLBID_HASH_ENABLE_63_32);
++		writel(BIT(9), isp->pb_base + IPU7_TLBID_HASH_ENABLE_95_64);
++	} else {
++		writel(BIT(22), isp->pb_base + IPU7_TLBID_HASH_ENABLE_63_32);
++		writel(BIT(1), isp->pb_base + IPU7_TLBID_HASH_ENABLE_127_96);
++	}
+ 
+ 	writel(b->regs->irq_all, isp->base + b->regs->irq_clear);
+ 	writel(b->regs->irq_all, isp->base + IPU7_BUTTRESS_REG_IRQ_MASK);
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-platform-buttress-regs.h b/drivers/media/pci/intel/ipu6/ipu6-platform-buttress-regs.h
+index c4da72c6bd8f..57e661cc2177 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-platform-buttress-regs.h
++++ b/drivers/media/pci/intel/ipu6/ipu6-platform-buttress-regs.h
+@@ -233,6 +233,8 @@ enum {
+ #define IPU7_BUTTRESS_REG_TSC_CMD		0x2014
+ #define IPU7_BUTTRESS_REG_TSC_CTL		0x2018
+ #define IPU7_BUTTRESS_REG_TSC_LO		0x201c
++#define IPU7_BUTTRESS_REG_PB_TIMESTAMP_LO	0x2030
++#define IPU7_BUTTRESS_REG_PB_TIMESTAMP_VALID	0x2038
+ #define IPU7_BUTTRESS_REG_IS_WORKPOINT_REQ	0x2104
+ #define IPU7_BUTTRESS_REG_PS_WORKPOINT_REQ	0x2100
+ #define IPU7_BUTTRESS_REG_IDLE_WDT		0x218c
+@@ -319,8 +321,13 @@ enum {
+ 
+ /* PB registers */
+ #define IPU7_GLOBAL_INTERRUPT_MASK		0x8
++#define IPU7_TLBID_HASH_ENABLE_31_0		0x30
+ #define IPU7_TLBID_HASH_ENABLE_63_32		0x34
++#define IPU7_TLBID_HASH_ENABLE_95_64		0x38
+ #define IPU7_TLBID_HASH_ENABLE_127_96		0x3c
+ #define IPU7_BAR2_MISC_CONFIG			0x64
+ 
++/* IPU7.5 */
++#define IPU7_BUTTRESS_SEL_PB_TIMESTAMP		BIT(9)
++
+ #endif /* IPU6_PLATFORM_BUTTRESS_REGS_H */
+diff --git a/drivers/media/pci/intel/ipu6/ipu6.c b/drivers/media/pci/intel/ipu6/ipu6.c
+index 14a60f10e649..74f9cf96410f 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6.c
++++ b/drivers/media/pci/intel/ipu6/ipu6.c
+@@ -197,6 +197,36 @@ static const struct ipu6_buttress_registers ipu7_buttress_regs = {
+ 	.irq_sai	= IPU7_BUTTRESS_IRQ_SAI_VIOLATION,
+ };
+ 
++static const struct ipu6_buttress_registers ipu7p5_buttress_regs = {
++	/* Registers */
++	.irq_status	= IPU7_BUTTRESS_REG_IRQ_STATUS,
++	.irq_clear	= IPU7_BUTTRESS_REG_IRQ_CLEAR,
++	.irq_enable	= IPU7_BUTTRESS_REG_IRQ_ENABLE,
++	.pwr_status	= IPU7_BUTTRESS_REG_PWR_STATUS,
++	.security_ctl	= IPU7_BUTTRESS_REG_SECURITY_CTL,
++	.fw_reset_ctl	= IPU7_BUTTRESS_REG_FW_RESET_CTL,
++	.fabric_cmd	= IPU7_BUTTRESS_REG_TSC_CMD,
++	.tsw_ctl	= IPU7_BUTTRESS_REG_TSC_CTL,
++	.tsc_lo		= IPU7_BUTTRESS_REG_PB_TIMESTAMP_LO,
++	.wdt		= IPU7_BUTTRESS_REG_IDLE_WDT,
++	.csr_in		= IPU7_BUTTRESS_REG_CSE2IUCSR,
++	.csr_out	= IPU7_BUTTRESS_REG_IU2CSECSR,
++	.db0_in		= IPU7_BUTTRESS_REG_CSE2IUDB0,
++	.db0_out	= IPU7_BUTTRESS_REG_IU2CSEDB0,
++	.data0_in	= IPU7_BUTTRESS_REG_CSE2IUDATA0,
++	.data0_out	= IPU7_BUTTRESS_REG_IU2CSEDATA0,
++	.sku_id		= IPU7_BUTTRESS_REG_SKU,
++
++	/* Bitmasks */
++	.irq_is		= IPU7_BUTTRESS_IRQ_IS_IRQ,
++	.irq_ps		= IPU7_BUTTRESS_IRQ_PS_IRQ,
++	.irq_all	= IPU7_BUTTRESS_IRQS,
++	.irq_events	= IPU7_BUTTRESS_IRQS,
++	.irq_cse_ipc	= IPU7_BUTTRESS_IRQ_IPC_FROM_CSE_IS_WAITING,
++	.irq_exec_done	= IPU7_BUTTRESS_IRQ_IPC_EXEC_DONE_BY_CSE,
++	.irq_sai	= IPU7_BUTTRESS_IRQ_SAI_VIOLATION,
++};
++
+ static void
+ ipu6_pkg_dir_configure_spc(struct ipu6_device *isp,
+ 			   const struct ipu6_hw_variants *hw_variant,
+@@ -624,6 +654,14 @@ static int ipu6_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		isys_ctrl = &ipu7_isys_buttress_ctrl;
+ 		psys_ctrl = &ipu7_psys_buttress_ctrl;
+ 		break;
++	case PCI_DEVICE_ID_INTEL_IPU7P5:
++		isp->hw_ver = IPU_VERSION_7P5;
++		isp->cpd_fw_name = IPU7P5_FIRMWARE_NAME;
++		isp->model_name = IPU7P5_MEDIA_DEV_MODEL_NAME;
++		isp->buttress.regs = &ipu7p5_buttress_regs;
++		isys_ctrl = &ipu7_isys_buttress_ctrl;
++		psys_ctrl = &ipu7_psys_buttress_ctrl;
++		break;
+ 	default:
+ 		return dev_err_probe(dev, -ENODEV,
+ 				     "Unsupported IPU6 device %x\n",
+diff --git a/drivers/media/pci/intel/ipu6/ipu6.h b/drivers/media/pci/intel/ipu6/ipu6.h
+index 8a696caf4b88..72c5063d5198 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6.h
++++ b/drivers/media/pci/intel/ipu6/ipu6.h
+@@ -25,6 +25,7 @@ struct ipu6_bus_device;
+ #define IPU6EPMTL_FIRMWARE_NAME		"intel/ipu/ipu6epmtl_fw.bin"
+ #define IPU6EPADLN_FIRMWARE_NAME	"intel/ipu/ipu6epadln_fw.bin"
+ #define IPU7_FIRMWARE_NAME		"intel/ipu/ipu7_fw.bin"
++#define IPU7P5_FIRMWARE_NAME		"intel/ipu/ipu7ptl_fw.bin"
+ 
+ #define IPU_VERSION_6		BIT(0) /* TGL */
+ #define IPU_VERSION_6SE		BIT(1) /* JSL */
+-- 
+2.47.3
+
+

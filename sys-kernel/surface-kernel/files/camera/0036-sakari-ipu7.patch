@@ -1,0 +1,130 @@
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E92D49E5DD
+	for <linux-media@vger.kernel.org>; Mon,  7 Sep 2026 11:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788780633; cv=none; b=fWBPLJDUWaJ6LaBsXBt1wiWC6yUh+zR4KhQP32MPm2wTZ488i0xCPek1wVVHlJsSdITPY7eMNja67xq4+80KH2Z9Lo6XfIO/zflDUrZCfcruqL/VTXEL/8yB7iYR+d9C/XZJvWw814td2mvdRdvq90TlS4MOXpNU9WfecFSMtU8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788780633; c=relaxed/simple;
+	bh=08SH5LuCn3gQHoPmMATIrlpD1dMi6VmHtETOhtnNVBY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WqQXzlxmRwMjXoRfxctDjO5Rbh2ekVzfhPdZH6rKbDxSqAoRKTdzt6vq+v2RzQWbfuZeqZ1TM+aDmQqrXWI+4ax3Ycdf1cxUDTI7onyPnVDhFO4tL5scSpx5kVka2tCmC2lRdUMpaw1lHQs5KH4qsYa+MOynop5v8iJ3XGK6Wes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Itq0voSX; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Itq0voSX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788780632; x=1820316632;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=08SH5LuCn3gQHoPmMATIrlpD1dMi6VmHtETOhtnNVBY=;
+  b=Itq0voSXmbYnM3gTDO5L6jFDg2onynPBD7YotW7NzKn+NicJNNWmVJmu
+   hgfM2narqz1pSUU+OL5LL7tiAB1S2UVqqx7nkVEsvTCnsA6vIk5wb09s6
+   JQysXo0BtcSuFY8itiJvKUeplJT+KeA++qVCSvDaIvwXr1jrNUxbAApX8
+   2QKlAMpm6KpZwcgP0PijFcYwAO0h52IENKw65dO8yvfxSY4h3MtewujFF
+   qgCWYw3f4/Ga4bsSRv00XUDFdN+jaLhYfgMXlLSrIoVEjxMWMxWHbKGs3
+   mW3f+t/5Oxf65e9EPEVppyP+vjcNslXmLVM1z/xWsu7cLGpmRknIhFz01
+   Q==;
+X-CSE-ConnectionGUID: Vm9c4aarRQuMsUUP2E5yRw==
+X-CSE-MsgGUID: WZ/FTiSvRcuCtadxcAGbaQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11898"; a="100538641"
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="100538641"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:17 -0700
+X-CSE-ConnectionGUID: kWJdqZDPRFSjSzJfBAh3UA==
+X-CSE-MsgGUID: 4rN04G8NRT2s2qEKrLqqJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="300569273"
+Received: from abityuts-desk1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.230])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:15 -0700
+Received: from punajuuri.localdomain (unknown [192.168.240.130])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 0FA0E1229D5;
+	Mon, 07 Sep 2026 14:30:06 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
+	(envelope-from <sakari.ailus@linux.intel.com>)
+	id 1x3XY5-0000000ARpd-2HE2;
+	Mon, 07 Sep 2026 14:30:05 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: Antti Laakso <antti.laakso@linux.intel.com>,
+	sarang.sapre@intel.com,
+	daxing.li@intel.com,
+	ong.hock.yu@intel.com
+Subject: [PATCH v4 36/45] media: ipu6: Read correct SKU ID for ipu7
+Date: Mon,  7 Sep 2026 14:29:55 +0300
+Message-ID: <20260907113004.2489993-37-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+References: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+Precedence: bulk
+X-Mailing-List: linux-media@vger.kernel.org
+List-Id: <linux-media.vger.kernel.org>
+List-Subscribe: <mailto:linux-media+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-media+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+From: Antti Laakso <antti.laakso@linux.intel.com>
+
+Add SKU ID to buttress register map to get correct ID for both IPUs.
+
+Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/pci/intel/ipu6/ipu6-buttress.h | 1 +
+ drivers/media/pci/intel/ipu6/ipu6.c          | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-buttress.h b/drivers/media/pci/intel/ipu6/ipu6-buttress.h
+index af72de2b8729..47a49e961945 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-buttress.h
++++ b/drivers/media/pci/intel/ipu6/ipu6-buttress.h
+@@ -54,6 +54,7 @@ struct ipu6_buttress_registers {
+ 	u32 db0_out;
+ 	u32 data0_in;
+ 	u32 data0_out;
++	u32 sku_id;
+ 
+ 	/* Bitmasks */
+ 	u32 irq_is;
+diff --git a/drivers/media/pci/intel/ipu6/ipu6.c b/drivers/media/pci/intel/ipu6/ipu6.c
+index 4e4f32723904..428ad046e239 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6.c
++++ b/drivers/media/pci/intel/ipu6/ipu6.c
+@@ -153,6 +153,7 @@ static const struct ipu6_buttress_registers ipu6_buttress_regs = {
+ 	.db0_out	= BUTTRESS_REG_IU2CSEDB0,
+ 	.data0_in	= BUTTRESS_REG_CSE2IUDATA0,
+ 	.data0_out	= BUTTRESS_REG_IU2CSEDATA0,
++	.sku_id		= BUTTRESS_REG_SKU,
+ 
+ 	/* Bitmasks */
+ 	.irq_is		= BUTTRESS_ISR_IS_IRQ,
+@@ -182,6 +183,7 @@ static const struct ipu6_buttress_registers ipu7_buttress_regs = {
+ 	.db0_out	= IPU7_BUTTRESS_REG_IU2CSEDB0,
+ 	.data0_in	= IPU7_BUTTRESS_REG_CSE2IUDATA0,
+ 	.data0_out	= IPU7_BUTTRESS_REG_IU2CSEDATA0,
++	.sku_id		= IPU7_BUTTRESS_REG_SKU,
+ 
+ 	/* Bitmasks */
+ 	.irq_is		= IPU7_BUTTRESS_IRQ_IS_IRQ,
+@@ -657,7 +659,7 @@ static int ipu6_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	/* Configure the arbitration mechanisms for VC requests */
+ 	ipu6_configure_vc_mechanism(isp);
+ 
+-	val = readl(isp->base + BUTTRESS_REG_SKU);
++	val = readl(isp->base + isp->buttress.regs->sku_id);
+ 	sku_id = FIELD_GET(GENMASK(6, 4), val);
+ 	version = FIELD_GET(GENMASK(3, 0), val);
+ 	dev_info(dev, "IPU%u-v%u[%x] hardware version %d\n", version, sku_id,
+-- 
+2.47.3
+
+

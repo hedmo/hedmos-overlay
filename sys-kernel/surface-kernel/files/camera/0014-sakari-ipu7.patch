@@ -1,0 +1,952 @@
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A3448F83D
+	for <linux-media@vger.kernel.org>; Mon,  7 Sep 2026 11:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788780619; cv=none; b=SChzjg1coqyhdhJ/FxZ5Q8Gdm7nKwxYz+W+Bb9pe+BbHgYd5kPDgzW7CcEayvju5iYgOKE6aCWil9Aj19cD+19uOBRnulmZv6oRzZSPSgz/czijDfg1ZkmHFVfUwfQ7DfWo0Rf+NoNQLNIUbBiMdGtLe88QGdeZ0Vny28icYSpo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788780619; c=relaxed/simple;
+	bh=STH9KYCzALrzP+QUVCTYZQJLGE37MedOUdFO5hUy3Mo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=d+pRCGH8LRZ2Qput5EJlaRn3gCSOGlnyecBauFrcasZ9B2Brl8Hd5JWyPEMOWXYRb0i8W/cnulrCT5y2mYHpvsz+5kcagDiDj079Oqb87oWxCZtH3NyUgvrX2+oUUqj1ldx+IwtdkPMlN1okmTpxWWaH+9+Me622ss5+GYawDCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nwSGTjKs; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nwSGTjKs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788780616; x=1820316616;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=STH9KYCzALrzP+QUVCTYZQJLGE37MedOUdFO5hUy3Mo=;
+  b=nwSGTjKs/iZx9xU7vd2Q/N6IYm7wahmnst1ikYJhizeKnzDCIWMC1JCs
+   KnmYtXPqf5BkVKHeznQPIeuWw7J00ZJRk8bSvz2dt2w+X9NOcAafzc6v9
+   8X4aQXmQtrP0gj5oHP55lj5Nk2QADn4HtuN2MQfbKUnie3BO2e+8NRbrc
+   17ZVortecaLy9mwGXPq73trrsBmN7m4LBBVg1W5r3FObQvu86XozH9c1Q
+   P9rRhD4SyQsCk1rsQlXi5qzc0jGM5hVdkHpR0BbiI3HnsMzVbcs7wvvm5
+   KuxSo+OUFv8zu/osuzFAJQZHkSuSbEF4w6/nEh+N+b4HScjXfZA+FIUMO
+   A==;
+X-CSE-ConnectionGUID: B3LonPavTpS32uliLuwHAg==
+X-CSE-MsgGUID: goVTc1hTTaK9Gfyfp6WImw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11898"; a="100538612"
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="100538612"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:10 -0700
+X-CSE-ConnectionGUID: jc/dFtlOTiitM5xBm/xOIQ==
+X-CSE-MsgGUID: GEaoln91T9CDsmaonfObGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="300569166"
+Received: from abityuts-desk1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.230])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:08 -0700
+Received: from punajuuri.localdomain (unknown [192.168.240.130])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id B965E121DF6;
+	Mon, 07 Sep 2026 14:30:05 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
+	(envelope-from <sakari.ailus@linux.intel.com>)
+	id 1x3XY5-0000000ARns-11WW;
+	Mon, 07 Sep 2026 14:30:05 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: Antti Laakso <antti.laakso@linux.intel.com>,
+	sarang.sapre@intel.com,
+	daxing.li@intel.com,
+	ong.hock.yu@intel.com
+Subject: [PATCH v4 14/45] media: ipu6: Add ipu7 mmu support
+Date: Mon,  7 Sep 2026 14:29:33 +0300
+Message-ID: <20260907113004.2489993-15-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+References: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+Precedence: bulk
+X-Mailing-List: linux-media@vger.kernel.org
+List-Id: <linux-media.vger.kernel.org>
+List-Subscribe: <mailto:linux-media+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-media+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+From: Antti Laakso <antti.laakso@linux.intel.com>
+
+The ipu7 mmu have similar page tables as ipu6, but e.g. register interface
+is different. Add own driver handling ipu7 mmu specifics.
+
+Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/pci/intel/ipu6/Makefile      |   1 +
+ drivers/media/pci/intel/ipu6/ipu6-mmu.c    |  14 +-
+ drivers/media/pci/intel/ipu6/ipu6-mmu.h    |   8 +-
+ drivers/media/pci/intel/ipu6/ipu7-mmu-hw.c | 599 +++++++++++++++++++++
+ drivers/media/pci/intel/ipu6/ipu7-mmu-hw.h | 155 ++++++
+ 5 files changed, 773 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/media/pci/intel/ipu6/ipu7-mmu-hw.c
+ create mode 100644 drivers/media/pci/intel/ipu6/ipu7-mmu-hw.h
+
+diff --git a/drivers/media/pci/intel/ipu6/Makefile b/drivers/media/pci/intel/ipu6/Makefile
+index 2106ab84acde..c0daf0995b22 100644
+--- a/drivers/media/pci/intel/ipu6/Makefile
++++ b/drivers/media/pci/intel/ipu6/Makefile
+@@ -5,6 +5,7 @@ intel-ipu6-y			:= ipu6.o \
+ 				ipu6-dma.o \
+ 				ipu6-mmu.o \
+ 				ipu6-mmu-hw.o \
++				ipu7-mmu-hw.o \
+ 				ipu6-buttress.o \
+ 				ipu6-cpd.o \
+ 				ipu6-fw-com.o
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-mmu.c b/drivers/media/pci/intel/ipu6/ipu6-mmu.c
+index 98ac59d00b78..243d438786ba 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-mmu.c
++++ b/drivers/media/pci/intel/ipu6/ipu6-mmu.c
+@@ -473,7 +473,12 @@ static struct ipu6_mmu_info *ipu6_mmu_alloc(struct ipu6_device *isp)
+ 	if (!mmu_info)
+ 		return NULL;
+ 
+-	mmu_info->aperture_start = 0;
++	if (IS_IPU7(isp))
++		mmu_info->aperture_start = isp->secure_mode ?
++			IPU7_FW_CODE_REGION_END : IPU7_FW_CODE_REGION_START;
++	else
++		mmu_info->aperture_start = 0;
++
+ 	mmu_info->aperture_end =
+ 		(dma_addr_t)DMA_BIT_MASK(isp->secure_mode ?
+ 					 IPU6_MMU_ADDR_BITS :
+@@ -532,6 +537,7 @@ EXPORT_SYMBOL_NS_GPL(ipu6_mmu_hw_cleanup, "INTEL_IPU6");
+ static struct ipu6_dma_mapping *alloc_dma_mapping(struct ipu6_device *isp)
+ {
+ 	struct ipu6_dma_mapping *dmap;
++	unsigned long base_pfn;
+ 
+ 	dmap = kzalloc_obj(*dmap);
+ 	if (!dmap)
+@@ -543,7 +549,9 @@ static struct ipu6_dma_mapping *alloc_dma_mapping(struct ipu6_device *isp)
+ 		return NULL;
+ 	}
+ 
+-	init_iova_domain(&dmap->iovad, SZ_4K, 1);
++	base_pfn = max_t(unsigned long, 1,
++			 PFN_DOWN(dmap->mmu_info->aperture_start));
++	init_iova_domain(&dmap->iovad, SZ_4K, base_pfn);
+ 	dmap->mmu_info->dmap = dmap;
+ 
+ 	dev_dbg(&isp->pdev->dev, "alloc mapping\n");
+@@ -676,7 +684,7 @@ struct ipu6_mmu *ipu6_mmu_init(struct device *dev,
+ 	if (!mmu)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	mmu->ops = &ipu6_mmu_ops;
++	mmu->ops = IS_IPU7(isp) ? &ipu7_mmu_ops : &ipu6_mmu_ops;
+ 	mmu->mmid = mmid;
+ 	mmu->ready = false;
+ 	INIT_LIST_HEAD(&mmu->vma_list);
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-mmu.h b/drivers/media/pci/intel/ipu6/ipu6-mmu.h
+index a741f1c0e284..44880478d242 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-mmu.h
++++ b/drivers/media/pci/intel/ipu6/ipu6-mmu.h
+@@ -8,6 +8,8 @@
+ #include <linux/spinlock_types.h>
+ #include <linux/types.h>
+ 
++#include "ipu7-mmu-hw.h"
++
+ struct device;
+ struct page;
+ 
+@@ -171,7 +173,10 @@ struct ipu6_mmu_hw_ops {
+ struct ipu6_mmu {
+ 	struct list_head node;
+ 
+-	struct ipu6_mmu_hw *ipu6_mmu_hw;
++	union {
++		struct ipu6_mmu_hw *ipu6_mmu_hw;
++		struct ipu7_mmu_hw *ipu7_mmu_hw;
++	};
+ 	unsigned int nr_mmus;
+ 	unsigned int mmid;
+ 
+@@ -192,6 +197,7 @@ struct ipu6_mmu {
+ };
+ 
+ extern const struct ipu6_mmu_hw_ops ipu6_mmu_ops;
++extern const struct ipu6_mmu_hw_ops ipu7_mmu_ops;
+ 
+ struct ipu6_mmu *ipu6_mmu_init(struct device *dev,
+ 			       void __iomem *base, int mmid);
+diff --git a/drivers/media/pci/intel/ipu6/ipu7-mmu-hw.c b/drivers/media/pci/intel/ipu6/ipu7-mmu-hw.c
+new file mode 100644
+index 000000000000..3cd9a818733c
+--- /dev/null
++++ b/drivers/media/pci/intel/ipu6/ipu7-mmu-hw.c
+@@ -0,0 +1,599 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2026 Intel Corporation
++ */
++
++#include <linux/types.h>
++#include <linux/iopoll.h>
++
++#include "ipu6.h"
++#include "ipu6-dma.h"
++#include "ipu6-mmu.h"
++
++static struct ipu7_mmu_hw ipu7_isys_mmu_hwdata[] = {
++	{
++		.offset = IPU7_IS_MMU_FW_RD_OFFSET,
++		.zlx_offset = IPU7_IS_ZLX_UC_RD_OFFSET,
++		.uao_offset = IPU7_IS_UAO_UC_RD_OFFSET,
++		.info_bits = 0x20006701,
++		.refill = 0x00002726,
++		.collapse_en_bitmap = 0x0,
++		.l1_block = IPU7_IS_MMU_FW_RD_L1_BLOCKNR_REG,
++		.l2_block = IPU7_IS_MMU_FW_RD_L2_BLOCKNR_REG,
++		.nr_l1streams = IPU7_IS_MMU_FW_RD_STREAM_NUM,
++		.nr_l2streams = IPU7_IS_MMU_FW_RD_STREAM_NUM,
++		.l1_block_sz = { 0x0, 0x8, 0xa },
++		.l2_block_sz = { 0x0, 0x2, 0x4 },
++		.zlx_nr = IPU7_IS_ZLX_UC_RD_NUM,
++		.zlx_axi_pool = { 0x00000f30 },
++		.zlx_en = { 0, 0, 0, 0 },
++		.zlx_conf = { 0x0, 0x0, 0x0, 0x0 },
++		.uao_p_num = IPU7_IS_UAO_UC_RD_PLANENUM,
++		.uao_p2tlb = { 0x61, 0x64, 0x65 },
++	},
++	{
++		.offset = IPU7_IS_MMU_FW_WR_OFFSET,
++		.zlx_offset = IPU7_IS_ZLX_UC_WR_OFFSET,
++		.uao_offset = IPU7_IS_UAO_UC_WR_OFFSET,
++		.info_bits = 0x20006801,
++		.refill = 0x00002524,
++		.collapse_en_bitmap = 0x0,
++		.l1_block = IPU7_IS_MMU_FW_WR_L1_BLOCKNR_REG,
++		.l2_block = IPU7_IS_MMU_FW_WR_L2_BLOCKNR_REG,
++		.nr_l1streams = IPU7_IS_MMU_FW_WR_STREAM_NUM,
++		.nr_l2streams = IPU7_IS_MMU_FW_WR_STREAM_NUM,
++		.l1_block_sz = { 0x0, 0x8, 0xa },
++		.l2_block_sz = { 0x0, 0x2, 0x4	},
++		.zlx_nr = IPU7_IS_ZLX_UC_WR_NUM,
++		.zlx_axi_pool = { 0x00000f20 },
++		.zlx_en = { 0, 1, 1, 0 },
++		.zlx_conf = { 0x0, 0x00010101, 0x00010101 },
++		.uao_p_num = IPU7_IS_UAO_UC_WR_PLANENUM,
++		.uao_p2tlb = { 0x61, 0x62, 0x63 },
++	},
++	{
++		.offset = IPU7_IS_MMU_M0_OFFSET,
++		.zlx_offset = IPU7_IS_ZLX_M0_OFFSET,
++		.uao_offset = IPU7_IS_UAO_M0_WR_OFFSET,
++		.info_bits = 0x20006601,
++		.refill = 0x00002120,
++		.collapse_en_bitmap = 0x0,
++		.l1_block = IPU7_IS_MMU_M0_L1_BLOCKNR_REG,
++		.l2_block = IPU7_IS_MMU_M0_L2_BLOCKNR_REG,
++		.nr_l1streams = IPU7_IS_MMU_M0_STREAM_NUM,
++		.nr_l2streams = IPU7_IS_MMU_M0_STREAM_NUM,
++		.l1_block_sz = { 0x0, 0x3, 0x6, 0x8, 0xa, 0xc, 0xe, 0x10 },
++		.l2_block_sz = { 0x0, 0x2, 0x4, 0x6, 0x8, 0xa, 0xc, 0xe },
++		.zlx_nr = IPU7_IS_ZLX_M0_NUM,
++		.zlx_axi_pool = { 0x00000f10 },
++		.zlx_en = { 1, 1, 1, 1, 1, 1, 1, 1 },
++		.zlx_conf = {
++			0x00010103,
++			0x00010103,
++			0x00010101,
++			0x00010101,
++			0x00010101,
++			0x00010101,
++			0x00010101,
++			0x00010101,
++		},
++		.uao_p_num = IPU7_IS_UAO_M0_WR_PLANENUM,
++		.uao_p2tlb = {
++			0x00000049,
++			0x0000004a,
++			0x0000004b,
++			0x0000004c,
++			0x0000004d,
++			0x0000004e,
++			0x0000004f,
++			0x00000050,
++		},
++	},
++	{
++		.offset = IPU7_IS_MMU_M1_OFFSET,
++		.zlx_offset = IPU7_IS_ZLX_M1_OFFSET,
++		.uao_offset = IPU7_IS_UAO_M1_WR_OFFSET,
++		.info_bits = 0x20006901,
++		.refill = 0x00002322,
++		.collapse_en_bitmap = 0x0,
++		.l1_block = IPU7_IS_MMU_M1_L1_BLOCKNR_REG,
++		.l2_block = IPU7_IS_MMU_M1_L2_BLOCKNR_REG,
++		.nr_l1streams = IPU7_IS_MMU_M1_STREAM_NUM,
++		.nr_l2streams = IPU7_IS_MMU_M1_STREAM_NUM,
++		.l1_block_sz = {
++			0x0, 0x3, 0x6, 0x9, 0xc,
++			0xe, 0x10, 0x12, 0x14, 0x16,
++			0x18, 0x1a, 0x1c, 0x1e, 0x20, 0x22,
++		},
++		.l2_block_sz = {
++			0x0, 0x2, 0x4, 0x6, 0x8,
++			0xa, 0xc, 0xe, 0x10, 0x12,
++			0x14, 0x16, 0x18, 0x1a, 0x1c, 0x1e,
++		},
++		.zlx_nr = IPU7_IS_ZLX_M1_NUM,
++		.zlx_axi_pool = { 0x00000f20 },
++		.zlx_en = { 1, 1, 1, 1, 1, 1, 1, 1,
++			    1, 1, 1, 1, 1, 1, 1, 1,
++		},
++		.zlx_conf = {
++			0x00010103,
++			0x00010103,
++			0x00010103,
++			0x00010103,
++			0x00010103,
++			0x00010103,
++			0x00010103,
++			0x00010103,
++			0x00010101,
++			0x00010101,
++			0x00010101,
++			0x00010101,
++			0x00010101,
++			0x00010101,
++			0x00010101,
++			0x00010101,
++		},
++		.uao_p_num = IPU7_IS_UAO_M1_WR_PLANENUM,
++		.uao_p2tlb = {
++			0x00000051,
++			0x00000052,
++			0x00000053,
++			0x00000054,
++			0x00000055,
++			0x00000056,
++			0x00000057,
++			0x00000058,
++			0x00000059,
++			0x0000005a,
++			0x0000005b,
++			0x0000005c,
++			0x0000005d,
++			0x0000005e,
++			0x0000005f,
++			0x00000060,
++		},
++	},
++};
++
++static struct ipu7_mmu_hw ipu7_psys_mmu_hwdata[] = {
++	{
++		.name = "PS_FW_RD",
++		.offset = IPU7_PS_MMU_FW_RD_OFFSET,
++		.zlx_offset = IPU7_PS_ZLX_FW_RD_OFFSET,
++		.uao_offset = IPU7_PS_UAO_FW_RD_OFFSET,
++		.info_bits = 0x20004801,
++		.refill = 0x00002726,
++		.collapse_en_bitmap = 0x0,
++		.l1_block = IPU7_PS_MMU_FW_RD_L1_BLOCKNR_REG,
++		.l2_block = IPU7_PS_MMU_FW_RD_L2_BLOCKNR_REG,
++		.nr_l1streams = IPU7_PS_MMU_FW_RD_STREAM_NUM,
++		.nr_l2streams = IPU7_PS_MMU_FW_RD_STREAM_NUM,
++		.l1_block_sz = {
++			0, 0x8, 0xa, 0xc, 0xd,
++			0xf, 0x11, 0x12, 0x13, 0x14,
++			0x16, 0x18, 0x19, 0x1a, 0x1a,
++			0x1a, 0x1a, 0x1a, 0x1a, 0x1a,
++		},
++		.l2_block_sz = {
++			0x0, 0x2, 0x4, 0x6, 0x8,
++			0xa, 0xc, 0xe, 0x10, 0x12,
++			0x14, 0x16, 0x18, 0x1a, 0x1c,
++			0x1e, 0x20, 0x22, 0x24, 0x26,
++		},
++		.zlx_nr = IPU7_PS_ZLX_FW_RD_NUM,
++		.zlx_axi_pool = { 0x00000f30 },
++		.zlx_en = {
++			0, 0, 0, 0, 0, 0, 0, 0,
++			0, 0, 0, 0, 0, 0, 0, 0,
++		},
++		.zlx_conf = { 0x0 },
++		.uao_p_num = IPU7_PS_UAO_FW_RD_PLANENUM,
++		.uao_p2tlb = {
++			0x00000036,
++			0x0000003d,
++			0x0000003e,
++			0x00000039,
++			0x0000003f,
++			0x00000040,
++			0x00000041,
++			0x0000003a,
++			0x0000003b,
++			0x00000042,
++			0x00000043,
++			0x00000044,
++			0x0000003c,
++		},
++	},
++	{
++		.offset = IPU7_PS_MMU_FW_WR_OFFSET,
++		.zlx_offset = IPU7_PS_ZLX_FW_WR_OFFSET,
++		.uao_offset = IPU7_PS_UAO_FW_WR_OFFSET,
++		.info_bits = 0x20004601,
++		.refill = 0x00002322,
++		.collapse_en_bitmap = 0x0,
++		.l1_block = IPU7_PS_MMU_FW_WR_L1_BLOCKNR_REG,
++		.l2_block = IPU7_PS_MMU_FW_WR_L2_BLOCKNR_REG,
++		.nr_l1streams = IPU7_PS_MMU_FW_WR_STREAM_NUM,
++		.nr_l2streams = IPU7_PS_MMU_FW_WR_STREAM_NUM,
++		.l1_block_sz = {
++			0, 0x8, 0xa, 0xc, 0xd,
++			0xe, 0xf, 0x10, 0x10, 0x10,
++		},
++		.l2_block_sz = {
++			0x0, 0x2, 0x4, 0x6, 0x8,
++			0xa, 0xc, 0xe, 0x10, 0x12,
++		},
++		.zlx_nr = IPU7_PS_ZLX_FW_WR_NUM,
++		.zlx_axi_pool = { 0x00000f20 },
++		.zlx_en = { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 },
++		.zlx_conf = { 0x0, 0x00010101, 0x00010101 },
++		.uao_p_num = IPU7_PS_UAO_FW_WR_PLANENUM,
++		.uao_p2tlb = { 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c },
++	},
++	{
++		.offset = IPU7_PS_MMU_SRT_RD_OFFSET,
++		.zlx_offset = IPU7_PS_ZLX_DATA_RD_OFFSET,
++		.uao_offset = IPU7_PS_UAO_SRT_RD_OFFSET,
++		.info_bits = 0x20004701,
++		.refill = 0x00002120,
++		.collapse_en_bitmap = 0x0,
++		.l1_block = IPU7_PS_MMU_SRT_RD_L1_BLOCKNR_REG,
++		.l2_block = IPU7_PS_MMU_SRT_RD_L2_BLOCKNR_REG,
++		.nr_l1streams = IPU7_PS_MMU_SRT_RD_STREAM_NUM,
++		.nr_l2streams = IPU7_PS_MMU_SRT_RD_STREAM_NUM,
++		.l1_block_sz = {
++			0x0, 0x4, 0x6, 0x8, 0xb,
++			0xd, 0xf, 0x11, 0x13, 0x15,
++			0x17, 0x23, 0x2b, 0x37, 0x3f,
++			0x41, 0x43, 0x44, 0x45, 0x46,
++			0x47, 0x48, 0x49, 0x4a, 0x4b,
++			0x4c, 0x4d, 0x4e, 0x4f, 0x50,
++			0x51, 0x52, 0x53, 0x55, 0x57,
++			0x59, 0x5b, 0x5d, 0x5f, 0x61,
++		},
++		.l2_block_sz = {
++			0x0, 0x2, 0x4, 0x6, 0x8,
++			0xa, 0xc, 0xe, 0x10, 0x12,
++			0x14, 0x16, 0x18, 0x1a, 0x1c,
++			0x1e, 0x20, 0x22, 0x24, 0x26,
++			0x28, 0x2a, 0x2c, 0x2e, 0x30,
++			0x32, 0x34, 0x36, 0x38, 0x3a,
++			0x3c, 0x3e, 0x40, 0x42, 0x44,
++			0x46, 0x48, 0x4a, 0x4c, 0x4e,
++		},
++		.zlx_nr = IPU7_PS_ZLX_DATA_RD_NUM,
++		.zlx_axi_pool = { 0x00000f30 },
++		.zlx_en = {
++			1, 1, 1, 1, 1, 1, 1, 1,
++			1, 1, 1, 1, 1, 1, 1, 1,
++			0, 0, 0, 0, 0, 0, 0, 0,
++			0, 0, 0, 0, 0, 0, 0, 0,
++		},
++		.zlx_conf = {
++			0x00030303,
++			0x00010101,
++			0x00010101,
++			0x00030202,
++			0x00010101,
++			0x00010101,
++			0x00010101,
++			0x00030800,
++			0x00030500,
++			0x00020101,
++			0x00042000,
++			0x00031000,
++			0x00042000,
++			0x00031000,
++			0x00020400,
++			0x00010101,
++		},
++		.uao_p_num = IPU7_PS_UAO_SRT_RD_PLANENUM,
++		.uao_p2tlb = {
++			0x00000022,
++			0x00000023,
++			0x00000024,
++			0x00000025,
++			0x00000026,
++			0x00000027,
++			0x00000028,
++			0x00000029,
++			0x0000002a,
++			0x0000002b,
++			0x0000002c,
++			0x0000002d,
++			0x0000002e,
++			0x0000002f,
++			0x00000030,
++			0x00000031,
++			0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
++			0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
++			0x0000001e,
++			0x0000001f,
++			0x00000020,
++			0x00000021,
++			0x00000032,
++			0x00000033,
++			0x00000034,
++			0x00000035,
++		},
++	},
++	{
++		.offset = IPU7_PS_MMU_SRT_WR_OFFSET,
++		.zlx_offset = IPU7_PS_ZLX_DATA_WR_OFFSET,
++		.uao_offset = IPU7_PS_UAO_SRT_WR_OFFSET,
++		.info_bits = 0x20004501,
++		.refill = 0x00002120,
++		.collapse_en_bitmap = 0x0,
++		.l1_block = IPU7_PS_MMU_SRT_WR_L1_BLOCKNR_REG,
++		.l2_block = IPU7_PS_MMU_SRT_WR_L2_BLOCKNR_REG,
++		.nr_l1streams = IPU7_PS_MMU_SRT_WR_STREAM_NUM,
++		.nr_l2streams = IPU7_PS_MMU_SRT_WR_STREAM_NUM,
++		.l1_block_sz = {
++			0x0, 0x2, 0x6, 0xa, 0xc,
++			0xe, 0x10, 0x12, 0x14, 0x16,
++			0x18, 0x1a, 0x1c, 0x1e, 0x20,
++			0x22, 0x24, 0x26, 0x32, 0x3a,
++			0x3c, 0x3e, 0x4a, 0x52, 0x58,
++			0x64, 0x6c, 0x72, 0x7e, 0x86,
++			0x8c, 0x8d, 0x8e, 0x8f, 0x90,
++			0x91, 0x92, 0x94, 0x96, 0x98,
++		},
++		.l2_block_sz = {
++			0x0, 0x2, 0x4, 0x6, 0x8,
++			0xa, 0xc, 0xe, 0x10, 0x12,
++			0x14, 0x16, 0x18, 0x1a, 0x1c,
++			0x1e, 0x20, 0x22, 0x24, 0x26,
++			0x28, 0x2a, 0x2c, 0x2e, 0x30,
++			0x32, 0x34, 0x36, 0x38, 0x3a,
++			0x3c, 0x3e, 0x40, 0x42, 0x44,
++			0x46, 0x48, 0x4a, 0x4c, 0x4e,
++		},
++		.zlx_nr = IPU7_PS_ZLX_DATA_WR_NUM,
++		.zlx_axi_pool = { 0x00000f50 },
++		.zlx_en = {
++			1, 1, 1, 1, 1, 1, 1, 1,
++			0, 0, 1, 1, 1, 1, 1, 1,
++			1, 1, 1, 1, 1, 1, 1, 1,
++			1, 1, 1, 1, 1, 1, 0, 0,
++		},
++		.zlx_conf = {
++			0x00010102,
++			0x00030103,
++			0x00030103,
++			0x00010101,
++			0x00010101,
++			0x00030101,
++			0x00010101,
++			0x38010101,
++			0x0,
++			0x0,
++			0x38010101,
++			0x38010101,
++			0x38010101,
++			0x38010101,
++			0x38010101,
++			0x38010101,
++			0x00010101,
++			0x00042000,
++			0x00031000,
++			0x00010101,
++			0x00010101,
++			0x00042000,
++			0x00031000,
++			0x00031000,
++			0x00042000,
++			0x00031000,
++			0x00031000,
++			0x00042000,
++			0x00031000,
++			0x00031000,
++			0x0,
++			0x0,
++		},
++		.uao_p_num = IPU7_PS_UAO_SRT_WR_PLANENUM,
++		.uao_p2tlb = {
++			0x00000000,
++			0x00000001,
++			0x00000002,
++			0x00000003,
++			0x00000004,
++			0x00000005,
++			0x00000006,
++			0x00000007,
++			0x00000008,
++			0x00000009,
++			0x0000000a,
++			0x0000000b,
++			0x0000000c,
++			0x0000000d,
++			0x0000000e,
++			0x0000000f,
++			0x00000010,
++			0x00000011,
++			0x00000012,
++			0x00000013,
++			0x00000014,
++			0x00000015,
++			0x00000016,
++			0x00000017,
++			0x00000018,
++			0x00000019,
++			0x0000001a,
++			0x0000001b,
++			0x0000001c,
++			0x0000001d,
++			0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
++			0x0000001e,
++			0x0000001f,
++			0x00000020,
++			0x00000021,
++		},
++	},
++};
++
++static const struct ipu7_mmu_hwdata ipu7_mmu_hwdata_lookup[IPU_SUBSYS_NUM] = {
++	[IPU_PSYS] = {
++		.hwdata = ipu7_psys_mmu_hwdata,
++		.nr_mmus = ARRAY_SIZE(ipu7_psys_mmu_hwdata),
++	},
++	[IPU_ISYS] = {
++		.hwdata = ipu7_isys_mmu_hwdata,
++		.nr_mmus = ARRAY_SIZE(ipu7_isys_mmu_hwdata),
++	},
++};
++
++static void __ipu7_tlb_invalidate(struct ipu6_mmu *mmu)
++{
++	struct ipu7_mmu_hw *mmu_hw = mmu->ipu7_mmu_hw;
++	unsigned long flags;
++	unsigned int i;
++	int ret;
++	u32 val;
++
++	spin_lock_irqsave(&mmu->ready_lock, flags);
++	if (!mmu->ready) {
++		spin_unlock_irqrestore(&mmu->ready_lock, flags);
++		return;
++	}
++
++	for (i = 0; i < mmu->nr_mmus; i++) {
++		writel(0xffffffffU, mmu_hw[i].base +
++		       IPU7_MMU_REG_INVALIDATE_0);
++
++		/* Need check with HW, use l1streams or l2streams */
++		if (mmu_hw[i].nr_l2streams > 32)
++			writel(0xffffffffU, mmu_hw[i].base +
++			       IPU7_MMU_REG_INVALIDATE_1);
++
++		/*
++		 * The TLB invalidation is a "single cycle" (IOMMU clock cycles)
++		 * When the actual MMIO write reaches the IPU TLB Invalidate
++		 * register, wmb() will force the TLB invalidate out if the CPU
++		 * attempts to update the IOMMU page table (or sooner).
++		 */
++		wmb();
++
++		/* wait invalidation done */
++		ret = readl_poll_timeout_atomic(mmu_hw[i].base +
++						IPU7_MMU_REG_INVALIDATION_STATUS,
++						val, !(val & 0x1U), 500,
++						IPU7_MMU_TLB_INVALIDATE_TIMEOUT);
++		if (ret)
++			dev_err(mmu->dev, "MMU[%u] TLB invalidate failed\n", i);
++	}
++
++	spin_unlock_irqrestore(&mmu->ready_lock, flags);
++}
++
++static int __ipu7_mmu_hw_init(struct ipu6_mmu *mmu)
++{
++	struct ipu6_mmu_info *mmu_info;
++	struct ipu7_mmu_hw *mmu_hw = mmu->ipu7_mmu_hw;
++	unsigned int i, j;
++
++	mmu_info = mmu->dmap->mmu_info;
++	for (i = 0; i < mmu->nr_mmus; i++) {
++		/* Write page table address per MMU */
++		writel((phys_addr_t)mmu_info->l1_pt_dma,
++		       mmu_hw[i].base + IPU7_MMU_REG_PAGE_TABLE_BASE_ADDR);
++
++		/* Set info bits and axi_refill per MMU */
++		writel(mmu_hw[i].info_bits,
++		       mmu_hw[i].base + IPU7_MMU_REG_USER_INFO_BITS);
++		writel(mmu_hw[i].refill, mmu_hw[i].base + IPU7_MMU_REG_AXI_REFILL_IF_ID);
++		writel(mmu_hw[i].collapse_en_bitmap,
++		       mmu_hw[i].base + IPU7_MMU_REG_COLLAPSE_ENABLE_BITMAP);
++
++		if (mmu_hw[i].at_sp_arb_cfg)
++			writel(mmu_hw[i].at_sp_arb_cfg,
++			       mmu_hw[i].base + IPU7_MMU_REG_AT_SP_ARB_CFG);
++
++		/* Default irq configuration */
++		writel(0x3ff, mmu_hw[i].base + IPU7_MMU_REG_IRQ_MASK);
++		writel(0x3ff, mmu_hw[i].base + IPU7_MMU_REG_IRQ_ENABLE);
++
++		/* Configure MMU TLB stream configuration for L1/L2 */
++		for (j = 0; j < mmu_hw[i].nr_l1streams; j++) {
++			writel(mmu_hw[i].l1_block_sz[j], mmu_hw[i].base +
++			       mmu_hw[i].l1_block + 4U * j);
++		}
++
++		for (j = 0; j < mmu_hw[i].nr_l2streams; j++) {
++			writel(mmu_hw[i].l2_block_sz[j], mmu_hw[i].base +
++			       mmu_hw[i].l2_block + 4U * j);
++		}
++
++		for (j = 0; j < mmu_hw[i].uao_p_num; j++) {
++			if (!mmu_hw[i].uao_p2tlb[j])
++				continue;
++			writel(mmu_hw[i].uao_p2tlb[j], mmu_hw[i].uao_base + 4U * j);
++		}
++	}
++
++	for (i = 0; i < mmu->nr_mmus; i++) {
++		for (j = 0; j < IPU7_ZLX_POOL_NUM; j++) {
++			if (!mmu_hw[i].zlx_axi_pool[j])
++				continue;
++			writel(mmu_hw[i].zlx_axi_pool[j],
++			       mmu_hw[i].zlx_base + IPU7_ZLX_REG_AXI_POOL + j * 0x4U);
++		}
++
++		for (j = 0; j < mmu_hw[i].zlx_nr; j++) {
++			if (!mmu_hw[i].zlx_conf[j])
++				continue;
++
++			writel(mmu_hw[i].zlx_conf[j],
++			       mmu_hw[i].zlx_base + IPU7_ZLX_REG_CONF + j * 0x8U);
++		}
++
++		for (j = 0; j < mmu_hw[i].zlx_nr; j++) {
++			if (!mmu_hw[i].zlx_en[j])
++				continue;
++
++			writel(mmu_hw[i].zlx_en[j],
++			       mmu_hw[i].zlx_base + IPU7_ZLX_REG_EN + j * 0x8U);
++		}
++	}
++
++	return 0;
++}
++
++static int __ipu7_mmu_init_hw_data(struct ipu6_mmu *mmu, struct device *dev,
++				   void __iomem *base)
++{
++	const struct ipu7_mmu_hwdata *lookup = ipu7_mmu_hwdata_lookup;
++	struct ipu7_mmu_hw *mmu_hw, *src;
++	unsigned int i, nr_mmus;
++
++	if (mmu->mmid >= IPU_SUBSYS_NUM)
++		return -EINVAL;
++
++	src = lookup[mmu->mmid].hwdata;
++	nr_mmus = lookup[mmu->mmid].nr_mmus;
++
++	mmu_hw = devm_kcalloc(dev, nr_mmus, sizeof(*mmu_hw), GFP_KERNEL);
++	if (!mmu_hw)
++		return -ENOMEM;
++
++	for (i = 0; i < nr_mmus; i++) {
++		if (src[i].nr_l1streams > IPU7_MMU_MAX_TLB_L1_STREAMS ||
++		    src[i].nr_l2streams > IPU7_MMU_MAX_TLB_L2_STREAMS)
++			return -EINVAL;
++
++		mmu_hw[i] = src[i];
++		mmu_hw[i].base = base + src[i].offset;
++		mmu_hw[i].zlx_base = base + src[i].zlx_offset;
++		mmu_hw[i].uao_base = base + src[i].uao_offset;
++	}
++
++	mmu->nr_mmus = nr_mmus;
++	mmu->ipu7_mmu_hw = mmu_hw;
++
++	return 0;
++}
++
++const struct ipu6_mmu_hw_ops ipu7_mmu_ops = {
++	.init_hw_data = __ipu7_mmu_init_hw_data,
++	.hw_init = __ipu7_mmu_hw_init,
++	.tlb_invalidate = __ipu7_tlb_invalidate,
++};
+diff --git a/drivers/media/pci/intel/ipu6/ipu7-mmu-hw.h b/drivers/media/pci/intel/ipu6/ipu7-mmu-hw.h
+new file mode 100644
+index 000000000000..68663057138a
+--- /dev/null
++++ b/drivers/media/pci/intel/ipu6/ipu7-mmu-hw.h
+@@ -0,0 +1,155 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* Copyright (C) 2026 Intel Corporation */
++
++#ifndef IPU7_MMU_HW_H
++#define IPU7_MMU_HW_H
++
++#define IPU7_MMU_REG_IRQ_MASK			0x2c
++#define IPU7_MMU_REG_IRQ_ENABLE			0x30
++#define IPU7_MMU_REG_PAGE_TABLE_BASE_ADDR	0x08
++#define IPU7_MMU_REG_USER_INFO_BITS		0x0c
++#define IPU7_MMU_REG_AXI_REFILL_IF_ID		0x10
++#define IPU7_MMU_REG_COLLAPSE_ENABLE_BITMAP	0x18
++#define IPU7_MMU_REG_AT_SP_ARB_CFG		0x20
++
++#define IPU7_ZLX_REG_AXI_POOL			0x0
++#define IPU7_ZLX_REG_EN				0x20
++#define IPU7_ZLX_REG_CONF			0x24
++#define IPU7_ZLX_POOL_NUM			8U
++
++#define IPU7_MMU_MAX_TLB_L1_STREAMS		40U
++#define IPU7_MMU_MAX_TLB_L2_STREAMS		40U
++#define IPU7_UAO_PLANE_MAX_NUM			64U
++#define IPU7_ZLX_MAX_NUM			32U
++
++#define IPU7_MMU_REG_INVALIDATE_0		0x00
++#define IPU7_MMU_REG_INVALIDATE_1		0x04
++#define IPU7_MMU_REG_INVALIDATION_STATUS	0x24
++#define IPU7_MMU_TLB_INVALIDATE_TIMEOUT		2000
++
++#define IPU7_FW_CODE_REGION_SIZE	0x1000000 /* 16MB */
++#define IPU7_FW_CODE_REGION_START	0x4000000 /* 64MB */
++#define IPU7_FW_CODE_REGION_END		(IPU7_FW_CODE_REGION_START +	\
++					 IPU7_FW_CODE_REGION_SIZE) /* 80MB */
++
++#define IPU7_IS_MMU_FW_RD_OFFSET		0x274000
++#define IPU7_IS_MMU_FW_RD_STREAM_NUM		3
++#define IPU7_IS_MMU_FW_RD_L1_BLOCKNR_REG	0x54
++#define IPU7_IS_MMU_FW_RD_L2_BLOCKNR_REG	0x60
++
++#define IPU7_IS_MMU_FW_WR_OFFSET		0x275000
++#define IPU7_IS_MMU_FW_WR_STREAM_NUM		3
++#define IPU7_IS_MMU_FW_WR_L1_BLOCKNR_REG	0x54
++#define IPU7_IS_MMU_FW_WR_L2_BLOCKNR_REG	0x60
++
++#define IPU7_IS_MMU_M0_OFFSET			0x276000
++#define IPU7_IS_MMU_M0_STREAM_NUM		8
++#define IPU7_IS_MMU_M0_L1_BLOCKNR_REG		0x54
++#define IPU7_IS_MMU_M0_L2_BLOCKNR_REG		0x74
++
++#define IPU7_IS_MMU_M1_OFFSET			0x277000
++#define IPU7_IS_MMU_M1_STREAM_NUM		16
++#define IPU7_IS_MMU_M1_L1_BLOCKNR_REG		0x54
++#define IPU7_IS_MMU_M1_L2_BLOCKNR_REG		0x94
++
++#define IPU7_PS_MMU_FW_RD_OFFSET		0x148000
++#define IPU7_PS_MMU_FW_RD_STREAM_NUM		20
++#define IPU7_PS_MMU_FW_RD_L1_BLOCKNR_REG	0x54
++#define IPU7_PS_MMU_FW_RD_L2_BLOCKNR_REG	0xa4
++
++#define IPU7_PS_MMU_FW_WR_OFFSET		0x149000
++#define IPU7_PS_MMU_FW_WR_STREAM_NUM		10
++#define IPU7_PS_MMU_FW_WR_L1_BLOCKNR_REG	0x54
++#define IPU7_PS_MMU_FW_WR_L2_BLOCKNR_REG	0x7c
++
++#define IPU7_PS_MMU_SRT_RD_OFFSET		0x14a000
++#define IPU7_PS_MMU_SRT_RD_STREAM_NUM		40
++#define IPU7_PS_MMU_SRT_RD_L1_BLOCKNR_REG	0x54
++#define IPU7_PS_MMU_SRT_RD_L2_BLOCKNR_REG	0xf4
++
++#define IPU7_PS_MMU_SRT_WR_OFFSET		0x14b000
++#define IPU7_PS_MMU_SRT_WR_STREAM_NUM		40
++#define IPU7_PS_MMU_SRT_WR_L1_BLOCKNR_REG	0x54
++#define IPU7_PS_MMU_SRT_WR_L2_BLOCKNR_REG	0xf4
++
++#define IPU7_IS_UAO_UC_RD_OFFSET		0x27c000
++#define IPU7_IS_UAO_UC_RD_PLANENUM		4
++
++#define IPU7_IS_UAO_UC_WR_OFFSET		0x27d000
++#define IPU7_IS_UAO_UC_WR_PLANENUM		4
++
++#define IPU7_IS_UAO_M0_WR_OFFSET		0x27e000
++#define IPU7_IS_UAO_M0_WR_PLANENUM		8
++
++#define IPU7_IS_UAO_M1_WR_OFFSET		0x27f000
++#define IPU7_IS_UAO_M1_WR_PLANENUM		16
++
++#define IPU7_PS_UAO_FW_RD_OFFSET		0x156000
++#define IPU7_PS_UAO_FW_RD_PLANENUM		20
++
++#define IPU7_PS_UAO_FW_WR_OFFSET		0x157000
++#define IPU7_PS_UAO_FW_WR_PLANENUM		16
++
++#define IPU7_PS_UAO_SRT_RD_OFFSET		0x154000
++#define IPU7_PS_UAO_SRT_RD_PLANENUM		40
++
++#define IPU7_PS_UAO_SRT_WR_OFFSET		0x155000
++#define IPU7_PS_UAO_SRT_WR_PLANENUM		40
++
++#define IPU7_IS_ZLX_UC_RD_OFFSET		0x278000
++#define IPU7_IS_ZLX_UC_WR_OFFSET		0x279000
++#define IPU7_IS_ZLX_M0_OFFSET			0x27a000
++#define IPU7_IS_ZLX_M1_OFFSET			0x27b000
++#define IPU7_IS_ZLX_UC_RD_NUM			4
++#define IPU7_IS_ZLX_UC_WR_NUM			4
++#define IPU7_IS_ZLX_M0_NUM			8
++#define IPU7_IS_ZLX_M1_NUM			16
++
++#define IPU7_PS_ZLX_DATA_RD_OFFSET		0x14e000
++#define IPU7_PS_ZLX_DATA_WR_OFFSET		0x14f000
++#define IPU7_PS_ZLX_FW_RD_OFFSET		0x150000
++#define IPU7_PS_ZLX_FW_WR_OFFSET		0x151000
++#define IPU7_PS_ZLX_DATA_RD_NUM			32
++#define IPU7_PS_ZLX_DATA_WR_NUM			32
++#define IPU7_PS_ZLX_FW_RD_NUM			16
++#define IPU7_PS_ZLX_FW_WR_NUM			10
++
++struct ipu7_mmu_hw {
++	char name[32];
++
++	void __iomem *base;
++	void __iomem *zlx_base;
++	void __iomem *uao_base;
++
++	u32 offset;
++	u32 zlx_offset;
++	u32 uao_offset;
++
++	u32 info_bits;
++	u32 refill;
++	u32 collapse_en_bitmap;
++	u32 at_sp_arb_cfg;
++
++	u32 l1_block;
++	u32 l2_block;
++
++	u8 nr_l1streams;
++	u8 nr_l2streams;
++	u32 l1_block_sz[IPU7_MMU_MAX_TLB_L1_STREAMS];
++	u32 l2_block_sz[IPU7_MMU_MAX_TLB_L2_STREAMS];
++
++	u8 zlx_nr;
++	u32 zlx_axi_pool[IPU7_ZLX_POOL_NUM];
++	u32 zlx_en[IPU7_ZLX_MAX_NUM];
++	u32 zlx_conf[IPU7_ZLX_MAX_NUM];
++
++	u32 uao_p_num;
++	u32 uao_p2tlb[IPU7_UAO_PLANE_MAX_NUM];
++};
++
++struct ipu7_mmu_hwdata {
++	struct ipu7_mmu_hw *hwdata;
++	unsigned int nr_mmus;
++};
++
++#endif
+-- 
+2.47.3
+
+

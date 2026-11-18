@@ -1,0 +1,190 @@
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D33349480F
+	for <linux-media@vger.kernel.org>; Mon,  7 Sep 2026 11:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788780626; cv=none; b=FDvPHqKXsaSYDp+H8NGFw7zSXL44EMo4EUvWFVuiNoIE4V2Gj4SJgDHE5bESc+37zR9EkDZQv8N0g34YWoRy6HuVdy69mEwxzEyJAv0PcLdJDsnT+u6//zHX5ebxwtJhExAzc1roVRVMHGgw3Uhsp4M2mfbiJpQSObmKc48QDbc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788780626; c=relaxed/simple;
+	bh=wVRONBfbH+e7qiumNnbbsyJwNRD80Tih1iy4IJMaWnM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nqJN8gayydQgKo28MjVHRA00mRlJA37ilaZPpM5s8lg1zE3ETHBfGO/xgv4HN4SU7j5iVgRads7mptBZDEe/knuqe6SPiQDeP9SVqGd/uGSdfFGew4wjsdF+A2kgQtPophAAhANKTdJI+EnRsjzH3qmSH04EgUpWST44Kp+Rzbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cUkWQ2jw; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cUkWQ2jw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788780624; x=1820316624;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=wVRONBfbH+e7qiumNnbbsyJwNRD80Tih1iy4IJMaWnM=;
+  b=cUkWQ2jwt050CBb0+J5oUwd8ytjQ9JoqUa5BCd5KZCrkJ5DoedgSyf1V
+   5NyOjJDAel58+8PzVd8RcVjUVemJpGi7gIDso9A0gGCBANKzz+cdNNF+I
+   Ad2TbMNPYp9+Ub5frHnNRJfE+/etIArcSFpqWONgX1FHuC8P2+gV9U8MJ
+   ptz9ITbWm0Fh+lQrFIjcrOSpWEq0RY4JPWOq0mTQbn7cohwn80J6K3Spt
+   wOYyAN+kz8Uxp7SdV0RIDj8R14jwuO+PwN4tCQ4Jh5BkxW7b249zmw9nO
+   bKudov+/vH98LlTZjtcmeGhsXhmiZcI0g8vX2vtOVPtg6QkOjpy88r5wE
+   g==;
+X-CSE-ConnectionGUID: BSOz/1sHQ8yM20g9CCoDFQ==
+X-CSE-MsgGUID: UXXCLajqROu4rAEAuc+6pA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11898"; a="100538623"
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="100538623"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:14 -0700
+X-CSE-ConnectionGUID: 5AgCw6qVRXaChGrY81IBCg==
+X-CSE-MsgGUID: yNuHyVyOTY+Mn6LPMrIqRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="300569229"
+Received: from abityuts-desk1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.230])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:12 -0700
+Received: from punajuuri.localdomain (unknown [192.168.240.130])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id C9CDE121EF3;
+	Mon, 07 Sep 2026 14:30:05 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
+	(envelope-from <sakari.ailus@linux.intel.com>)
+	id 1x3XY5-0000000ARoG-1I0t;
+	Mon, 07 Sep 2026 14:30:05 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: Antti Laakso <antti.laakso@linux.intel.com>,
+	sarang.sapre@intel.com,
+	daxing.li@intel.com,
+	ong.hock.yu@intel.com
+Subject: [PATCH v4 19/45] media: ipu6: Move hw specific buffer handling down
+Date: Mon,  7 Sep 2026 14:29:38 +0300
+Message-ID: <20260907113004.2489993-20-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+References: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+Precedence: bulk
+X-Mailing-List: linux-media@vger.kernel.org
+List-Id: <linux-media.vger.kernel.org>
+List-Subscribe: <mailto:linux-media+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-media+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+From: Antti Laakso <antti.laakso@linux.intel.com>
+
+Move handling of hardware specific buffers out of common code, like
+ipu6-isys-video.c. Now the ipu6_put_fw_msg_buf() works with fw_msg_bufs,
+like its counterpart ipu6_get_fw_msg_buf().
+
+Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/pci/intel/ipu6/ipu6-fw-isys.c    | 11 ++++++++++-
+ drivers/media/pci/intel/ipu6/ipu6-isys-video.c |  6 +++---
+ drivers/media/pci/intel/ipu6/ipu6-isys.c       |  7 ++-----
+ drivers/media/pci/intel/ipu6/ipu6-isys.h       |  2 +-
+ 4 files changed, 16 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-fw-isys.c b/drivers/media/pci/intel/ipu6/ipu6-fw-isys.c
+index 7f7125202ffd..8906727ca84b 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-fw-isys.c
++++ b/drivers/media/pci/intel/ipu6/ipu6-fw-isys.c
+@@ -530,6 +530,7 @@ int ipu6_isys_isr_one(struct ipu6_bus_device *adev)
+ 	struct ipu6_fw_isys_resp_info_abi *resp;
+ 	struct ipu6_isys_stream *stream;
+ 	struct ipu6_isys_csi2 *csi2 = NULL;
++	struct isys_fw_msgs *isys_fw_msg = NULL;
+ 	u32 index;
+ 	u64 ts;
+ 
+@@ -598,7 +599,15 @@ int ipu6_isys_isr_one(struct ipu6_bus_device *adev)
+ 		 * firmware only release the capture msg until software
+ 		 * get pin_data_ready event
+ 		 */
+-		ipu6_put_fw_msg_buf(ipu6_bus_get_drvdata(adev), resp->buf_id);
++		if (!resp->buf_id)
++			dev_warn(&adev->auxdev.dev, "%d: Invalid buf ID\n",
++				 resp->stream_handle);
++		else
++			isys_fw_msg =
++				container_of((void *)(uintptr_t)resp->buf_id,
++					     struct isys_fw_msgs, ipu6.dummy);
++
++		ipu6_put_fw_msg_buf(ipu6_bus_get_drvdata(adev), isys_fw_msg);
+ 		if (resp->pin_id < IPU6_ISYS_OUTPUT_PINS &&
+ 		    stream->output_pins_queue[resp->pin_id])
+ 			ipu6_isys_queue_buf_ready(stream, resp);
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-isys-video.c b/drivers/media/pci/intel/ipu6/ipu6-isys-video.c
+index c925386a1e98..fabea6a75d7d 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-isys-video.c
++++ b/drivers/media/pci/intel/ipu6/ipu6-isys-video.c
+@@ -544,7 +544,7 @@ static int start_stream_firmware(struct ipu6_isys_video *av,
+ 
+ 		ret = ipu6_isys_fw_pin_cfg(__av, stream_cfg);
+ 		if (ret < 0) {
+-			ipu6_put_fw_msg_buf(av->isys, (uintptr_t)stream_cfg);
++			ipu6_put_fw_msg_buf(av->isys, msg);
+ 			return ret;
+ 		}
+ 	}
+@@ -561,7 +561,7 @@ static int start_stream_firmware(struct ipu6_isys_video *av,
+ 				       IPU6_FW_ISYS_SEND_TYPE_STREAM_OPEN);
+ 	if (ret < 0) {
+ 		dev_err(dev, "can't open stream (%d)\n", ret);
+-		ipu6_put_fw_msg_buf(av->isys, (uintptr_t)stream_cfg);
++		ipu6_put_fw_msg_buf(av->isys, msg);
+ 		return ret;
+ 	}
+ 
+@@ -570,7 +570,7 @@ static int start_stream_firmware(struct ipu6_isys_video *av,
+ 	tout = wait_for_completion_timeout(&stream->stream_open_completion,
+ 					   IPU6_FW_CALL_TIMEOUT_JIFFIES);
+ 
+-	ipu6_put_fw_msg_buf(av->isys, (uintptr_t)stream_cfg);
++	ipu6_put_fw_msg_buf(av->isys, msg);
+ 
+ 	if (!tout) {
+ 		dev_err(dev, "stream open time out\n");
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-isys.c b/drivers/media/pci/intel/ipu6/ipu6-isys.c
+index a58a35112ebd..bb3c0d6bc6c9 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-isys.c
++++ b/drivers/media/pci/intel/ipu6/ipu6-isys.c
+@@ -919,17 +919,14 @@ void ipu6_cleanup_fw_msg_bufs(struct ipu6_isys *isys)
+ 	spin_unlock_irqrestore(&isys->listlock, flags);
+ }
+ 
+-void ipu6_put_fw_msg_buf(struct ipu6_isys *isys, uintptr_t data)
++void ipu6_put_fw_msg_buf(struct ipu6_isys *isys, struct isys_fw_msgs *msg)
+ {
+-	struct isys_fw_msgs *msg;
+ 	unsigned long flags;
+-	void *ptr = (void *)data;
+ 
+-	if (!ptr)
++	if (!msg)
+ 		return;
+ 
+ 	spin_lock_irqsave(&isys->listlock, flags);
+-	msg = container_of(ptr, struct isys_fw_msgs, ipu6.dummy);
+ 	list_move(&msg->head, &isys->framebuflist);
+ 	spin_unlock_irqrestore(&isys->listlock, flags);
+ }
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-isys.h b/drivers/media/pci/intel/ipu6/ipu6-isys.h
+index abcd5e1cbc2c..f39566513a87 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-isys.h
++++ b/drivers/media/pci/intel/ipu6/ipu6-isys.h
+@@ -175,7 +175,7 @@ struct isys_fw_msgs {
+ };
+ 
+ struct isys_fw_msgs *ipu6_get_fw_msg_buf(struct ipu6_isys_stream *stream);
+-void ipu6_put_fw_msg_buf(struct ipu6_isys *isys, uintptr_t data);
++void ipu6_put_fw_msg_buf(struct ipu6_isys *isys, struct isys_fw_msgs *msg);
+ void ipu6_cleanup_fw_msg_bufs(struct ipu6_isys *isys);
+ 
+ extern const struct v4l2_ioctl_ops ipu6_isys_ioctl_ops;
+-- 
+2.47.3
+
+

@@ -1,0 +1,180 @@
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209794A0137
+	for <linux-media@vger.kernel.org>; Mon,  7 Sep 2026 11:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788780636; cv=none; b=D2/eJkn68z/BuzAViD2LBawFSkr1b1s02nxAShnfeNU1kHDdSSzZLayBnQuWtKP93xTfbBQbfrhpKmqF5Mx4Q/u2ozy34Xy8SayLpxNwTKU/oDdPW+QkZ854EE9z32j238j7isnd1KnFqxghZiJiyL5N222GhJvSwj36O+ZAxnA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788780636; c=relaxed/simple;
+	bh=Vi0Cn9nnyUDbTKKEvfC9JWrN4uLOsGKR4See9vtW4DU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SGmd1XNtPcMC0lv5JacoE2G0ol2Bdk0Tv6iHKpBf6EF4CgWc5bnwuNJ/ZwRL9uo2xbHCvGLTlrsvFsztkcyXUel06lSquCftZoRvKg4Mg38I7NRVR/OwFvqEVN3/8JmQzhRygU9Gq4KvQwIbAt2z8a+sQj9O+aTk1ZrZIjfxd0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PsTESBM9; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PsTESBM9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788780634; x=1820316634;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Vi0Cn9nnyUDbTKKEvfC9JWrN4uLOsGKR4See9vtW4DU=;
+  b=PsTESBM91K5zxJqfE7gmPE/tkhUquO/gpNOKlc9ShGR70alowm3WnMl+
+   4D7WQ1LhlBuxt5AoDwXIzsO+z+nlusPzIrKZ+axA2hWPBBh7ooo9b3ueD
+   NeXY4UHIWyKxPDqt1qLgkFyWBfDZUYQa0M1qp1wD087MRQUdC5gJP47sM
+   3RzcDH+uEQalOUP6xllJVF9Y5axf9+AoXnj+4gfSpeySD+uOTOgBXHAUK
+   WyIYQ1OjYV57futNjIkLCsmXqzpRTLjhjnvgyM6rGO8vU/JPYGJgBaHM1
+   iU51ZP8hS/KQnXoGxFHwz8oz8qH0f6lt39YPa1raQJ2qLcacHQMpSDsRG
+   Q==;
+X-CSE-ConnectionGUID: U0kI9aBsT961MCBAVUTnsw==
+X-CSE-MsgGUID: tkEvD2LkTf2nzhAWkpp6sQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11898"; a="100538649"
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="100538649"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:17 -0700
+X-CSE-ConnectionGUID: ekJ1+kI8TPqOgIkD+43E8g==
+X-CSE-MsgGUID: bY2A3yTITpezIAsF0ou+NA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="300569283"
+Received: from abityuts-desk1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.230])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:16 -0700
+Received: from punajuuri.localdomain (unknown [192.168.240.130])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 2904E122B7E;
+	Mon, 07 Sep 2026 14:30:06 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
+	(envelope-from <sakari.ailus@linux.intel.com>)
+	id 1x3XY5-0000000ARqH-2img;
+	Mon, 07 Sep 2026 14:30:05 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: Antti Laakso <antti.laakso@linux.intel.com>,
+	sarang.sapre@intel.com,
+	daxing.li@intel.com,
+	ong.hock.yu@intel.com
+Subject: [PATCH v4 44/45] media: ipu6: Enable support for IPU 7 and IPU 7.5
+Date: Mon,  7 Sep 2026 14:30:03 +0300
+Message-ID: <20260907113004.2489993-45-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+References: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+Precedence: bulk
+X-Mailing-List: linux-media@vger.kernel.org
+List-Id: <linux-media.vger.kernel.org>
+List-Subscribe: <mailto:linux-media+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-media+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+From: Antti Laakso <antti.laakso@linux.intel.com>
+
+Enable support for Intel IPU 7 and IPU 7.5, found in Lunar lake and
+Panther lake, respectively, in the ipu6 driver.
+
+Disabling the CONFIG_VIDEO_INTEL_IPU6_IPU7 Kconfig option can be used to
+still default the support of IPU7 and 7.5 to the ipu7 driver, while
+default is enabled. The driver binding can still be configured at runtime
+by using force_probe and force_no_ipu7_probe options in ipu6 and ipu7
+drivers, respectively.
+
+Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+Co-developed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/pci/intel/ipu6/Kconfig | 9 +++++++++
+ drivers/media/pci/intel/ipu6/ipu6.c  | 8 ++++++++
+ drivers/staging/media/ipu7/ipu7.c    | 7 +++++++
+ include/media/ipu6-pci-table.h       | 2 ++
+ 4 files changed, 26 insertions(+)
+
+diff --git a/drivers/media/pci/intel/ipu6/Kconfig b/drivers/media/pci/intel/ipu6/Kconfig
+index 1129e2beb4be..779ccbf8e034 100644
+--- a/drivers/media/pci/intel/ipu6/Kconfig
++++ b/drivers/media/pci/intel/ipu6/Kconfig
+@@ -16,3 +16,12 @@ config VIDEO_INTEL_IPU6
+ 
+ 	  To compile this driver, say Y here! It contains 2 modules -
+ 	  intel_ipu6 and intel_ipu6_isys.
++
++config VIDEO_INTEL_IPU6_IPU7
++	bool "Support IPU 7 and IPU 7.5 support in ipu6 driver by default"
++	depends on VIDEO_INTEL_IPU6
++	default y
++	help
++	  Support Intel IPU 7 and IPU 7.5 in ipu6 driver by default, instead of
++	  the ipu7 staging driver. This behaviour can be changed at runtime with
++	  module parameters in the respective drivers.
+diff --git a/drivers/media/pci/intel/ipu6/ipu6.c b/drivers/media/pci/intel/ipu6/ipu6.c
+index 74f9cf96410f..43d951735f72 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6.c
++++ b/drivers/media/pci/intel/ipu6/ipu6.c
+@@ -39,6 +39,10 @@
+ #define IPU6_PCI_BAR		0
+ #define IPU7_PCI_PBBAR		4
+ 
++static int force_no_probe_ipu7 = !IS_BUILTIN(CONFIG_VIDEO_INTEL_IPU6_IPU7);
++module_param(force_no_probe_ipu7, int, 0644);
++MODULE_PARM_DESC(force_no_probe_ipu7, "Don't probe ipu7 and ipu7.5 devices");
++
+ struct ipu6_cell_program {
+ 	u32 magic_number;
+ 
+@@ -612,6 +616,10 @@ static int ipu6_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	unsigned long dir;
+ 	int ret;
+ 
++	if ((id->device == PCI_DEVICE_ID_INTEL_IPU7 ||
++	     id->device == PCI_DEVICE_ID_INTEL_IPU7P5) && force_no_probe_ipu7)
++		return -ENODEV;
++
+ 	isp = devm_kzalloc(dev, sizeof(*isp), GFP_KERNEL);
+ 	if (!isp)
+ 		return -ENOMEM;
+diff --git a/drivers/staging/media/ipu7/ipu7.c b/drivers/staging/media/ipu7/ipu7.c
+index 48a35bda4237..88e362c7ae35 100644
+--- a/drivers/staging/media/ipu7/ipu7.c
++++ b/drivers/staging/media/ipu7/ipu7.c
+@@ -39,6 +39,10 @@
+ #define IPU_PCI_BAR		0
+ #define IPU_PCI_PBBAR		4
+ 
++static int force_probe = !IS_BUILTIN(CONFIG_VIDEO_INTEL_IPU6_IPU7);
++module_param(force_probe, int, 0644);
++MODULE_PARM_DESC(force_probe, "Probe ipu7 and ipu7.5 with this driver instead of ipu6");
++
+ static const unsigned int ipu7_csi_offsets[] = {
+ 	IPU_CSI_PORT_A_ADDR_OFFSET,
+ 	IPU_CSI_PORT_B_ADDR_OFFSET,
+@@ -2414,6 +2418,9 @@ static int ipu7_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	u32 is_es;
+ 	int ret;
+ 
++	if (!force_probe)
++		return -ENODEV;
++
+ 	if (!fwnode || fwnode_property_read_u32(fwnode, "is_es", &is_es))
+ 		is_es = 0;
+ 
+diff --git a/include/media/ipu6-pci-table.h b/include/media/ipu6-pci-table.h
+index cd5b941fb96c..cacb8a3170d0 100644
+--- a/include/media/ipu6-pci-table.h
++++ b/include/media/ipu6-pci-table.h
+@@ -24,6 +24,8 @@ static const struct pci_device_id ipu6_pci_tbl[] = {
+ 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IPU6EP_ADLN) },
+ 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IPU6EP_RPLP) },
+ 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IPU6EP_MTL) },
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IPU7) },
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IPU7P5) },
+ 	{ }
+ };
+ 
+-- 
+2.47.3
+
+

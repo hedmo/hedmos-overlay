@@ -1,0 +1,145 @@
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A1449EC45
+	for <linux-media@vger.kernel.org>; Mon,  7 Sep 2026 11:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788780635; cv=none; b=hy2d276WNvQhuUplkRFmy7NGpRSRvWJjTPCva3i8/J2LCx9BxnG1cEAAItHr6KrctLsVxh3+jnjqvDK59fQV0htU4efhT6D6LparK3RywUJFTWPmfTZzKP/4OHUvlHd1dHv+//Mk7IbITn/V+euj5qOEhr3Fkl59GRtftEW9jCo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788780635; c=relaxed/simple;
+	bh=LtCqSu9BEXwPy8U+t5vtGJjnHf579ve7Zg+1dHeUf/4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hX2aNuwXAzxWXNKE6wDycAijT7/TLmUUdxg8J8cmq54Qh5togNIyE/Jn4IsDSTsGDJkZp/4oE1hkog+f6yTvzyLpZZZFY+W0vsUVBXvedEDFOT239+s8/mn08lMNvzUceoBmdyf/AD8MQazQRNcJ7gQawcyeULeGD5gUZsaQXQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TqJieY8T; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TqJieY8T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788780634; x=1820316634;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=LtCqSu9BEXwPy8U+t5vtGJjnHf579ve7Zg+1dHeUf/4=;
+  b=TqJieY8T2+oZEbw287LX9t6/b6m1wWRWy0JLacJDKfrab28YE97bA6X3
+   pa2q/khIrdqSxi1j/yG/1IIR7Spl42NC+TEGASjnuArvuPoKCvzAjGAjw
+   iOhJdK9K56GYhv8rV1HTBvr1U0WAvB6CqjD2PbdwLfyagEuFaQe0JXKCO
+   gFC3wvovyL9dHneVmNbVf37UunSyrkCRlwo65rIjYe2D03+IXG/gko1RM
+   1XMevjYdRZrOoOrBfQJOcXntsF0IN5QhweTEh9H3e8xQUGTY9su+HkN55
+   UibuW82nesI4aOYTwld6T7E06SFFEBytNZzzOvdzc0yOTY1JKI6wgGxtl
+   g==;
+X-CSE-ConnectionGUID: AYWZzMEQSQ+9h2wNZCM5nQ==
+X-CSE-MsgGUID: pE1NXU1jQha2LO0TH/ibXg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11898"; a="100538646"
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="100538646"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:17 -0700
+X-CSE-ConnectionGUID: XatIwNqhQcSvjcI5i/yvJA==
+X-CSE-MsgGUID: WDig88VWSzGTXce26Bvs2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="300569279"
+Received: from abityuts-desk1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.230])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:16 -0700
+Received: from punajuuri.localdomain (unknown [192.168.240.130])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 1F416122B5B;
+	Mon, 07 Sep 2026 14:30:06 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
+	(envelope-from <sakari.ailus@linux.intel.com>)
+	id 1x3XY5-0000000ARq3-2Xq7;
+	Mon, 07 Sep 2026 14:30:05 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: Antti Laakso <antti.laakso@linux.intel.com>,
+	sarang.sapre@intel.com,
+	daxing.li@intel.com,
+	ong.hock.yu@intel.com
+Subject: [PATCH v4 41/45] media: ipu6: Set model name for ipu7
+Date: Mon,  7 Sep 2026 14:30:00 +0300
+Message-ID: <20260907113004.2489993-42-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+References: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+Precedence: bulk
+X-Mailing-List: linux-media@vger.kernel.org
+List-Id: <linux-media.vger.kernel.org>
+List-Subscribe: <mailto:linux-media+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-media+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+From: Antti Laakso <antti.laakso@linux.intel.com>
+
+We are about to enable support for ipu7 hardware, set model name
+accordingly.
+
+Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/pci/intel/ipu6/ipu6-isys.c | 2 +-
+ drivers/media/pci/intel/ipu6/ipu6.c      | 2 ++
+ drivers/media/pci/intel/ipu6/ipu6.h      | 3 +++
+ 3 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-isys.c b/drivers/media/pci/intel/ipu6/ipu6-isys.c
+index 3fb34d2d189c..08f29b678d1b 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-isys.c
++++ b/drivers/media/pci/intel/ipu6/ipu6-isys.c
+@@ -739,7 +739,7 @@ static int isys_register_devices(struct ipu6_isys *isys)
+ 
+ 	isys->media_dev.dev = dev;
+ 	media_device_pci_init(&isys->media_dev,
+-			      pdev, IPU6_MEDIA_DEV_MODEL_NAME);
++			      pdev, isys->adev->isp->model_name);
+ 
+ 	strscpy(isys->v4l2_dev.name, isys->media_dev.model,
+ 		sizeof(isys->v4l2_dev.name));
+diff --git a/drivers/media/pci/intel/ipu6/ipu6.c b/drivers/media/pci/intel/ipu6/ipu6.c
+index 817bf54e332a..14a60f10e649 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6.c
++++ b/drivers/media/pci/intel/ipu6/ipu6.c
+@@ -588,6 +588,7 @@ static int ipu6_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 
+ 	isp->cpd_metadata_cmpnt_size = sizeof(struct ipu6_cpd_metadata_cmpnt);
+ 	isp->buttress.regs = &ipu6_buttress_regs;
++	isp->model_name = IPU6_MEDIA_DEV_MODEL_NAME;
+ 	isys_ctrl = &ipu6_isys_buttress_ctrl;
+ 	psys_ctrl = &ipu6_psys_buttress_ctrl;
+ 
+@@ -618,6 +619,7 @@ static int ipu6_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	case PCI_DEVICE_ID_INTEL_IPU7:
+ 		isp->hw_ver = IPU_VERSION_7;
+ 		isp->cpd_fw_name = IPU7_FIRMWARE_NAME;
++		isp->model_name = IPU7_MEDIA_DEV_MODEL_NAME;
+ 		isp->buttress.regs = &ipu7_buttress_regs;
+ 		isys_ctrl = &ipu7_isys_buttress_ctrl;
+ 		psys_ctrl = &ipu7_psys_buttress_ctrl;
+diff --git a/drivers/media/pci/intel/ipu6/ipu6.h b/drivers/media/pci/intel/ipu6/ipu6.h
+index a2992ffe8e3c..8a696caf4b88 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6.h
++++ b/drivers/media/pci/intel/ipu6/ipu6.h
+@@ -16,6 +16,8 @@ struct ipu6_bus_device;
+ 
+ #define IPU6_NAME			"intel-ipu6"
+ #define IPU6_MEDIA_DEV_MODEL_NAME	"ipu6"
++#define IPU7_MEDIA_DEV_MODEL_NAME	"ipu7"
++#define IPU7P5_MEDIA_DEV_MODEL_NAME	"ipu7.5"
+ 
+ #define IPU6SE_FIRMWARE_NAME		"intel/ipu/ipu6se_fw.bin"
+ #define IPU6EP_FIRMWARE_NAME		"intel/ipu/ipu6ep_fw.bin"
+@@ -63,6 +65,7 @@ struct ipu6_device {
+ 	const struct firmware *cpd_fw;
+ 	const char *cpd_fw_name;
+ 	u32 cpd_metadata_cmpnt_size;
++	const char *model_name;
+ 
+ 	void __iomem *base;
+ 	void __iomem *pb_base;
+-- 
+2.47.3
+
+

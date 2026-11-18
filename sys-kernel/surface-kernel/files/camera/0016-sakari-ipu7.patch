@@ -1,0 +1,105 @@
+From mboxrd@z Thu Jan  1 00:00:00 1970
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661804908A8
+	for <linux-media@vger.kernel.org>; Mon,  7 Sep 2026 11:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788780625; cv=none; b=lEImm7sZencXA85vyvmEneua8zMbHK8SYiYwpF52Ag/tO7BCAy4lBQ3fEkOq+lII2DBalUqNY06tRkxptK3yQ+ZQzT5yFOucBI/hbBCkm+vJIf9QD94TDNYHvJoC8ObQcL/+69C6/VsF84TGPQjibFucMhKex+0EZ6GA+rnvESE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788780625; c=relaxed/simple;
+	bh=04Hzn1iMzwdqEgNjNEvclDMiZyo1ZtRZLnVBb1NcL7A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tT08hUtABCCXvVbdn9A3TJmj7n+Udzek8lm3nP6YJ9jQ/ZK4q4Qd//u3SRR4p0SMeaFgZy6Y3DhyuXt3SoiTIhbQ4qTt7YGFdU2IgE1hF7d7EXrK4U1S+z6IR7tRQ2GU7MZmBlmhxpmq1se1NGxpEKgt39Bz07noLto9OKf+lxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AK7B0LjM; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AK7B0LjM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788780620; x=1820316620;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=04Hzn1iMzwdqEgNjNEvclDMiZyo1ZtRZLnVBb1NcL7A=;
+  b=AK7B0LjMXIEKTwWcuk1JTUdNys35P/WUSJd+IJln6oJaIxXHT1yWQqcj
+   iSvZi/QbZXpWakcmk/TVJdvTVX+c9C45/NH3q/IDMOMtASd63vtrUF841
+   K04Fu6dTJQxy3JppXyiqt9m0as2hgszVPM7TYrj0NWvsqzkBTsf4+fhMc
+   HN2yESjkZewKjH3FRZ7nuGHNa4AlYTk2X6v0YPENkOfMpfhGTD9KCOSjB
+   jRYxgAFEL2wsZ2ujd1+D4b4qfKpmyfn4+Hz+t9/4W492Lbaa5Dgey5ws6
+   Zr+aGh3VCOl9iK96c1Pd4PwQi8SYMbldndcsrHb23phknbUTWek3K+pyu
+   A==;
+X-CSE-ConnectionGUID: +zAuHHMgQc2zBypDej7lkA==
+X-CSE-MsgGUID: e8nJ//IUS4mEw1V3t6xz4w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11898"; a="100538618"
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="100538618"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:13 -0700
+X-CSE-ConnectionGUID: I5MY1z5/SG+WMkNUMKdLdA==
+X-CSE-MsgGUID: 5G1733VUTk26ixpmZwkobw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,267,1779174000"; 
+   d="scan'208";a="300569214"
+Received: from abityuts-desk1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.230])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2026 04:30:12 -0700
+Received: from punajuuri.localdomain (unknown [192.168.240.130])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id C1690121E2B;
+	Mon, 07 Sep 2026 14:30:05 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
+	(envelope-from <sakari.ailus@linux.intel.com>)
+	id 1x3XY5-0000000ARo1-17ry;
+	Mon, 07 Sep 2026 14:30:05 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: Antti Laakso <antti.laakso@linux.intel.com>,
+	sarang.sapre@intel.com,
+	daxing.li@intel.com,
+	ong.hock.yu@intel.com
+Subject: [PATCH v4 16/45] media: ipu6: Add check for pkg_dir before freeing
+Date: Mon,  7 Sep 2026 14:29:35 +0300
+Message-ID: <20260907113004.2489993-17-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+References: <20260907113004.2489993-1-sakari.ailus@linux.intel.com>
+Precedence: bulk
+X-Mailing-List: linux-media@vger.kernel.org
+List-Id: <linux-media.vger.kernel.org>
+List-Subscribe: <mailto:linux-media+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-media+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+From: Antti Laakso <antti.laakso@linux.intel.com>
+
+We are adding support for mapping ipu7 firmware which doesn't have
+pkg_dir.
+
+Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/pci/intel/ipu6/ipu6-cpd.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/pci/intel/ipu6/ipu6-cpd.c b/drivers/media/pci/intel/ipu6/ipu6-cpd.c
+index c4b2d954a9d4..1fadb0f2f6c1 100644
+--- a/drivers/media/pci/intel/ipu6/ipu6-cpd.c
++++ b/drivers/media/pci/intel/ipu6/ipu6-cpd.c
+@@ -235,8 +235,9 @@ EXPORT_SYMBOL_NS_GPL(ipu6_cpd_create_pkg_dir, "INTEL_IPU6");
+ 
+ void ipu6_cpd_free_pkg_dir(struct ipu6_bus_device *adev)
+ {
+-	ipu6_dma_free(adev, adev->pkg_dir_size, adev->pkg_dir,
+-		      adev->pkg_dir_dma_addr, 0);
++	if (adev->pkg_dir)
++		ipu6_dma_free(adev, adev->pkg_dir_size, adev->pkg_dir,
++			      adev->pkg_dir_dma_addr, 0);
+ }
+ EXPORT_SYMBOL_NS_GPL(ipu6_cpd_free_pkg_dir, "INTEL_IPU6");
+ 
+-- 
+2.47.3
+
+
