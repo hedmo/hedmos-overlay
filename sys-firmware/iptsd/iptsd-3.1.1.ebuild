@@ -34,7 +34,7 @@ BDEPEND="
 
 src_configure() {
 	local emesonargs=(
-		-Ddebug_tools=$(usex tools true false)
+		-Ddebug_tools=$(usex tools calibrate,dump,perf,plot,show '[]')
 		-Dservice_manager=$(usex systemd systemd none)
 	)
 	meson_src_configure
