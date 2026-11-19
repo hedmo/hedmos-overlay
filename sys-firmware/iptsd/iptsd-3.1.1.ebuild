@@ -12,7 +12,7 @@ SRC_URI="https://github.com{PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="GPL-2+"
 SLOT="0"
 KEYWORDS="~amd64 ~arm64"
-IUSE="systemd"
+IUSE="systemd tools"
 
 DEPEND="
 	dev-cpp/cli11
@@ -21,7 +21,10 @@ DEPEND="
 	dev-libs/hidapi
 	dev-libs/inih
 	dev-libs/spdlog:=
-	media-libs/libsdl2
+	tools? (
+		dev-cpp/cairomm:0
+		media-libs/libsdl2
+	)
 "
 RDEPEND="${DEPEND}"
 BDEPEND="
@@ -31,6 +34,7 @@ BDEPEND="
 
 src_configure() {
 	local emesonargs=(
+		-Ddebug_tools=$(usex tools true false)
 		-Dservice_manager=$(usex systemd systemd none)
 	)
 	meson_src_configure
