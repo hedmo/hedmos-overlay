@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://gentoo.org">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>hedmoo@yahoo.com</email>
+		<name>Andreas Westman Dorcsak</name>
+	</maintainer>
+	<use>
+		<flag name="camera">Apply experimental Intel IPU4P/IPU7 camera patches for Surface devices</flag>
+	</use>
+	<upstream>
+		<remote-id type="github">linux-surface/linux-surface</remote-id>
+	</upstream>
+</pkgmetadata>

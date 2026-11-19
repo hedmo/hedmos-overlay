@@ -5,7 +5,7 @@ EAPI=8
 
 inherit systemd udev
 
-DESCRIPTION="Surface Book 3 IPU4P firmware, tuning, modprobe, udev, and WirePlumber rules for libcamera"
+DESCRIPTION="Intel IPU4P camera firmware and HAL for Microsoft Surface Book 3"
 HOMEPAGE="https://kernel.org"
 S="${WORKDIR}"
 
