@@ -11,7 +11,7 @@ S="${WORKDIR}"
 
 LICENSE="GPL-2+ all-rights-reserved"
 SLOT="0"
-KEYWORDS="~amd64 amd64"
+KEYWORDS="~amd64"
 IUSE="howdy"
 RESTRICT="mirror bindist"
 

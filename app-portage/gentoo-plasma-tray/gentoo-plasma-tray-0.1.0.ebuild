@@ -12,7 +12,7 @@ S="${WORKDIR}"
 
 LICENSE="GPL-2+"
 SLOT="0"
-KEYWORDS="~amd64 amd64"
+KEYWORDS="~amd64"
 IUSE="+live systemd +yakuake"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
